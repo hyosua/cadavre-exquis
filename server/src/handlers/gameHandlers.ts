@@ -38,24 +38,23 @@ export function registerGameHandlers(io: Server, socket: Socket) {
   socket.on('join_game', async (data) => {
     try {
       const validated = joinGameSchema.parse(data);
-      const game = await gameService.joinGame(
+      const { game, player, isReconnected } = await gameService.joinGame(
         socket.id,
         validated.code,
         validated.pseudo
       );
 
       socket.join(game.id);
-      
-      const currentPlayer = game.players.find(p => p.socketId === socket.id);
-      
-      // Notifier le nouveau joueur
+
+      // Notifier le joueur courant
       socket.emit('game_state', game);
-      if (currentPlayer) {
-        socket.emit('current_player', currentPlayer);
-      }
+      socket.emit('current_player', player);
 
       // Notifier les autres joueurs
-      socket.to(game.id).emit('player_joined', { player: currentPlayer });
+      socket.to(game.id).emit('player_joined', { player, reconnected: isReconnected });
+      if (isReconnected) {
+        socket.to(game.id).emit('player_reconnected', { playerId: player.id });
+      }
       socket.to(game.id).emit('game_state', game);
     } catch (error: any) {
       console.error('Error joining game:', error);

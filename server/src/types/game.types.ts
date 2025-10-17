@@ -12,6 +12,7 @@ export interface Player {
   isHost: boolean;
   hasPlayedCurrentPhase: boolean;
   isConnected: boolean;
+  disconnectedAt?: number;
 }
 
 export interface Sentence {

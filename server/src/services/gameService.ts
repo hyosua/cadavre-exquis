@@ -4,7 +4,15 @@ import { timerService } from './timerService';
 import { generateGameCode, generateId } from '@/utils/generateCode';
 import { Game, GameConfig, Player, Sentence } from '@/types/game.types';
 
+interface JoinGameResult {
+  game: Game;
+  player: Player;
+  isReconnected: boolean;
+}
+
 export class GameService {
+  private hostReconnectionTimers: Map<string, NodeJS.Timeout> = new Map();
+
   async createGame(hostSocketId: string, pseudo: string, config: GameConfig): Promise<Game> {
     const gameId = generateId();
     let code = generateGameCode();
@@ -47,24 +55,44 @@ export class GameService {
     return game;
   }
 
-  async joinGame(socketId: string, code: string, pseudo: string): Promise<Game> {
+  async joinGame(socketId: string, code: string, pseudo: string): Promise<JoinGameResult> {
     const game = await redisService.getGameByCode(code);
-    
+
     if (!game) {
       throw new Error('Partie introuvable');
     }
 
-    if (game.status !== 'waiting') {
+    const existingPlayer = game.players.find(p => p.pseudo === pseudo);
+
+    if (game.status !== 'waiting' && (!existingPlayer || existingPlayer.isConnected)) {
       throw new Error('La partie a déjà commencé');
     }
 
-    // Vérifier si le pseudo existe déjà
-    if (game.players.some(p => p.pseudo === pseudo)) {
-      throw new Error('Ce pseudo est déjà pris');
+    if (existingPlayer) {
+      if (existingPlayer.isConnected) {
+        throw new Error('Ce pseudo est déjà pris');
+      }
+
+      await redisService.deletePlayerGame(existingPlayer.socketId);
+
+      existingPlayer.socketId = socketId;
+      existingPlayer.isConnected = true;
+      existingPlayer.disconnectedAt = undefined;
+
+      await redisService.saveGame(game);
+      await redisService.setPlayerGame(socketId, game.id);
+
+      if (existingPlayer.isHost) {
+        this.clearHostReconnectionTimer(game.id);
+      }
+
+      console.log(`🔄 ${pseudo} reconnected to game ${game.id}`);
+
+      return { game, player: existingPlayer, isReconnected: true };
     }
 
     const playerId = generateId();
-    
+
     const player: Player = {
       id: playerId,
       socketId,
@@ -80,7 +108,7 @@ export class GameService {
 
     console.log(`👋 ${pseudo} joined game ${game.id}`);
 
-    return game;
+    return { game, player, isReconnected: false };
   }
 
   async startGame(io: Server, gameId: string): Promise<Game> {
@@ -250,7 +278,7 @@ export class GameService {
 
   async handleDisconnect(io: Server, socketId: string): Promise<void> {
     const gameId = await redisService.getPlayerGame(socketId);
-    
+
     if (!gameId) return;
 
     const game = await redisService.getGame(gameId);
@@ -260,6 +288,8 @@ export class GameService {
     if (!player) return;
 
     player.isConnected = false;
+    player.disconnectedAt = Date.now();
+    await redisService.deletePlayerGame(socketId);
     await redisService.saveGame(game);
 
     io.to(gameId).emit('player_left', { playerId: player.id });
@@ -267,13 +297,13 @@ export class GameService {
 
     console.log(`👋 ${player.pseudo} disconnected from game ${gameId}`);
 
-    // Si c'était l'hôte et que le jeu est en attente, supprimer la partie
     if (player.isHost && game.status === 'waiting') {
-      await this.deleteGame(io, gameId);
+      this.scheduleHostReconnectionTimer(io, gameId);
     }
   }
 
   async deleteGame(io: Server, gameId: string): Promise<void> {
+    this.clearHostReconnectionTimer(gameId);
     timerService.clearTimer(gameId);
     
     // Nettoyer les données Redis
@@ -290,9 +320,9 @@ export class GameService {
     }
     
     await redisService.deleteGame(gameId);
-    
+
     io.to(gameId).emit('game_deleted');
-    
+
     console.log(`🗑️  Game ${gameId} deleted`);
   }
 
@@ -310,6 +340,40 @@ export class GameService {
     }
 
     await redisService.saveGame(game);
+  }
+
+  private scheduleHostReconnectionTimer(io: Server, gameId: string): void {
+    this.clearHostReconnectionTimer(gameId);
+
+    const timeout = setTimeout(async () => {
+      const currentGame = await redisService.getGame(gameId);
+      if (!currentGame) {
+        this.hostReconnectionTimers.delete(gameId);
+        return;
+      }
+
+      const host = currentGame.players.find(p => p.id === currentGame.hostId);
+
+      if (!host || host.isConnected || currentGame.status !== 'waiting') {
+        this.hostReconnectionTimers.delete(gameId);
+        return;
+      }
+
+      console.log(`⌛ Host did not reconnect to game ${gameId}, deleting game`);
+      await this.deleteGame(io, gameId);
+      this.hostReconnectionTimers.delete(gameId);
+    }, 30_000);
+
+    this.hostReconnectionTimers.set(gameId, timeout);
+  }
+
+  private clearHostReconnectionTimer(gameId: string): void {
+    const timer = this.hostReconnectionTimers.get(gameId);
+
+    if (timer) {
+      clearTimeout(timer);
+      this.hostReconnectionTimers.delete(gameId);
+    }
   }
 
   private initializeSentences(players: Player[]): Sentence[] {
