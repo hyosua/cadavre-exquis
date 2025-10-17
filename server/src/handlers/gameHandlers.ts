@@ -26,6 +26,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       // Sauvegarder le joueur actuel
       const currentPlayer = game.players.find(p => p.socketId === socket.id);
       if (currentPlayer) {
+        currentPlayer.gameId = game.id;
         socket.emit('current_player', currentPlayer);
       }
     } catch (error: any) {
@@ -51,6 +52,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       // Notifier le nouveau joueur
       socket.emit('game_state', game);
       if (currentPlayer) {
+        currentPlayer.gameId = game.id;
         socket.emit('current_player', currentPlayer);
       }
 

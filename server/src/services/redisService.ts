@@ -43,6 +43,7 @@ export class RedisService {
   }
 
   async deletePlayerGame(socketId: string): Promise<void> {
+    console.log("player deleted")
     await redis.del(`player:${socketId}:gameId`);
   }
 

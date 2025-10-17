@@ -260,12 +260,33 @@ export class GameService {
     if (!player) return;
 
     player.isConnected = false;
+    player.disconnectedAt = Date.now();
     await redisService.saveGame(game);
 
-    io.to(gameId).emit('player_left', { playerId: player.id });
+    io.to(gameId).emit('player_disconnected', { playerId: player.id });
     io.to(gameId).emit('game_state', game);
 
     console.log(`👋 ${player.pseudo} disconnected from game ${gameId}`);
+    // ✅ Grace period de 60 secondes
+    setTimeout(async () => {
+      const currentGame = await redisService.getGame(gameId);
+      if (!currentGame) return;
+
+      const currentPlayer = currentGame.players.find(p => p.id === player.id);
+      if (!currentPlayer || currentPlayer.isConnected) return;
+
+      // Si toujours déconnecté après 60s, supprime
+      console.log(`🗑️  Removing ${player.pseudo} after timeout`);
+      await redisService.deletePlayerGame(player.socketId);
+      
+      io.to(currentGame.id).emit('player_left', { playerId: player.id });
+      io.to(currentGame.id).emit('game_state', currentGame);
+      
+      // Supprime la partie si vide
+      if (currentGame.players.length === 0) {
+        await this.deleteGame(io, currentGame.id);
+      }
+    }, 30000); // 30 secondes
 
     // Si c'était l'hôte et que le jeu est en attente, supprimer la partie
     if (player.isHost && game.status === 'waiting') {
