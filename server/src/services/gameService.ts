@@ -273,6 +273,62 @@ export class GameService {
     }
   }
 
+  async removePlayer(io: Server, gameId: string, playerId: string): Promise<Game | null>{
+    const game = await redisService.getGame(gameId);
+
+
+    if(!game) {
+      throw new Error('Partie Introuvable');
+    }
+
+
+    const playerIdx = game.players.findIndex(p => p.id === playerId);
+
+
+    if(playerIdx === -1){
+      throw new Error('Joueur Introuvable');
+    }
+
+
+    const player = game.players[playerIdx];
+
+
+    // supprimer le mapping redis du joueur
+    await redisService.deletePlayerGame(player.socketId);
+    game.players.splice(playerIdx,1);
+    console.log(`🗑️ ${player.pseudo} a été supprimé de la partie ${gameId}`)
+
+
+    // Si la partie est vide, la supprimer
+    if(game.players.length === 0){
+      await this.deleteGame(io, gameId);
+      return null;
+    }
+
+
+    // si c'était l'hôte, assigner un nouvel hôte
+    if(player.isHost){
+      const newHost = game.players[0]
+      newHost.isHost = true;
+      game.hostId = newHost.id;
+      console.log(`👑 ${newHost.pseudo} est le nouveau hôte!`);
+    }
+
+
+    await redisService.saveGame(game);
+
+
+    // Notifier les autres joueurs
+    io.to(gameId).emit("player_removed",{ playerId: player.id, pseudo: player.pseudo })
+    io.to(gameId).emit("game_state", game);
+
+
+    return game
+
+
+  }
+
+
   async deleteGame(io: Server, gameId: string): Promise<void> {
     timerService.clearTimer(gameId);
     
