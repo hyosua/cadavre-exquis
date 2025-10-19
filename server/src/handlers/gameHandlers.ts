@@ -34,6 +34,30 @@ export function registerGameHandlers(io: Server, socket: Socket) {
     }
   });
 
+  // Annuler la partie
+  socket.on('cancel_game', async (data) => {
+    try {
+      const { gameId } = data;
+      const game = await redisService.getGame(gameId);
+      
+      if (!game) {
+        throw new Error('Partie introuvable');
+      }
+
+      const player = game.players.find(p => p.socketId === socket.id);
+      
+      if (!player?.isHost) {
+        throw new Error('Seul l\'hôte peut annuler la partie');
+      }
+
+      await gameService.deleteGame(io, gameId);
+      io.to(gameId).emit('game_canceled');
+    } catch (error: any) {
+      console.error('Error canceling game:', error);
+      socket.emit('error', { message: error.message || 'Erreur lors de l\'annulation de la partie' });
+    }
+  });
+
   // Rejoindre une partie
   socket.on('join_game', async (data) => {
     try {
