@@ -32,9 +32,10 @@ export function registerConnectionHandlers(io: Server, socket: Socket) {
       // attach socket to room and update player's socket id
       socket.join(gameId);
       player.socketId = socket.id;
+      player.isConnected = true;
       await redisService.saveGame(game); 
 
-      ack?.({ ok: true });
+      ack?.({ ok: true, player, game });
       socket.emit('player_reconnected', { player, game });
       io.to(gameId).emit('game_state', game);
       console.log('player reconnected', player.id, 'to game', gameId);
