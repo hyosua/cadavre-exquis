@@ -23,12 +23,12 @@ const ranking: RankingEntry[] = game.sentences
     .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
+        <div className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">🏆 Résultats</h1>
-            <p className="text-gray-600">Classement des meilleures phrases</p>
+            <h1 className="text-4xl font-bold  mb-2">🏆 Résultats</h1>
+            <p className="font-semibold">Classement des meilleures phrases</p>
           </div>
 
           <div className="space-y-4">

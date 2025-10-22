@@ -12,7 +12,7 @@ export function GameLobby() {
   if (!game || !currentPlayer) return null;
 
   const isHost = currentPlayer.isHost;
-  const canStart = game.players.length >= 2;
+  const canStart = game.players.length >= 1;
 
   return (
     <div className="bg-base-300 border border-gray-500 min-h-screen  p-4">

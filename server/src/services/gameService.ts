@@ -94,7 +94,7 @@ export class GameService {
       throw new Error('La partie a déjà commencé');
     }
 
-    if (game.players.length < 2) {
+    if (game.players.length < 1) {
       throw new Error('Il faut au moins 2 joueurs');
     }
 

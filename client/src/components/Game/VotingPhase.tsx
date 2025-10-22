@@ -12,12 +12,12 @@ export function VotingPhase() {
   const voted = hasVoted();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
+        <div className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Vote</h1>
-            <p className="text-gray-600">Choisissez votre phrase préférée !</p>
+            <h1 className="text-4xl font-bold  mb-2">Vote</h1>
+            <p className="font-semibold">Choisissez votre phrase préférée !</p>
           </div>
 
           <div className="space-y-4">
