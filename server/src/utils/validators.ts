@@ -4,7 +4,7 @@ export const createGameSchema = z.object({
   pseudo: z.string().min(2).max(20),
   config: z.object({
     phases: z.array(z.string()).min(4).max(6),
-    timePerPhase: z.number().min(30).max(300),
+    timePerPhase: z.number().min(10).max(300),
   }),
 });
 

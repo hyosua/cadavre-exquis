@@ -106,7 +106,6 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       const updatedGame = await gameService.startGame(io, gameId);
       
       io.to(gameId).emit('phase_started', { 
-        phase: updatedGame.currentPhase, 
         timeLeft: updatedGame.config.timePerPhase 
       });
       io.to(gameId).emit('game_state', updatedGame);
@@ -140,7 +139,10 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       );
 
       io.to(validated.gameId).emit('player_submitted', { playerId: player.id });
-      io.to(validated.gameId).emit('game_state', updatedGame);
+      const allPlayed = updatedGame.players.every(p => p.hasPlayedCurrentPhase);
+      if (!allPlayed) {
+        io.to(validated.gameId).emit('game_state', updatedGame);
+      }
     } catch (error: any) {
       console.error('Error submitting word:', error);
       socket.emit('error', { message: error.message || 'Erreur lors de l\'envoi' });

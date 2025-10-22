@@ -112,6 +112,9 @@ export class GameService {
     // Démarrer le timer
     timerService.startPhaseTimer(io, gameId, game.config.timePerPhase);
 
+    // Notify clients of the starting phase and full game state
+    io.to(gameId).emit('game_state', game);
+
     console.log(`🚀 Game ${gameId} started with ${game.players.length} players`);
 
     return game;
