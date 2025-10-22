@@ -140,6 +140,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
 
       io.to(validated.gameId).emit('player_submitted', { playerId: player.id });
       const allPlayed = updatedGame.players.every(p => p.hasPlayedCurrentPhase);
+      
       if (!allPlayed) {
         io.to(validated.gameId).emit('game_state', updatedGame);
       }
