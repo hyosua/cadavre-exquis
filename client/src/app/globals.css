@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
+@import "tailwindcss";
+ @plugin "daisyui" {
+   themes: light --default, dark --prefersdark, sunset, dracula, caramellatte;  
+ }
+
+ @plugin "daisyui/theme" {
+  name: "sunset";
+  default: true;
+  --color-primary: #4cc9f0;
+}
+
+@plugin "tailwindcss-animate";
+@import "tw-animate-css";
+
+@theme {
+  --font-title: "Flavors", cursive;
+  --font-averia: "Averia Gruesa Libre", system-ui;
+}
