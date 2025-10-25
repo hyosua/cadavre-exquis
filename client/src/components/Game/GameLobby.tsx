@@ -3,8 +3,8 @@
 import React from 'react';
 import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
-import { PlayerList } from '@/components/Game/Playerlist';
 import { Confirm } from '../ui/confirm';
+import { PlayerList } from '@/components/Game/Playerlist';
 
 
 export function GameLobby() {
@@ -55,7 +55,6 @@ export function GameLobby() {
                 />
                 <Button
                   onClick={startGame}
-                  disabled={!canStart}
                   className="w-full"
                   size="lg"
                 >

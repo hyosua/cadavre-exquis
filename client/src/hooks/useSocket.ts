@@ -28,6 +28,7 @@ export function useSocket() {
     if (!socket) return;
 
     socket.on('connect', () => {
+      console.log("Attempting to connect ...")
       setIsConnected(true);
       setError(null);
       // Try to reconnect with stored credentials
@@ -69,6 +70,7 @@ export function useSocket() {
 
     socket.on('game_canceled', () => {
       console.log('Game canceled by server');
+      resetGame()
       router.push('/');
     });
 

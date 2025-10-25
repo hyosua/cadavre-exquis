@@ -3,12 +3,18 @@
 import React from 'react';
 import { useGame } from '@/hooks/useGame';
 import { RankingEntry, Sentence } from '@/types/game.type';
+import { Button } from '@/components/ui/button';
+import { Confirm } from '../ui/confirm';
+import { PlayerList } from '@/components/Game/Playerlist';
+
 
 export function Results() {
-  const { game } = useGame();
+  const { game, currentPlayer, startGame, leaveGame, cancelGame} = useGame();
 
-  if (!game) return null;
-
+  if (!game || !currentPlayer) return null;
+  const isHost = currentPlayer.isHost;
+  // à modifier pour implémenter un bouton ready
+  const canStart = game.players.length >= 1;
 
 interface Vote {
     sentenceId: string;
@@ -21,7 +27,7 @@ const ranking: RankingEntry[] = game.sentences
         words: sentence.words,
     }))
     .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount);
-
+    
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
@@ -62,6 +68,50 @@ const ranking: RankingEntry[] = game.sentences
             })}
           </div>
         </div>
+        
+        <div className='flex justify-center mt-4 mb-4 gap-2'>
+          
+          {isHost && (
+            <>
+              <Confirm
+                message="Vous êtes sur le point de supprimer la partie."
+                buttonName='Quitter'
+                className='hover:bg-error '
+                onConfirm={cancelGame}
+              />
+              <Button
+                onClick={startGame}
+                disabled={!canStart}
+                className="w-full max-w-lg"
+                size="lg"
+              >
+                Rejouer
+              </Button>
+            </>
+          )}
+
+          {!isHost && (
+            <p className="mt-6 text-center text-sm text-info font-semibold">
+              En attente que l&apos;hôte redémarre la partie...
+            </p>
+            
+          )}
+        </div>  
+        <PlayerList 
+                    players={game.players} 
+                    currentPlayerId={currentPlayer.id}
+        />
+
+        {!isHost && (
+          <div className='py-4 text-center'>
+            <Confirm
+              message="Vous êtes sur le point de quitter la partie."
+              buttonName='Quitter'
+              className='hover:bg-error '
+              onConfirm={leaveGame}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

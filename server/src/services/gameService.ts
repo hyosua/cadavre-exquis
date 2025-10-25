@@ -90,12 +90,16 @@ export class GameService {
       throw new Error('Partie introuvable');
     }
 
-    if (game.status !== 'waiting') {
+    if (game.status !== 'waiting' && game.status !== 'finished') {
       throw new Error('La partie a déjà commencé');
     }
 
     if (game.players.length < 1) {
       throw new Error('Il faut au moins 2 joueurs');
+    }
+
+    if (game.status === 'finished'){
+      game.votes = []
     }
 
     // Initialiser les phrases

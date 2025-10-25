@@ -40,7 +40,17 @@ export const useGameStore = create<GameState>()(
       setGame: (game) => {
         set({ game });
         // Si le serveur envoie un game, mets à jour la ref persistée
-        if (game?.id) set({ persistedGameRef: { id: game.id, code: (game as Game).code } });
+        if ( ! game?.id) {
+          set({ persistedGameRef: null})
+          return
+        }
+
+        if(game.status === "finished"){
+          set({ persistedGameRef: null})
+        } else { // sauvegarde en localstorage pour pouvoir rejoin
+          set({ persistedGameRef: { id: game.id, code: (game as Game).code } });
+        }
+
       },
       setCurrentPlayer: (player) =>
         set({ currentPlayer: player ? player : null }),
@@ -50,7 +60,7 @@ export const useGameStore = create<GameState>()(
       setError: (error) => set({ error }),
       setIsConnected: (connected) => set({ isConnected: connected }),
       setOnGameCreated: (callback) => set({ onGameCreated: callback }),
-
+      
       resetGame: () =>
         set({
           game: null,

@@ -87,6 +87,34 @@ export function registerGameHandlers(io: Server, socket: Socket) {
     }
   });
 
+  // Quitter une partie
+  socket.on('leave_game', async (data) => {
+    try {
+      const { gameId } = data;
+      const game = await redisService.getGame(gameId);
+
+      if (!game) {
+        throw new Error('Partie introuvable');
+      }
+
+      const player = game.players.find(p => p.socketId === socket.id);
+
+      if(!player){
+        throw new Error('Joueur introuvable');
+        return
+      }
+            
+      await gameService.removePlayer(io, gameId, player.id)
+
+      // Notifier les autres joueurs
+      socket.to(game.id).emit('player_left', { player: player });
+      socket.to(game.id).emit('game_state', game);
+    } catch (error: any) {
+      console.error('Error leaving game:', error);
+      socket.emit('error', { message: error.message || 'Erreur lors du départ de la partie' });
+    }
+  });
+
   // Démarrer la partie
   socket.on('start_game', async (data) => {
     try {

@@ -23,6 +23,12 @@ export function useGame() {
     socketService.emit('join_game', { code, pseudo });
   };
 
+  const leaveGame = () => {
+    if (game) {
+      socketService.emit('leave_game', { gameId: game.id });
+    }
+  };
+
   const startGame = () => {
     if (game) {
       socketService.emit('start_game', { gameId: game.id });
@@ -65,6 +71,7 @@ export function useGame() {
     createGame,
     cancelGame,
     joinGame,
+    leaveGame,
     startGame,
     submitWord,
     vote,

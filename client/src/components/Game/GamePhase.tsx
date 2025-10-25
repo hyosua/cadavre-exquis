@@ -38,7 +38,7 @@ export function GamePhase() {
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
 
-          <div className="mt-8 grid md:grid-cols-2 gap-6">
+          <div className="mt-8 grid gap-6 max-w-lg">
             <div>
               {currentSentence && currentSentence.words.length > 0 && (
                 <div className="bg-neutral border border-neutral rounded-lg p-4 mb-4">
