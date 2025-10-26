@@ -1,7 +1,7 @@
 import { redis } from '@/config/redis';
 import { Game } from '@/types/game.types';
 
-const GAME_TTL = 86400; // 24 heures
+const GAME_TTL = 8 * 60 * 60; // 8 heures
 
 export class RedisService {
   // Game CRUD

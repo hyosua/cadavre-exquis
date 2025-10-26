@@ -275,9 +275,9 @@ export class GameService {
     console.log(`👋 ${player.pseudo} disconnected from game ${gameId}`);
 
     // Si c'était l'hôte et que le jeu est en attente, supprimer la partie
-    if (player.isHost && game.status === 'waiting') {
-      await this.deleteGame(io, gameId);
-    }
+    // if (player.isHost && game.status === 'waiting') {
+    //   await this.deleteGame(io, gameId);
+    // }
   }
 
   async removePlayer(io: Server, gameId: string, playerId: string): Promise<Game | null>{
