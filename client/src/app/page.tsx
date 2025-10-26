@@ -53,7 +53,7 @@ function TypeText({
   }, [current, deleting, pause, subIndex, typingSpeed]);
 
   return (
-    <div className="mx-auto inline-flex items-center text-lg sm:text-xl text-base-content">
+    <div className="mx-auto inline-flex items-center text-2xl sm:text-4xl text-base-content">
       <span className="whitespace-pre">{current.slice(0, subIndex)}</span>
       <span className={`ml-0.5 h-6 w-[2px] bg-gray-800 ${blink ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
     </div>
