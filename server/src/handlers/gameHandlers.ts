@@ -106,9 +106,9 @@ export function registerGameHandlers(io: Server, socket: Socket) {
             
       await gameService.removePlayer(io, gameId, player.id)
 
-      // Notifier les autres joueurs
-      socket.to(game.id).emit('player_left', { player: player });
-      socket.to(game.id).emit('game_state', game);
+      socket.leave(game.id)
+      socket.emit('game_left', {message: 'Vous avez quitté la partie.'})
+
     } catch (error: any) {
       console.error('Error leaving game:', error);
       socket.emit('error', { message: error.message || 'Erreur lors du départ de la partie' });

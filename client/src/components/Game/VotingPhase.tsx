@@ -28,9 +28,9 @@ export function VotingPhase() {
               return (
                 <div
                   key={sentence.id}
-                  className="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors"
+                  className="bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors"
                 >
-                  <div className="flex flex-col items-center sm:items-start justify-center sm:justify-between sm:flex-row">
+                  <div className="flex flex-col items-center sm:items-center justify-center sm:justify-between sm:flex-row">
                     <div className="flex-1">
                       <p className="text-sm text-gray-500 mb-1">Phrase {index + 1}</p>
                       <p className="text-lg font-medium text-gray-900 mb-2">{fullSentence}</p>

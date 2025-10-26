@@ -68,6 +68,11 @@ export function useSocket() {
       router.push('/');
     });
 
+    socket.on('game_left', () => {
+      console.log('server-response: Player left game')
+      router.push('/');
+    })
+
     socket.on('game_canceled', () => {
       console.log('Game canceled by server');
       resetGame()

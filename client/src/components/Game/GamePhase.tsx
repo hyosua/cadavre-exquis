@@ -28,7 +28,7 @@ export function GamePhase() {
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in">
+        <div className="bg-base-100 flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold mb-2">
               Phase {game.currentPhase + 1} / {game.config.phases.length}
@@ -38,7 +38,7 @@ export function GamePhase() {
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
 
-          <div className="mt-8 grid gap-6 max-w-lg">
+          <div className="mt-8 grid gap-6 w-full">
             <div>
               {currentSentence && currentSentence.words.length > 0 && (
                 <div className="bg-neutral border border-neutral rounded-lg p-4 mb-4">
