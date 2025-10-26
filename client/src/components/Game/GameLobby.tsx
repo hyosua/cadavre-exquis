@@ -12,7 +12,7 @@ export function GameLobby() {
   if (!game || !currentPlayer) return null;
 
   const isHost = currentPlayer.isHost;
-  const canStart = game.players.length >= 1;
+  const canStart = game.players.length >= 2;
 
   return (
     <div className="bg-base-300 border border-gray-500 min-h-screen  p-4">
@@ -56,6 +56,7 @@ export function GameLobby() {
                 <Button
                   onClick={startGame}
                   className="w-full"
+                  disabled={!canStart}
                   size="lg"
                 >
                   Démarrer
