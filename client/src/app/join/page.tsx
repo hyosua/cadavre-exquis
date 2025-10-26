@@ -47,12 +47,10 @@ export default function JoinGame() {
   
   if (isJoining) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex flex-col gap-4 items-center justify-center">
           <Loader />
-          <p className="font-semibold">Connexion à la partie...</p>
-          <p className="text-sm  mt-2">Code: {code}</p>
-        </div>
+          <p className="font-bold">Connexion à la partie...</p>
+          <p className="text-sm ">Code: {code}</p>
       </div>
     );
   }

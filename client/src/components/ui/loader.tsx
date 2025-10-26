@@ -1,22 +1,23 @@
 import React from "react";
 
 interface LoaderProps {
-  size?: number; // taille en pixels
-  borderWidth?: number; 
-  colorClass?: string; 
-  className?: string; 
+  size?: number;        // px
+  borderWidth?: number; // px
+  colorClass?: string;  
+  className?: string;
 }
 
 const Loader: React.FC<LoaderProps> = ({
-  size = 48,
+  size = 56,
   borderWidth = 2,
-  colorClass = "border-primary",
+  colorClass = "border-primary", 
   className = "",
 }) => {
   return (
     <div
-      className={`animate-spin rounded-full border-b-${borderWidth} ${colorClass} mx-auto mb-4 ${className}`}
-      style={{ width: size, height: size }}
+      className={`animate-spin rounded-full border ${colorClass} border-t-transparent ${className}`}
+      style={{ width: size, height: size, borderWidth }}
+      aria-label="loading"
     />
   );
 };

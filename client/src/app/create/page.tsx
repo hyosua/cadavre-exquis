@@ -62,11 +62,9 @@ export default function CreateGame() {
   };
   if (isCreating) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex-col gap-4 flex items-center justify-center">
           <Loader />
-          <p className="">Création de la partie...</p>
-        </div>
+          <p className="font-bold">Création de la partie...</p>
       </div>
     );
   }

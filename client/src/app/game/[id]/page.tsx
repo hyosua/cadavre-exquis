@@ -25,16 +25,8 @@ export default function Game() {
 
   if (!game) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen flex flex-col gap-4 items-center justify-center">
           <Loader />
-          <p className="font-semibold">Connexion à la partie...</p>
-          {params?.id && (
-            <p className="text-sm mt-2">
-              ID: {params.id}
-            </p>
-          )}
-        </div>
       </div>
     );
   }

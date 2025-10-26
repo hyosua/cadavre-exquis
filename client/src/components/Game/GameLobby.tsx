@@ -46,7 +46,7 @@ export function GameLobby() {
                   Il faut au moins 2 joueurs pour commencer
                 </p>
               )}
-              <div className='flex gap-2'>
+              <div className='flex items-center gap-2'>
                 <Confirm
                   message="Vous êtes sur le point d'annuler la partie"
                   buttonName='Annuler'
