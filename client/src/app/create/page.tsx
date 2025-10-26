@@ -99,7 +99,7 @@ export default function CreateGame() {
               <div className="flex items-center space-x-4">
                 <input
                   type="range"
-                  min="30"
+                  min="10"
                   max="180"
                   step="10"
                   value={timePerPhase}

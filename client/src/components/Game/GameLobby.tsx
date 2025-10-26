@@ -22,7 +22,7 @@ export function GameLobby() {
             <h1 className="text-4xl text-primary font-bold mb-2">Salle d&apos;attente</h1>
             <div className="inline-block bg-primary-100 px-6 py-3 rounded-lg">
               <p className="text-sm  mb-1">Code de la partie</p>
-              <p className="text-3xl font-mono font-bold text-primary-700">{game.code}</p>
+              <p className="text-3xl font-mono font-bold text-secondary">{game.code}</p>
             </div>
           </div>
 

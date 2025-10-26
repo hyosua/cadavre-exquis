@@ -1,7 +1,7 @@
 #!/bin/bash
 # run
-# run server & client on different terminals
+# run server & client 
 
-(cd server && npm run dev) &
+(cd server && npm run dev) & 
 (cd client && npm run dev) &
 wait
