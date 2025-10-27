@@ -54,7 +54,8 @@ export function useGame() {
 
   const hasPlayedCurrentPhase = () => {
     if (!game || !currentPlayer) return false;
-    return currentPlayer.hasPlayedCurrentPhase;
+    const playerInGame = game.players.find(p => p.id === currentPlayer.id);
+    return playerInGame?.hasPlayedCurrentPhase;
   };
 
   const hasVoted = () => {
