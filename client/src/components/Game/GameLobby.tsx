@@ -5,6 +5,7 @@ import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
 import { Confirm } from '../ui/confirm';
 import { PlayerList } from '@/components/Game/Playerlist';
+import CodeCopyBtn from '../ui/copy-btn';
 
 
 export function GameLobby() {
@@ -22,7 +23,10 @@ export function GameLobby() {
             <h1 className="text-4xl text-primary font-bold mb-2">Salle d&apos;attente</h1>
             <div className="inline-block bg-primary-100 px-6 py-3 rounded-lg">
               <p className="text-sm  mb-1">Code de la partie</p>
-              <p className="text-3xl font-mono font-bold text-secondary">{game.code}</p>
+              <div className='flex items-baseline gap-4'>
+                <p className="text-3xl font-mono font-bold  text-secondary">{game.code}</p>
+                <CodeCopyBtn codeToCopy={game.code} />
+              </div>
             </div>
           </div>
 
