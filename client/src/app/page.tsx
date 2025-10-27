@@ -2,10 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
 import { phrases } from '@/lib/phrases';
+import { ChevronDown } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 // Small typewriter text animation component
@@ -97,24 +101,22 @@ export default function Home() {
                 </Button>
           </div>
 
-           <div className="bg-neutral rounded-2xl shadow-xl p-6">
-            <div className="space-y-1 mb-4">
-              <h2 className="text-xl font-semibold ">Comment jouer&nbsp;?</h2>
-              <p className="text-sm ">Suivez ces étapes pour démarrer une partie</p>
-            </div>
+           <Collapsible className="bg-neutral rounded-2xl shadow-xl p-6">
+            <CollapsibleTrigger className="space-y-1 flex justify-between items-center w-full">
+              <h2 className="text-xl font-semibold">Comment jouer&nbsp;?</h2>
+              <ChevronDown />
+            </CollapsibleTrigger>
 
-            <div className="border-t  my-4" />
-
-            <div className="pt-2">
-              <ol className="list-decimal pl-8 space-y-2 text-sm">
+            <CollapsibleContent className="pt-4 mt-2">
+              <ol className="list-decimal pl-8 space-y-2 text-sm flex flex-col items-start sm:text-lg">
                 <li>Un joueur crée une partie et partage le code</li>
                 <li>Chaque joueur écrit un mot à chaque phase</li>
                 <li>Les phrases tournent entre les joueurs</li>
                 <li>Votez pour votre phrase préférée</li>
                 <li>Découvrez le classement final</li>
               </ol>
-            </div>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
       </div>
     </div>
