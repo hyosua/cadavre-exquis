@@ -32,7 +32,7 @@
   }
 
   [data-slot='collapsible-content'][data-state='open'] {
-    animation: smoothDown 1500ms ease-out forwards;
+    animation: smoothDown 150ms ease-out forwards;
   }
 
   [data-slot='collapsible-content'][data-state='closed'] {
