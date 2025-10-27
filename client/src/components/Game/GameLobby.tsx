@@ -5,6 +5,7 @@ import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
 import { Confirm } from '../ui/confirm';
 import { PlayerList } from '@/components/Game/Playerlist';
+import { motion } from 'framer-motion';
 import CodeCopyBtn from '../ui/copy-btn';
 
 
@@ -18,7 +19,11 @@ export function GameLobby() {
   return (
     <div className="bg-base-300 border border-gray-500 min-h-screen  p-4">
       <div className="max-w-2xl mx-auto mt-8">
-        <div className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in">
+        <motion.div 
+          initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
+          animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
+          transition={{duration: 0.2, ease:'easeOut'}}
+          className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
             <h1 className="text-4xl text-primary font-bold mb-2">Salle d&apos;attente</h1>
             <div className="inline-block bg-primary-100 px-6 py-3 rounded-lg">
@@ -74,7 +79,7 @@ export function GameLobby() {
               En attente que l&apos;hôte démarre la partie...
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

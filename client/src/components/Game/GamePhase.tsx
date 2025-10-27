@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Timer } from '@/components/ui/Timer';
 import { PlayerList } from '@/components/Game/Playerlist';
+import { motion } from 'framer-motion';
 
 export function GamePhase() {
   const { game, currentPlayer, timeLeft, submitWord, hasPlayedCurrentPhase, getCurrentSentence } = useGame();
@@ -28,7 +29,11 @@ export function GamePhase() {
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-base-100 flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 animate-fade-in">
+        <motion.div 
+          initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
+          animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
+          transition={{duration: 0.2, ease:'easeOut'}}
+          className="bg-base-100 flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold mb-2">
               Phase {game.currentPhase + 1} / {game.config.phases.length}
@@ -81,7 +86,7 @@ export function GamePhase() {
               />
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

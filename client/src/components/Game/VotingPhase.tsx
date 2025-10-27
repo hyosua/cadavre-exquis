@@ -3,6 +3,7 @@
 import React from 'react';
 import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 export function VotingPhase() {
   const { game, currentPlayer, vote, hasVoted } = useGame();
@@ -26,7 +27,10 @@ export function VotingPhase() {
               const voteCount = game.votes.filter((v: { sentenceId: string; }) => v.sentenceId === sentence.id).length;
 
               return (
-                <div
+                <motion.div
+                  initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
+                  animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
+                  transition={{duration: 0.2, ease:'easeOut'}}
                   key={sentence.id}
                   className="bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors"
                 >
@@ -48,7 +52,7 @@ export function VotingPhase() {
                       {voted ? 'Voté' : 'Voter'}
                     </Button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

@@ -6,6 +6,7 @@ import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
 import { useSocket } from '@/hooks/useSocket';
+import { motion } from 'framer-motion';
 import Loader from '@/components/ui/loader';
 
 
@@ -58,7 +59,12 @@ export default function JoinGame() {
   return (
     <div className="min-h-screen  flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in">
+        <motion.div 
+          initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
+          animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
+          transition={{duration: 0.2, ease:'easeOut'}}
+          className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in"
+        >
           <h1 className="text-3xl font-bold mb-6 text-center">
             Rejoindre une partie
           </h1>
@@ -107,7 +113,7 @@ export default function JoinGame() {
               </Button>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -72,9 +72,9 @@ export default function Home() {
     <div ref={containerRef} className="min-h-screen bg-base-300 flex  justify-center py-16 p-4">
       <div className="max-w-3xl w-full flex flex-col gap-8 py-16 sm:py-24">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
           className="text-center mb-16"
         >
           <h1 className="text-5xl font-title sm:text-8xl font-bold text-secondary ">Cadavre Exquis</h1>
@@ -83,7 +83,12 @@ export default function Home() {
           </div>
         </motion.div>
 
-          <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <motion.div 
+            className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            initial={{ opacity: 0, scale: 0.8, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)'}}
+            transition={{ duration: 0.3 }}
+            >
                 <Button
                   onClick={() => router.push('/create')}
                   variant="ghost"
@@ -99,24 +104,30 @@ export default function Home() {
                 >
                   Rejoindre une partie
                 </Button>
-          </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Collapsible className="bg-neutral rounded-2xl shadow-xl p-6">
+              <CollapsibleTrigger className="space-y-1 flex justify-between items-center w-full">
+                <h2 className="text-xl font-semibold">Comment jouer&nbsp;?</h2>
+                <ChevronDown />
+              </CollapsibleTrigger>
 
-           <Collapsible className="bg-neutral rounded-2xl shadow-xl p-6">
-            <CollapsibleTrigger className="space-y-1 flex justify-between items-center w-full">
-              <h2 className="text-xl font-semibold">Comment jouer&nbsp;?</h2>
-              <ChevronDown />
-            </CollapsibleTrigger>
+              <CollapsibleContent className="pt-4 mt-2">
+                <ol className="list-decimal pl-8 space-y-2 text-sm flex flex-col items-start sm:text-lg">
+                  <li>Un joueur crée une partie et partage le code</li>
+                  <li>Chaque joueur écrit un mot à chaque phase</li>
+                  <li>Les phrases tournent entre les joueurs</li>
+                  <li>Votez pour votre phrase préférée</li>
+                  <li>Découvrez le classement final</li>
+                </ol>
+              </CollapsibleContent>
+            </Collapsible>
+          </motion.div>
 
-            <CollapsibleContent className="pt-4 mt-2">
-              <ol className="list-decimal pl-8 space-y-2 text-sm flex flex-col items-start sm:text-lg">
-                <li>Un joueur crée une partie et partage le code</li>
-                <li>Chaque joueur écrit un mot à chaque phase</li>
-                <li>Les phrases tournent entre les joueurs</li>
-                <li>Votez pour votre phrase préférée</li>
-                <li>Découvrez le classement final</li>
-              </ol>
-            </CollapsibleContent>
-          </Collapsible>
 
       </div>
     </div>

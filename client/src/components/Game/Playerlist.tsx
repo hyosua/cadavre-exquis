@@ -1,5 +1,6 @@
 import React from 'react';
 import { Player } from '@/types/game.type';
+import { motion } from 'framer-motion';
 
 interface PlayerListProps {
   players: Player[];
@@ -9,7 +10,12 @@ interface PlayerListProps {
 
 export function PlayerList({ players, currentPlayerId, showPlayedStatus = false }: PlayerListProps) {
   return (
-    <div className="bg-neutral border border-gray-600 rounded-lg shadow-md p-4">
+    <motion.div 
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-neutral border border-gray-600 rounded-lg shadow-md p-4"
+    >
       <h3 className="text-lg font-semibold mb-3">Joueurs ({players.length})</h3>
       <div className="space-y-2">
         {players.map((player) => (
@@ -40,6 +46,6 @@ export function PlayerList({ players, currentPlayerId, showPlayedStatus = false 
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

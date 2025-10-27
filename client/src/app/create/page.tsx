@@ -7,6 +7,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useSocket } from '@/hooks/useSocket';
+import { motion } from 'framer-motion';
 import Loader from '@/components/ui/loader';
 
 
@@ -72,7 +73,12 @@ export default function CreateGame() {
   return (
     <div className="min-h-screen  bg-base-300 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in">
+        <motion.div 
+          initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
+          animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
+          transition={{duration: 0.2, ease:'easeOut'}}
+          className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in"
+        >
           <h1 className="text-3xl font-bold mb-6 text-center">
             Créer une partie
           </h1>
@@ -133,7 +139,7 @@ export default function CreateGame() {
               </Button>
             </div>
           </form>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
