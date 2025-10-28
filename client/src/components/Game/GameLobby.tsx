@@ -77,6 +77,8 @@ export function GameLobby() {
 
           {!isHost && (
             <p className="mt-6 text-center text-sm text-info font-semibold">
+              En attente que l&apos;hôte démarre la partie 
+              {"  "}
               <span className="loading loading-dots loading-xs"></span>
             </p>
           )}

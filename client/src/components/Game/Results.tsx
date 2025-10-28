@@ -33,7 +33,7 @@ const ranking: RankingEntry[] = game.sentences
       <div className="max-w-4xl mx-auto mt-8">
         <div className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-primary mb-2">🏆 Résultats</h1>
+            <h1 className="text-4xl font-bold text-primary mb-2">Résultats</h1>
             <p className="font-semibold">Classement des meilleures phrases</p>
           </div>
 
