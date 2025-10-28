@@ -23,7 +23,8 @@ export function GameLobby() {
           initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
           animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{duration: 0.2, ease:'easeOut'}}
-          className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in">
+          className="bg-base-100 rounded-2xl p-8 animate-pulse-shadow"
+        >
           <div className="text-center mb-8">
             <h1 className="text-4xl text-primary font-bold mb-2">Salle d&apos;attente</h1>
             <div className="inline-block bg-primary-100 px-6 py-3 rounded-lg">
@@ -76,7 +77,7 @@ export function GameLobby() {
 
           {!isHost && (
             <p className="mt-6 text-center text-sm text-info font-semibold">
-              En attente que l&apos;hôte démarre la partie...
+              <span className="loading loading-dots loading-xs"></span>
             </p>
           )}
         </motion.div>

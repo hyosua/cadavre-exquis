@@ -17,8 +17,36 @@
   --font-title: "Flavors", cursive;
   --font-averia: "Averia Gruesa Libre", system-ui;
 }
+  .glow-shadow {
+    /*
+      1. Première ombre (bordure/anneau) : Très fine et légèrement blanche (0.08 d'opacité)
+        pour délimiter clairement l'élément du fond sombre.
+    */
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.08), 
+      
+      /* 2. Deuxième ombre (profondeur) : Plus grande et plus opaque (0.3) 
+            pour simuler l'élévation au-dessus du fond.
+      */
+      0 2px 20px rgba(94, 169, 209, 0.3),
+      
+      /* 3. Troisième ombre (proximité) : Plus petite et plus douce pour l'effet de proximité.
+      */
+      0 2px 4px rgba(0, 255, 255, 0.1);
+  }
 
+  .red-glow-shadow {
+
+    box-shadow: 
+      0 0 0 1px rgba(220, 195, 213, 0.08), 
+
+      0 2px 20px rgba(215, 106, 189, 0.3),
+
+      0 2px 4px rgba(216, 150, 218, 0.1);
+  }
 @layer utilities {
+
+  
   [data-slot='collapsible-content'] {
     overflow: hidden;
     transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease-out;
@@ -63,5 +91,21 @@
       opacity: 0;
       transform: translateY(-4px);
     }
+  }
+
+  @keyframes pulse-shadow {
+    0%, 100% {
+      /* Couleur de base et ombre normale */
+      box-shadow: 0 3px 12px -3px rgba(69, 211, 219, 0.2), 0 4px 6px -4px rgba(157, 191, 193, 0.2);
+    }
+    50% {
+      /* Ombre accentuée avec une couleur secondaire/primaire subtile */
+      box-shadow: 0 0 15px rgba(60, 144, 177, 0.4), 0 0 12px rgba(78, 114, 255, 0.2); 
+    }
+
+  }
+
+  .animate-pulse-shadow {
+    animation: pulse-shadow 5s ease-in-out infinite; /* 4 secondes, fluide, en boucle */
   }
 }   

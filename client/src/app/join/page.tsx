@@ -63,7 +63,7 @@ export default function JoinGame() {
           initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
           animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{duration: 0.2, ease:'easeOut'}}
-          className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in"
+          className="bg-base-300 rounded-2xl shadow-xl p-8 glow-shadow"
         >
           <h1 className="text-3xl font-bold mb-6 text-center">
             Rejoindre une partie

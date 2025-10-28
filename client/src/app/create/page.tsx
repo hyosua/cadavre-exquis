@@ -71,13 +71,13 @@ export default function CreateGame() {
   }
 
   return (
-    <div className="min-h-screen  bg-base-300 flex items-center justify-center p-4">
+    <div className="min-h-screen   flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <motion.div 
           initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
           animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{duration: 0.2, ease:'easeOut'}}
-          className="bg-base-100 rounded-2xl shadow-xl p-8 animate-fade-in"
+          className="bg-base-300 rounded-2xl p-8 red-glow-shadow"
         >
           <h1 className="text-3xl font-bold mb-6 text-center">
             Créer une partie
@@ -86,7 +86,7 @@ export default function CreateGame() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               value={pseudo}
-              className='text-primary'
+              className='text-secondary'
               onChange={(e) => {
                 setPseudo(e.target.value);
                 setError('');
