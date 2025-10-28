@@ -59,7 +59,6 @@ function TypeText({
   return (
     <div className="mx-auto inline-flex items-center text-2xl sm:text-4xl text-base-content">
       <span className="whitespace-pre">{current.slice(0, subIndex)}</span>
-      <span className={`ml-0.5 h-6 w-[2px] bg-gray-800 ${blink ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
     </div>
   );
 }
@@ -75,10 +74,10 @@ export default function Home() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-14"
         >
           <h1 className="text-5xl font-title sm:text-8xl font-bold text-secondary ">Cadavre Exquis</h1>
-          <div className="mt-4 font-averia ">
+          <div className="mt-4 font-averia min-h-[2rem] sm:min-h-[3rem]">
             <TypeText />
           </div>
         </motion.div>
@@ -116,7 +115,7 @@ export default function Home() {
                 <ChevronDown />
               </CollapsibleTrigger>
 
-              <CollapsibleContent className="pt-4 mt-2">
+              <CollapsibleContent className=" mt-2">
                 <ol className="list-none space-y-4 pt-4">
                   {/* ÉTAPE 1: Création */}
                   <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
@@ -172,7 +171,7 @@ export default function Home() {
                     <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">6.</div>
                     <div>
                       <p className="text-base sm:text-lg text-base-content">
-                        <span className='font-bold'>Rejouez ?</span>.
+                        <span className='font-bold'>Rejouez ?</span>
                       </p>
                     </div>
                   </li>
