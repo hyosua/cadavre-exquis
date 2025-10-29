@@ -23,6 +23,7 @@ interface GameState {
   setIsConnected: (connected: boolean) => void;
   setOnGameCreated: (callback: ((gameId: string) => void) | null) => void;
   resetGame: () => void;
+  leaveGame: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -60,6 +61,7 @@ export const useGameStore = create<GameState>()(
       setError: (error) => set({ error }),
       setIsConnected: (connected) => set({ isConnected: connected }),
       setOnGameCreated: (callback) => set({ onGameCreated: callback }),
+      leaveGame: () => set({game: null, persistedGameRef: null, timeLeft: 0, error: null, onGameCreated: null}),
       
       resetGame: () =>
         set({

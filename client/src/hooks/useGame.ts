@@ -2,7 +2,7 @@
 
 import { useGameStore } from '@/store/gameStore';
 import { socketService } from '@/services/socketService';
-import { GameConfig } from '@/types/game.type';
+import { GameConfig, Player } from '@/types/game.type';
 
 export function useGame() {
   const { game, currentPlayer, timeLeft, error, isConnected } = useGameStore();
@@ -35,9 +35,9 @@ export function useGame() {
     }
   };
 
-  const removePlayer = (playerId: string) => {
+  const kickPlayer = (playerToRemove: Player) => {
     if (game) {
-      socketService.emit('remove_player', { gameId: game.id, playerId });
+      socketService.emit('kick_player', { gameId: game.id, playerToRemove });
     }
   };
 
@@ -77,7 +77,7 @@ export function useGame() {
     isConnected,
     createGame,
     cancelGame,
-    removePlayer,
+    kickPlayer,
     joinGame,
     leaveGame,
     startGame,

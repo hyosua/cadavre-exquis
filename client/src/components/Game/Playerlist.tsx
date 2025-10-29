@@ -1,7 +1,6 @@
 import React from 'react';
 import { Player } from '@/types/game.type';
 import { motion } from 'framer-motion';
-import { Button } from '../ui/button';
 import { useGame } from '@/hooks/useGame';
 import { X } from 'lucide-react';
 import { Confirm } from '../ui/confirm';
@@ -14,7 +13,7 @@ interface PlayerListProps {
 
 
 export function PlayerList({ players, currentPlayerId, showPlayedStatus = false }: PlayerListProps) {
-  const { removePlayer, game, currentPlayer } = useGame();
+  const { kickPlayer, currentPlayer } = useGame();
 
   
   return (
@@ -61,7 +60,7 @@ export function PlayerList({ players, currentPlayerId, showPlayedStatus = false 
                   </>
                 }
                 message="Vous êtes sûr le point de supprimer ce joueur de la partie."
-                onConfirm={() => removePlayer(player.id)}
+                onConfirm={() => kickPlayer(player)}
               />
             )}
           </div>

@@ -15,6 +15,7 @@ export function useSocket() {
     setTimeLeft,
     setError,
     resetGame,
+    leaveGame,
     setIsConnected,
     setCurrentPlayer,
     onGameCreated,
@@ -76,6 +77,13 @@ export function useSocket() {
 
     socket.on('game_left', () => {
       console.log('server-response: Player left game')
+      resetGame()
+      router.push('/');
+    })
+
+    socket.on('kicked_out', () => {
+      console.log('Player kicked out by server')
+      resetGame()
       router.push('/');
     })
 
@@ -106,11 +114,11 @@ export function useSocket() {
 
     return () => {
       [
-        'connect', 'game_deleted','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','game_created','game_canceled','error',
+        'connect', 'game_deleted','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','kicked_out','game_created','game_canceled','error',
         'current_player','game_state','phase_started','timer_update'
       ].forEach((e) => socket.off(e));
     };
-  }, [hasHydrated, showToast, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, setIsConnected, setCurrentPlayer, router]);
+  }, [hasHydrated, showToast, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer, router]);
 
   return socketService;
 }
