@@ -33,12 +33,14 @@ export function ToastProvider() {
 
   return (
     <Toaster
+        position='top-center'
         duration={4000}
         richColors={false}
+        // visibleToasts={1} //force a single toast
         toastOptions={{
         unstyled: true, // Supprime les styles par défaut de Sonner
         classNames: {
-          toast: 'alert flex items-center gap-3 shadow-lg w-full min-w-[300px]',
+          toast: 'alert flex justify-center items-center gap-3 shadow-lg w-full min-w-[300px]',
           title: 'font-semibold text-sm',
           description: 'text-xs opacity-90',
           actionButton: 'btn btn-sm',
