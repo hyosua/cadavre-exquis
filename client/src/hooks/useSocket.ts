@@ -46,6 +46,7 @@ export function useSocket() {
       setCurrentPlayer(data.player);
       setGame(data.game);
       setError(null);
+      router.push(`/game/${data.game.id}`);
     });
 
     socket.on('rejoin_failed', (data: { message: string }) => {
@@ -54,6 +55,7 @@ export function useSocket() {
       // Clear invalid stored data
       useGameStore.getState().setPersistedGameRef(null);
       setCurrentPlayer(null);
+      router.push('/');
     });
 
     socket.on('game_created', (data: { gameId: string; code: string }) => {
