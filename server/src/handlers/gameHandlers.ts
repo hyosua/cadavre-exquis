@@ -101,7 +101,6 @@ export function registerGameHandlers(io: Server, socket: Socket) {
 
       if(!player){
         throw new Error('Joueur introuvable');
-        return
       }
             
       await gameService.removePlayer(io, gameId, player.id)
@@ -112,6 +111,44 @@ export function registerGameHandlers(io: Server, socket: Socket) {
     } catch (error: any) {
       console.error('Error leaving game:', error);
       socket.emit('error', { message: error.message || 'Erreur lors du départ de la partie' });
+    }
+  });
+
+  // Retirer un joueur de la partie
+  socket.on('kick_player', async (data) => {
+    try {
+      const { gameId } = data;
+      const game = await redisService.getGame(gameId);
+      if (!game) {
+        throw new Error('Partie introuvable');
+      }
+
+      // Vérif sur l'auteur de la requête
+      const requester = game.players.find(p => p.socketId === socket.id);
+      if(!requester || requester.id !== game.hostId){
+        throw new Error('Seul l\'hôte peut retirer un joueur de la partie.');
+      }
+
+      // Vérif sur le joueur à retirer
+      const playerToRemove = game.players.find(p => p.id === data.playerToRemove.id)
+      console.log("Joueur à retirer ID: ",data.playerToRemove.id)
+      if(!playerToRemove){
+        throw new Error('Joueur à supprimer introuvable')
+      }
+
+      io.to(playerToRemove.socketId).emit("kicked_out", {
+        message: 'Vous avez été retiré de la partie par l\'hote.',
+        gameId: gameId
+      })
+
+      await gameService.removePlayer(io, gameId, playerToRemove.id)
+
+      // Confirmer à l'hôte
+      socket.emit('player_kicked_success', { playerToRemove });
+
+    } catch (error: any) {
+      console.error('Error kicking out player:', error);
+      socket.emit('error', { message: error.message || 'Erreur lors de la suppression d\'un joueur de la partie' });
     }
   });
 
