@@ -81,7 +81,6 @@ export function useSocket() {
       console.log('Game canceled by server');
       resetGame()
       router.push('/');
-      showToast('warning', 'Partie supprimée');
     });
 
     socket.on('error', (data: { message: string }) => {
@@ -105,7 +104,7 @@ export function useSocket() {
 
     return () => {
       [
-        'connect', 'rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','game_created','game_canceled','error',
+        'connect', 'game_deleted','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','game_created','game_canceled','error',
         'current_player','game_state','phase_started','timer_update'
       ].forEach((e) => socket.off(e));
     };
