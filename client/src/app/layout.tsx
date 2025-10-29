@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { SocketManager } from '@/components/SocketManager';
+import { ToastProvider } from '@/components/providers/ToastProvider';
+
 
 export const metadata: Metadata = {
   title: 'Cadavre Exquis',
@@ -16,7 +18,10 @@ export default function RootLayout({
     <html lang="fr" data-theme="sunset">
       <body>
         <SocketManager />
+        
         {children}
+      
+        <ToastProvider />
       </body>
     </html>
   );

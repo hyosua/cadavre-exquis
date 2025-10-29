@@ -4,10 +4,12 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { socketService } from '@/services/socketService';
 import { useGameStore } from '@/store/gameStore';
+import { useToastStore } from '@/store/toastStore';
 import { Game, Player } from '@/types/game.type';
 
 export function useSocket() {
   const router = useRouter();
+  const { showToast } = useToastStore();
   const {
     setGame,
     setTimeLeft,
@@ -47,11 +49,12 @@ export function useSocket() {
       setGame(data.game);
       setError(null);
       router.push(`/game/${data.game.id}`);
+      showToast('success', `Connecté en tant que ${data.player.pseudo}`);
     });
 
     socket.on('rejoin_failed', (data: { message: string }) => {
       console.error('Rejoin failed:', data.message);
-      setError(data.message);
+      showToast('error', `${data.message}`);
       // Clear invalid stored data
       useGameStore.getState().setPersistedGameRef(null);
       setCurrentPlayer(null);
@@ -59,8 +62,8 @@ export function useSocket() {
     });
 
     socket.on('game_created', (data: { gameId: string; code: string }) => {
+      showToast('success', 'Partie créée');
       onGameCreated?.(data.gameId);
-      // on persiste la ref dès la création
       useGameStore.getState().setPersistedGameRef({ id: data.gameId, code: data.code });
     });
 
@@ -68,6 +71,7 @@ export function useSocket() {
       console.log('Game deleted by server');
       resetGame()
       router.push('/');
+      showToast('info', 'Partie supprimée');
     });
 
     socket.on('game_left', () => {
@@ -79,9 +83,13 @@ export function useSocket() {
       console.log('Game canceled by server');
       resetGame()
       router.push('/');
+      showToast('warning', 'Partie supprimée');
     });
 
-    socket.on('error', (data: { message: string }) => setError(data.message));
+    socket.on('error', (data: { message: string }) => {
+      setError(data.message)
+      showToast('error', data.message);
+    });
     socket.on('current_player', (player) => setCurrentPlayer(player));
     socket.on('game_state', (game: Game) => {
       console.log("game_state: ",game)
@@ -96,7 +104,7 @@ export function useSocket() {
         'current_player','game_state','phase_started','timer_update'
       ].forEach((e) => socket.off(e));
     };
-  }, [hasHydrated, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, setIsConnected, setCurrentPlayer, router]);
+  }, [hasHydrated, showToast, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, setIsConnected, setCurrentPlayer, router]);
 
   return socketService;
 }
