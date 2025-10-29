@@ -1,6 +1,10 @@
 import React from 'react';
 import { Player } from '@/types/game.type';
 import { motion } from 'framer-motion';
+import { Button } from '../ui/button';
+import { useGame } from '@/hooks/useGame';
+import { X } from 'lucide-react';
+import { Confirm } from '../ui/confirm';
 
 interface PlayerListProps {
   players: Player[];
@@ -8,7 +12,11 @@ interface PlayerListProps {
   showPlayedStatus?: boolean;
 }
 
+
 export function PlayerList({ players, currentPlayerId, showPlayedStatus = false }: PlayerListProps) {
+  const { removePlayer, game, currentPlayer } = useGame();
+
+  
   return (
     <motion.div 
       initial={{ opacity: 0, y: 16 }}
@@ -42,6 +50,19 @@ export function PlayerList({ players, currentPlayerId, showPlayedStatus = false 
                   <span className="text-gray-400 text-sm">En attente...</span>
                 )}
               </div>
+            )}
+            {currentPlayer?.isHost && currentPlayerId !== player.id && (
+              <Confirm
+                variant="destructive"
+                size="icon"
+                buttonName={
+                  <>
+                    <X />
+                  </>
+                }
+                message="Vous êtes sûr le point de supprimer ce joueur de la partie."
+                onConfirm={() => removePlayer(player.id)}
+              />
             )}
           </div>
         ))}

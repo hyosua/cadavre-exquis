@@ -9,33 +9,44 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { Button, type ButtonProps } from "@/components/ui/button"
+import { type ReactNode } from "react"
 
 type ConfirmProps = {
-    message?: string
-    onConfirm?: () => void
-    buttonName?: string
-    disableCondition?: boolean
-    className?: string;
-}
+  message?: string
+  onConfirm?: () => void
+  buttonName?: string | ReactNode
+  disableCondition?: boolean
+} & Omit<ButtonProps, 'onClick' | 'disabled' | 'children'>
 
 export function Confirm({ 
-    message = "Cette action est irréversible",
-    buttonName = "Valider",
-    disableCondition = false,
-    className = "",
-    onConfirm
-} : ConfirmProps) {
+  message = "Cette action est irréversible",
+  buttonName = "Valider",
+  disableCondition = false,
+  variant = "outline",
+  size = "default",
+  className,
+  onConfirm,
+  ...buttonProps
+}: ConfirmProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className={className} disabled={disableCondition}>{buttonName}</Button>
+        <Button 
+          variant={variant}
+          size={size}
+          className={className}
+          disabled={disableCondition}
+          {...buttonProps}
+        >
+          {buttonName}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Êtes-vous sûr?</AlertDialogTitle>
           <AlertDialogDescription>
-            { message }
+            {message}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

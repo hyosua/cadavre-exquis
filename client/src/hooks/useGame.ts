@@ -35,6 +35,12 @@ export function useGame() {
     }
   };
 
+  const removePlayer = (playerId: string) => {
+    if (game) {
+      socketService.emit('remove_player', { gameId: game.id, playerId });
+    }
+  };
+
   const submitWord = (word: string) => {
     if (game) {
       socketService.emit('submit_word', { gameId: game.id, word });
@@ -71,6 +77,7 @@ export function useGame() {
     isConnected,
     createGame,
     cancelGame,
+    removePlayer,
     joinGame,
     leaveGame,
     startGame,
