@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ToastProvider } from '@/components/providers/ToastProvider';
+
 
 export const metadata: Metadata = {
   title: 'Cadavre Exquis',
@@ -13,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" data-theme="sunset">
-      <body>{children}</body>
+      <body>
+        {children}
+        <ToastProvider />
+      </body>
     </html>
   );
 }
