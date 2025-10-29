@@ -88,6 +88,13 @@ export function useSocket() {
       setError(data.message)
       showToast('error', data.message);
     });
+
+    socket.on('join_failed', (data: { message: string }) => {
+      setError(data.message)
+      showToast('error', data.message);
+      router.push('/');
+    });
+
     socket.on('current_player', (player) => setCurrentPlayer(player));
     socket.on('game_state', (game: Game) => {
       console.log("game_state: ",game)
@@ -98,7 +105,7 @@ export function useSocket() {
 
     return () => {
       [
-        'connect', 'rejoin_game','disconnect','rejoin_failed','player_reconnected','game_created','game_canceled','error',
+        'connect', 'rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','game_created','game_canceled','error',
         'current_player','game_state','phase_started','timer_update'
       ].forEach((e) => socket.off(e));
     };

@@ -83,7 +83,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       socket.to(game.id).emit('game_state', game);
     } catch (error: any) {
       console.error('Error joining game:', error);
-      socket.emit('error', { message: error.message || 'Erreur lors de la connexion' });
+      socket.emit('join_failed', { message: error.message || 'Erreur lors de la connexion' });
     }
   });
 
