@@ -9,15 +9,9 @@ import { Input } from '@/components/ui/input';
 import { useSocket } from '@/hooks/useSocket';
 import { motion } from 'framer-motion';
 import Loader from '@/components/ui/loader';
+import { DEFAULT_CONFIG } from '@/app/config/config';
 
 
-const DEFAULT_PHASES = [
-  'Nom commun',
-  'Adjectif',
-  'Verbe transitif',
-  'Nom commun',
-  'Circonstances'
-];
 
 export default function CreateGame() {
   useSocket();
@@ -29,6 +23,8 @@ export default function CreateGame() {
   const [timePerPhase, setTimePerPhase] = useState(60);
   const [error, setError] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const phases = DEFAULT_CONFIG.phases
+  const phaseDetails = DEFAULT_CONFIG.phaseDetails
 
   useEffect(() => {
     setOnGameCreated((gameId: string) => {
@@ -55,7 +51,8 @@ export default function CreateGame() {
     }
 
     createGame(pseudo.trim(), {
-      phases: DEFAULT_PHASES,
+      phases,
+      phaseDetails,
       timePerPhase,
     });
     setIsCreating(true);
@@ -119,9 +116,10 @@ export default function CreateGame() {
             <div className="bg-neutral rounded-lg p-4">
               <h3 className="text-sm font-semibold mb-2">Phases du jeu</h3>
               <ol className="text-sm  space-y-1 list-decimal list-inside">
-                {DEFAULT_PHASES.map((phase, index) => (
-                  <li key={index}>{phase}</li>
-                ))}
+                {phases.map((phase: string) => {
+                  const detail = phaseDetails[phase]
+                  return <li key={phase}>{detail.titre}</li>
+                })}
               </ol>
             </div>
 

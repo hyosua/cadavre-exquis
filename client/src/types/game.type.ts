@@ -2,7 +2,14 @@ export type GameStatus = 'waiting' | 'playing' | 'voting' | 'finished';
 
 export interface GameConfig {
   phases: string[];
+  phaseDetails: Record<string, phaseDetail>;
   timePerPhase: number;
+}
+
+export interface phaseDetail {
+  titre: string;
+  helper: string;
+  placeholder: string;
 }
 
 export interface Player {

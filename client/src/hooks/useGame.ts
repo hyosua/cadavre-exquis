@@ -10,7 +10,6 @@ export function useGame() {
   const createGame = (pseudo: string, config: GameConfig) => {
     console.log("1. Création demandée")
     socketService.emit('create_game', { pseudo, config });
-    console.log("socket envoyé")
   };
 
   const cancelGame = () => {

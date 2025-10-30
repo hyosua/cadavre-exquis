@@ -42,7 +42,7 @@ export function GamePhase() {
           animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{duration: 0.2, ease:'easeOut'}}
           className="bg-base-neutral flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 ">
-          <div className="text-center mb-6">
+          <div className="text-center mb-2">
             <h1 className="text-3xl font-bold mb-2">
               Phase {" "}
                 <AnimatePresence 
@@ -68,20 +68,20 @@ export function GamePhase() {
                 >
                   <motion.p
                     key={currentPhaseLabel}
-                    className="text-xl text-primary font-semibold" 
+                    className="text-3xl sm:text-5xl text-primary font-semibold" 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }} 
                     transition={{ duration: 0.2, ease: 'easeInOut' }}
-                  >
-                {currentPhaseLabel}
+                  >Écris un {" "}
+                {currentPhaseLabel.toUpperCase()}
                 </motion.p>
               </AnimatePresence>
           </div>
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
 
-          <div className="mt-8 grid gap-6 w-full">
+          <div className="mt-6 grid gap-6 w-full">
             <div>
                 <AnimatePresence>
                   {currentSentence && currentSentence.words.length > 0 && (
@@ -115,7 +115,7 @@ export function GamePhase() {
                     <Input
                       value={word}
                       onChange={(e) => setWord(e.target.value)}
-                      placeholder={`Entrez ${currentPhaseLabel.toLowerCase()}...`}
+                      placeholder={`Entrez un ${currentPhaseLabel.toLowerCase()}...`}
                       maxLength={50}
                       autoFocus
                     />
