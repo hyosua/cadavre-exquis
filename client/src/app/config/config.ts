@@ -39,4 +39,4 @@ export const DEFAULT_CONFIG: GameConfig = {
     
     },
     timePerPhase: 60
-} as const
+}

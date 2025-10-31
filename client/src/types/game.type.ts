@@ -1,15 +1,17 @@
 export type GameStatus = 'waiting' | 'playing' | 'voting' | 'finished';
-
-export interface GameConfig {
-  phases: string[];
-  phaseDetails: Record<string, phaseDetail>;
-  timePerPhase: number;
-}
+export const PHASES = ["s", "adj", "v", "cod", "cc"] as const;
+export type PhaseKey = (typeof PHASES)[number];
 
 export interface phaseDetail {
   titre: string;
   helper: string;
   placeholder: string;
+}
+
+export interface GameConfig {
+  phases: PhaseKey[];
+  phaseDetails: Record<PhaseKey, phaseDetail>;
+  timePerPhase: number;
 }
 
 export interface Player {
