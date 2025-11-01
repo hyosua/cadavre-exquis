@@ -4,9 +4,10 @@ import React from 'react';
 import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { Confirm } from '../ui/confirm';
 
 export function VotingPhase() {
-  const { game, currentPlayer, vote, hasVoted } = useGame();
+  const { game, currentPlayer, vote, hasVoted, leaveGame } = useGame();
 
   if (!game || !currentPlayer) return null;
 
@@ -62,6 +63,14 @@ export function VotingPhase() {
               Vote enregistré ! En attente des autres joueurs...
             </p>
           )}
+        </div>
+        <div>
+          <Confirm
+            message="Vous êtes sur le point de quitter la partie."
+            buttonName='Quitter'
+            className='hover:bg-error '
+            onConfirm={leaveGame}
+          />
         </div>
       </div>
     </div>

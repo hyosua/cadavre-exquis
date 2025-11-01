@@ -85,12 +85,16 @@ export function useSocket() {
       console.log('Player kicked out by server')
       resetGame()
       router.push('/');
+      showToast('warning', 'Vous avez été exclu du jeu');
+
     })
 
     socket.on('game_canceled', () => {
       console.log('Game canceled by server');
       resetGame()
       router.push('/');
+      showToast('warning', 'Partie annulée');
+
     });
 
     socket.on('error', (data: { message: string }) => {
