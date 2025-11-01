@@ -8,6 +8,7 @@ import { Timer } from '@/components/ui/Timer';
 import { PlayerList } from '@/components/Game/Playerlist';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { Confirm } from '../ui/confirm';
+import { PhaseSteps } from './PhaseSteps';
 
 const MotionButton = motion.create(Button)
 
@@ -76,7 +77,7 @@ export function GamePhase() {
             <AnimatePresence mode="wait" initial={false}>
               <motion.p
                 key={currentPhaseLabel}
-                className="text-3xl sm:text-5xl text-primary font-semibold"
+                className="text-2xl sm:text-5xl text-primary font-semibold"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
@@ -90,28 +91,10 @@ export function GamePhase() {
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
 
+          <PhaseSteps phases={game.config.phases} currentPhase={game.currentPhase} />
+
           <div className="mt-6 grid gap-6 w-full">
             <div>
-              <AnimatePresence>
-                {currentSentence && currentSentence.words.length > 0 && (
-                  <motion.div
-                    key="current-sentence" // Clé statique car il n'y a qu'un seul élément
-                    className="bg-neutral border border-neutral rounded-lg p-4 mb-4"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <h3 className="text-sm font-semibold  mb-2">
-                      Phrase en cours
-                    </h3>
-                    <p className="text-lg font-medium">
-                      {currentSentence.words.join(" ")}...
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
               <AnimatePresence mode="wait">
                 {!hasPlayed ? (
                   <motion.form
@@ -171,7 +154,7 @@ export function GamePhase() {
               </AnimatePresence>
             </div>
 
-            <div className='flex flex-col gap-4'>
+            <div className="flex flex-col gap-4">
               <PlayerList
                 players={game.players}
                 currentPlayerId={currentPlayer.id}
@@ -179,13 +162,11 @@ export function GamePhase() {
               />
               <Confirm
                 message="Vous êtes sur le point de quitter la partie."
-                buttonName='Quitter'
-                className='hover:bg-error '
+                buttonName="Quitter"
+                className="hover:bg-error "
                 onConfirm={leaveGame}
               />
             </div>
-
-            
           </div>
         </motion.div>
       </div>
