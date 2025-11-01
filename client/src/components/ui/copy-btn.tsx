@@ -2,10 +2,16 @@ import React from "react";
 import { Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 interface CodeCopyBtnProps {
-    codeToCopy: string
+  codeToCopy: string;
 }
 
 /**
@@ -13,59 +19,69 @@ interface CodeCopyBtnProps {
  */
 
 const CodeCopyBtn: React.FC<CodeCopyBtnProps> = ({ codeToCopy }) => {
-    const [isCopied, setIsCopied] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
-    const handleCopy = async () => {
-        if(isCopied) return
+  const handleCopy = async () => {
+    if (isCopied) return;
 
-        try{
-            await navigator.clipboard.writeText(codeToCopy)
+    try {
+      await navigator.clipboard.writeText(codeToCopy);
 
-            setIsCopied(true)
+      setIsCopied(true);
 
-            setTimeout(() => {
-                setIsCopied(false)
-            }, 1000)
-        }catch(err){
-            console.error('Erreur, impossible de copier le code.', err)
-        }
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+    } catch (err) {
+      console.error("Erreur, impossible de copier le code.", err);
     }
+  };
 
-    return (
-        <Button 
+  return (
+    <TooltipProvider>
+      <Tooltip open={isCopied}>
+        <TooltipTrigger asChild>
+          <Button
             variant="outline"
             disabled={isCopied}
             aria-label="Copier le code"
             size="icon"
             onClick={handleCopy}
-        >
+          >
             <AnimatePresence mode="wait" initial={false}>
-                {isCopied ? (
-                    <motion.span
-                        key="check" // La 'key' est cruciale pour qu'AnimatePresence fonctionne
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0, transition: { duration: 0.1 }}}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    >
-
-                        <Check size={12} className="text-accent"/>
-                    </motion.span>
-                ) : (
-                    <motion.span
-                        key="copy" 
-                        initial={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{ duration: 0.01 }}
-                    >
-                        <Copy size={12} />
-                    </motion.span>
-                )}
+              {isCopied ? (
+                <motion.span
+                  key="check"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{
+                    scale: 0.8,
+                    opacity: 0,
+                    transition: { duration: 0.05 },
+                  }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                >
+                  <Check size={12} className="text-white" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="copy"
+                  initial={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  transition={{ duration: 0.01 }}
+                >
+                  <Copy size={12} />
+                </motion.span>
+              )}
             </AnimatePresence>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="bg-accent text-base-300 font-semibold">
+          <p>Copié !</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
-        </Button>
-    )
-
-}
-
-export default CodeCopyBtn
+export default CodeCopyBtn;
