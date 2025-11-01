@@ -318,6 +318,11 @@ export class GameService {
       const newHost = game.players[0]
       newHost.isHost = true;
       game.hostId = newHost.id;
+
+      io.to(newHost.socketId).emit("assigned_host", {
+        player: player,
+        message: 'Vous avez été assigné hôte de la partie.',
+      })
       console.log(`👑 ${newHost.pseudo} est le nouveau hôte!`);
     }
 

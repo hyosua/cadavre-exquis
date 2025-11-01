@@ -64,7 +64,7 @@ export function VotingPhase() {
             </p>
           )}
         </div>
-        <div>
+        <div className='mt-4 text-center'>
           <Confirm
             message="Vous êtes sur le point de quitter la partie."
             buttonName='Quitter'

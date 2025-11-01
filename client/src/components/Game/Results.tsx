@@ -74,10 +74,10 @@ const ranking: RankingEntry[] = game.sentences
           {isHost && (
             <>
               <Confirm
-                message="Vous êtes sur le point de supprimer la partie."
+                message="Vous êtes sur le point de quitter la partie."
                 buttonName='Quitter'
                 className='hover:bg-error '
-                onConfirm={cancelGame}
+                onConfirm={leaveGame}
               />
               <Button
                 onClick={startGame}

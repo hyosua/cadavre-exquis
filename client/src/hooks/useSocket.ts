@@ -97,6 +97,13 @@ export function useSocket() {
 
     });
 
+    socket.on('assigned_host', (data: { player: Player, message: string }) => {
+      console.log('server: new host assigned');
+      setCurrentPlayer(data.player);
+      showToast('info', data.message);
+
+    });
+
     socket.on('error', (data: { message: string }) => {
       setError(data.message)
       showToast('error', data.message);
@@ -119,7 +126,7 @@ export function useSocket() {
     return () => {
       [
         'connect', 'game_deleted','game_left','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','kicked_out','game_created','game_canceled','error',
-        'current_player','game_state','phase_started','timer_update'
+        'current_player','game_state','phase_started','timer_update', 'assigned_host'
       ].forEach((e) => socket.off(e));
     };
   }, [hasHydrated, showToast, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer, router]);
