@@ -22,7 +22,7 @@
       0 0 0 1px rgba(255, 255, 255, 0.08),
       0 2px 20px rgba(94, 169, 209, 0.3),
       0 2px 4px rgba(0, 255, 255, 0.1);
-    transition: all 0.4s ease-in-out;
+    transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
   }
 
   .glow-shadow:hover {
@@ -32,12 +32,20 @@
       0 4px 8px rgba(0, 255, 255, 0.2);
   }
 
+  .glow-shadow:active {
+    transform: scale(0.98);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      0 1px 10px rgba(94, 169, 209, 0.5),
+      0 1px 2px rgba(0, 255, 255, 0.2);
+  }
+
   .red-glow-shadow {
     box-shadow: 
       0 0 0 1px rgba(220, 195, 213, 0.08), 
       0 2px 20px rgba(215, 106, 189, 0.3),
       0 2px 4px rgba(216, 150, 218, 0.1);
-      transition: all 0.4s ease-in-out;
+      transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
   }
 
   .red-glow-shadow:hover {
@@ -46,6 +54,15 @@
       0 4px 30px rgba(215, 106, 189, 0.5),
       0 4px 8px rgba(216, 150, 218, 0.2);
   }
+
+  .red-glow-shadow:active {
+    transform: scale(0.98);
+    box-shadow:
+      0 0 0 1px rgba(220, 195, 213, 0.15),
+      0 1px 10px rgba(215, 106, 189, 0.5),
+      0 1px 2px rgba(216, 150, 218, 0.2);
+  }
+
 
 @layer utilities {
 
