@@ -69,16 +69,10 @@ const ranking: RankingEntry[] = game.sentences
           </div>
         </div>
         
-        <div className='flex justify-between mt-4 mb-4 gap-2'>
+        <div className='flex justify-center mt-4 mb-4 gap-2'>
           
           {isHost && (
             <>
-              <Confirm
-                message="Vous êtes sur le point de quitter la partie."
-                buttonName='Quitter'
-                className='hover:bg-error '
-                onConfirm={leaveGame}
-              />
               <Button
                 onClick={startGame}
                 disabled={!canStart}
@@ -102,16 +96,16 @@ const ranking: RankingEntry[] = game.sentences
                     currentPlayerId={currentPlayer.id}
         />
 
-        {!isHost && (
-          <div className='py-4 text-center'>
-            <Confirm
-              message="Vous êtes sur le point de quitter la partie."
-              buttonName='Quitter'
-              className='hover:bg-error '
-              onConfirm={leaveGame}
-            />
-          </div>
-        )}
+
+        <div className='py-4 text-center'>
+          <Confirm
+            message="Vous êtes sur le point de quitter la partie."
+            buttonName='Quitter'
+            className='hover:bg-error '
+            onConfirm={leaveGame}
+          />
+        </div>
+
       </div>
     </div>
   );
