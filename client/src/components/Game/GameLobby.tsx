@@ -10,7 +10,7 @@ import CodeCopyBtn from '../ui/copy-btn';
 
 
 export function GameLobby() {
-  const { game, currentPlayer, startGame, cancelGame } = useGame();
+  const { game, currentPlayer, startGame, cancelGame, leaveGame } = useGame();
   if (!game || !currentPlayer) return null;
 
   const isHost = currentPlayer.isHost;
@@ -18,14 +18,14 @@ export function GameLobby() {
 
   return (
     <div className="bg-base-300 border border-gray-500 min-h-screen  p-4">
-      <div className="max-w-2xl mx-auto mt-8">
+      <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <motion.div 
           initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
           animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
           transition={{duration: 0.2, ease:'easeOut'}}
-          className="bg-base-100 rounded-2xl p-8 animate-pulse-shadow"
+          className="bg-base-100 rounded-2xl p-4 sm:p-8 animate-pulse-shadow"
         >
-          <div className="text-center mb-8">
+          <div className="text-center mb-4 sm:mb-8">
             <h1 className="text-4xl text-primary font-bold mb-2">Salle d&apos;attente</h1>
             <div className="inline-block bg-primary-100 px-6 py-3 rounded-lg">
               <p className="text-sm  mb-1">Code de la partie</p>
@@ -41,7 +41,7 @@ export function GameLobby() {
             currentPlayerId={currentPlayer.id}
           />
 
-          <div className="mt-6 bg-base-100 rounded-lg p-4">
+          <div className="mt-4 sm:mt-6 bg-neutral rounded-lg p-2 sm:p-4">
             <h4 className="font-semibold mb-2">Configuration</h4>
             <div className="text-md  space-y-1 sm:text-lg">
               <p>• Phases: {game.config.phases.join(', ')}</p>
@@ -50,7 +50,7 @@ export function GameLobby() {
           </div>
 
           {isHost && (
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               {!canStart && (
                 <p className="text-center text-amber-600 mb-2 text-sm">
                   Il faut au moins 2 joueurs pour commencer
@@ -76,11 +76,19 @@ export function GameLobby() {
           )}
 
           {!isHost && (
-            <p className="mt-6 text-center text-sm text-info font-semibold">
-              En attente que l&apos;hôte démarre la partie 
-              {"  "}
-              <span className="loading loading-dots loading-xs"></span>
-            </p>
+            <div className='flex flex-col items-center gap-4 sm:gap-8'>
+              <p className="mt-4 sm:mt-6 text-center text-sm text-info font-semibold">
+                En attente que l&apos;hôte démarre la partie 
+                {"  "}
+                <span className="loading loading-dots loading-xs"></span>
+              </p>
+              <Confirm
+                message="Vous êtes sur le point de quitter la partie."
+                buttonName='Quitter'
+                className='hover:bg-error '
+                onConfirm={leaveGame}
+              />
+            </div>
           )}
         </motion.div>
       </div>

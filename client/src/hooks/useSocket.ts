@@ -114,7 +114,7 @@ export function useSocket() {
 
     return () => {
       [
-        'connect', 'game_deleted','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','kicked_out','game_created','game_canceled','error',
+        'connect', 'game_deleted','game_left','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','kicked_out','game_created','game_canceled','error',
         'current_player','game_state','phase_started','timer_update'
       ].forEach((e) => socket.off(e));
     };

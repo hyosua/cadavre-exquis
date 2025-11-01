@@ -7,11 +7,20 @@ import { Input } from '@/components/ui/input';
 import { Timer } from '@/components/ui/Timer';
 import { PlayerList } from '@/components/Game/Playerlist';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
+import { Confirm } from '../ui/confirm';
 
 const MotionButton = motion.create(Button)
 
 export function GamePhase() {
-  const { game, currentPlayer, timeLeft, submitWord, hasPlayedCurrentPhase, getCurrentSentence } = useGame();
+  const {
+    game,
+    currentPlayer,
+    timeLeft,
+    submitWord,
+    hasPlayedCurrentPhase,
+    getCurrentSentence,
+    leaveGame,
+  } = useGame();
   const [word, setWord] = useState('');
 
   const buttonControls = useAnimationControls();
@@ -45,7 +54,7 @@ export function GamePhase() {
           initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
           animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="bg-base-neutral flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 "
+          className="bg-base-300 flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 "
         >
           <div className="text-center mb-2">
             <h1 className="text-3xl font-bold mb-2">
@@ -162,13 +171,21 @@ export function GamePhase() {
               </AnimatePresence>
             </div>
 
-            <div>
+            <div className='flex flex-col gap-4'>
               <PlayerList
                 players={game.players}
                 currentPlayerId={currentPlayer.id}
                 showPlayedStatus={true}
               />
+              <Confirm
+                message="Vous êtes sur le point de quitter la partie."
+                buttonName='Quitter'
+                className='hover:bg-error '
+                onConfirm={leaveGame}
+              />
             </div>
+
+            
           </div>
         </motion.div>
       </div>
