@@ -18,32 +18,35 @@
   --font-averia: "Averia Gruesa Libre", system-ui;
 }
   .glow-shadow {
-    /*
-      1. Première ombre (bordure/anneau) : Très fine et légèrement blanche (0.08 d'opacité)
-        pour délimiter clairement l'élément du fond sombre.
-    */
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.08), 
-      
-      /* 2. Deuxième ombre (profondeur) : Plus grande et plus opaque (0.3) 
-            pour simuler l'élévation au-dessus du fond.
-      */
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
       0 2px 20px rgba(94, 169, 209, 0.3),
-      
-      /* 3. Troisième ombre (proximité) : Plus petite et plus douce pour l'effet de proximité.
-      */
       0 2px 4px rgba(0, 255, 255, 0.1);
+    transition: all 0.4s ease-in-out;
+  }
+
+  .glow-shadow:hover {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      0 4px 30px rgba(94, 169, 209, 0.5),
+      0 4px 8px rgba(0, 255, 255, 0.2);
   }
 
   .red-glow-shadow {
-
     box-shadow: 
       0 0 0 1px rgba(220, 195, 213, 0.08), 
-
       0 2px 20px rgba(215, 106, 189, 0.3),
-
       0 2px 4px rgba(216, 150, 218, 0.1);
+      transition: all 0.4s ease-in-out;
   }
+
+  .red-glow-shadow:hover {
+    box-shadow:
+      0 0 0 1px rgba(220, 195, 213, 0.15),
+      0 4px 30px rgba(215, 106, 189, 0.5),
+      0 4px 8px rgba(216, 150, 218, 0.2);
+  }
+
 @layer utilities {
 
   
