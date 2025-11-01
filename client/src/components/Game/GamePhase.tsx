@@ -8,7 +8,7 @@ import { Timer } from '@/components/ui/Timer';
 import { PlayerList } from '@/components/Game/Playerlist';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 
-const MotionButton = motion(Button)
+const MotionButton = motion.create(Button)
 
 export function GamePhase() {
   const { game, currentPlayer, timeLeft, submitWord, hasPlayedCurrentPhase, getCurrentSentence } = useGame();
