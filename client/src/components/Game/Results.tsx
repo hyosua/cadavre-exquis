@@ -31,7 +31,7 @@ const ranking: RankingEntry[] = game.sentences
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-neutral rounded-2xl shadow-xl p-8 animate-fade-in">
+        <div className="bg-neutral rounded-2xl shadow-[0_8px_34px_-6px_rgba(34,211,238,0.25)] p-8 animate-fade-in">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-primary mb-2">Résultats</h1>
             <p className="font-semibold">Classement des meilleures phrases</p>
@@ -39,15 +39,22 @@ const ranking: RankingEntry[] = game.sentences
 
           <div className="space-y-4">
             {ranking.map((entry, index) => {
-              const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
-              
+              const medal =
+                index === 0
+                  ? "🥇"
+                  : index === 1
+                  ? "🥈"
+                  : index === 2
+                  ? "🥉"
+                  : `${index + 1}.`;
+
               return (
                 <div
                   key={entry.sentence.id}
                   className={`rounded-lg p-6 ${
                     index === 0
-                      ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 border-2 border-yellow-400'
-                      : 'bg-gray-50'
+                      ? "bg-gradient-to-r from-yellow-100 to-yellow-200 border-2 border-yellow-400"
+                      : "bg-gray-50"
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -55,11 +62,11 @@ const ranking: RankingEntry[] = game.sentences
                       <div className="flex items-center space-x-3 mb-2">
                         <span className="text-2xl">{medal}</span>
                         <span className="text-sm font-semibold text-gray-600">
-                          {entry.voteCount} vote{entry.voteCount > 1 ? 's' : ''}
+                          {entry.voteCount} vote{entry.voteCount > 1 ? "s" : ""}
                         </span>
                       </div>
                       <p className="text-lg font-medium text-gray-900">
-                        {entry.words.join(' ')}
+                        {entry.words.join(" ")}
                       </p>
                     </div>
                   </div>
@@ -68,9 +75,8 @@ const ranking: RankingEntry[] = game.sentences
             })}
           </div>
         </div>
-        
-        <div className='flex justify-center mt-4 mb-4 gap-2'>
-          
+
+        <div className="flex justify-center mt-4 mb-4 gap-2">
           {isHost && (
             <>
               <Button
@@ -88,24 +94,18 @@ const ranking: RankingEntry[] = game.sentences
             <p className="mt-6 text-center text-sm text-info font-semibold">
               En attente que l&apos;hôte redémarre la partie...
             </p>
-            
           )}
-        </div>  
-        <PlayerList 
-                    players={game.players} 
-                    currentPlayerId={currentPlayer.id}
-        />
+        </div>
+        <PlayerList players={game.players} currentPlayerId={currentPlayer.id} />
 
-
-        <div className='py-4 text-center'>
+        <div className="py-4 text-center">
           <Confirm
             message="Vous êtes sur le point de quitter la partie."
-            buttonName='Quitter'
-            className='hover:bg-error '
+            buttonName="Quitter"
+            className="hover:bg-error "
             onConfirm={leaveGame}
           />
         </div>
-
       </div>
     </div>
   );
