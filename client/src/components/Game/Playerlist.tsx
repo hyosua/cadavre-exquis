@@ -30,7 +30,7 @@ export function PlayerList({ players, currentPlayerId, showPlayedStatus = false 
             key={player.id}
             className={`flex items-center justify-between p-2 rounded ${
               player.id === currentPlayerId
-                ? "bg-gray-50 text-neutral"
+                ? "border border-primary glow-shadow bg-base-100"
                 : "bg-base-100"
             }`}
           >

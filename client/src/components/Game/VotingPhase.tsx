@@ -36,7 +36,7 @@ export function VotingPhase() {
                     animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                     key={sentence.id}
-                    className="bg-neutral  rounded-lg p-2 hover:scale-105 transition-transform duration-300"
+                    className="bg-neutral  rounded-lg p-2 "
                   >
                     <div className="flex flex-col items-center sm:items-center justify-center sm:justify-between sm:flex-row">
                       <div className="flex-1">

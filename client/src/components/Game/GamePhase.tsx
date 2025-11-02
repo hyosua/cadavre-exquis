@@ -108,7 +108,7 @@ export function GamePhase() {
                   >
                     <Input
                       value={word}
-                      className="placeholder:text-gray-400 sm:text-lg placeholder:text-sm sm:placeholder:text-base placeholder:truncate"
+                      className="md:text-xl placeholder:text-gray-500 sm:text-xl placeholder:text-sm  sm:placeholder:text-lg placeholder:truncate"
                       onChange={(e) => setWord(e.target.value)}
                       placeholder={placeholder}
                       maxLength={50}
