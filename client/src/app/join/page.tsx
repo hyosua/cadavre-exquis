@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useGame } from '@/hooks/useGame';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
-import { useSocket } from '@/hooks/useSocket';
 import { motion } from 'framer-motion';
 import Loader from '@/components/ui/loader';
 
 
 export default function JoinGame() {
-  useSocket();
   const router = useRouter();
   const { joinGame, game } = useGame();
   const [pseudo, setPseudo] = useState('');

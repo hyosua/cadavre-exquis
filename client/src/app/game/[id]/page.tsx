@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useGame } from '@/hooks/useGame';
-import { useSocket } from '@/hooks/useSocket';
 import { GameLobby } from '@/components/Game/GameLobby';
 import { GamePhase } from '@/components/Game/GamePhase';
 import { VotingPhase } from '@/components/Game/VotingPhase';
@@ -15,7 +14,6 @@ export default function Game() {
   const router = useRouter();
   const params = useParams();
   const { game, error } = useGame();
-  useSocket();
   useEffect(() => {
     if (error) {
       alert(error);
