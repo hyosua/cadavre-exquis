@@ -43,7 +43,7 @@ export const difficultyLabels: Record<GamePreset["difficulty"], string> = {
 
 export const DEFAULT_VALUES: GameConfigValues = {
   pseudo: "",
-  presetId: "moyen_cod_cc",
-  phases: ['s', 'adj', 'v', 'cod', 'cc'],
+  presetId: "type_adj",
+  phases: ['s', 'adj', 'v', 'cod'],
   timePerPhase: [60],
 };
