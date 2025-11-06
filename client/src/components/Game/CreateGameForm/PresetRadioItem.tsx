@@ -20,9 +20,9 @@ export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
     <Label
       htmlFor={preset.id}
       className={cn(
-        "flex flex-col rounded-lg border-2 border-muted bg-popover p-4 cursor-pointer",
-        "hover:bg-accent hover:text-accent-foreground",
-        "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        "flex flex-col rounded-lg border-2 p-4 cursor-pointer",
+        "hover:text-primary hover:text-lg hover:font-bold transition-all",
+        "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary peer-data-[state=checked]:text-primary"
       )}
     >
       <span className="font-semibold mb-1">{preset.name}</span>
