@@ -74,7 +74,7 @@ export function CreateGameForm() {
       timePerPhase: data.timePerPhase[0],
       phaseDetails: selectedPhaseDetails,
     };
-
+    console.log("→ Game config envoyée :", config);
     createGame(data.pseudo, config);
   };
 

@@ -1,5 +1,9 @@
 import { z } from 'zod';
-const phaseKeySchema = z.enum(["s", "adj", "v", "cod", "cc"]);
+const phaseKeySchema = z.enum([
+  "s", "adj", "v", "cod", "cc",
+  "ve", "coi", "atts", "pp", "sub",
+  "ccl", "cct", "ccm", "gns", "adv"
+]);
 
 const phaseDetailSchema = z.object({
   titre: z.string(),
@@ -9,7 +13,7 @@ const phaseDetailSchema = z.object({
 
 const gameConfigSchema = z.object({
   phases: z.array(phaseKeySchema).min(1),
-  phaseDetails: z.record(phaseKeySchema, phaseDetailSchema),
+  phaseDetails: z.record(z.string(), phaseDetailSchema),
   timePerPhase: z.number().min(10).max(300),
 });
 

@@ -1,6 +1,5 @@
 export type GameStatus = 'waiting' | 'playing' | 'voting' | 'finished';
-export const PHASES = ["s", "adj", "v", "cod", "cc"] as const;
-export type PhaseKey = (typeof PHASES)[number];
+
 
 export interface phaseDetail {
   titre: string;
@@ -9,10 +8,11 @@ export interface phaseDetail {
 }
 
 export interface GameConfig {
-  phases: PhaseKey[];
-  phaseDetails: Record<PhaseKey, phaseDetail>;
+  phases: string[];
+  phaseDetails: Record<string, phaseDetail>;
   timePerPhase: number;
 }
+
 export interface Player {
   id: string;
   socketId: string;
