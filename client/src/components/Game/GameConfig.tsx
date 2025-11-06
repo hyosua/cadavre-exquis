@@ -92,9 +92,8 @@ export function CreateGameForm() {
   const { createGame } = useGame();
   const setOnGameCreated = useGameStore((s) => s.setOnGameCreated);
 
-  // <-- CORRECTION (TypeScript): useForm peut maintenant inférer le type correctement
   const form = useForm<GameConfigValues>({
-    resolver: zodResolver(gameConfigSchema), // <-- Ne devrait plus avoir d'erreur
+    resolver: zodResolver(gameConfigSchema), 
     defaultValues: {
       pseudo: "",
       presetId: "type_a",
