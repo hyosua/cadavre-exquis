@@ -144,7 +144,16 @@ export function CreateGameForm() {
                 />
               </CardContent>
 
-              <CardFooter>
+              <CardFooter className="flex gap-2 sm:gap-8">
+                <Button
+                  variant={"destructive"}
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting}
+                  onClick={() => router.back()}
+                >
+                  Annuler
+                </Button>
                 <Button
                   type="submit"
                   size="lg"

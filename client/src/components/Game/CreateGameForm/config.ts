@@ -16,11 +16,24 @@ export const gameConfigSchema = z.object({
 
 export type GameConfigValues = z.infer<typeof gameConfigSchema>;
 
+// groupedPresets permet de grouper les presets selon leur difficulté
+/*
+Attendu:
+{
+  facile: [presetA, presetB],
+  moyen: [presetC],
+  difficile: [presetD, presetE],
+}
+*/
 export const groupedPresets = GAME_PRESETS.reduce((acc, preset) => {
+  // si la difficulté n'existe pas encore, on crée un tableau vide.
   if (!acc[preset.difficulty]) acc[preset.difficulty] = [];
   acc[preset.difficulty].push(preset);
+
   return acc;
 }, {} as Record<GamePreset["difficulty"], GamePreset[]>);
+
+
 
 export const difficultyLabels: Record<GamePreset["difficulty"], string> = {
   facile: "Facile",
@@ -30,7 +43,7 @@ export const difficultyLabels: Record<GamePreset["difficulty"], string> = {
 
 export const DEFAULT_VALUES: GameConfigValues = {
   pseudo: "",
-  presetId: "type_a",
-  phases: ["s", "v", "cod"],
+  presetId: "moyen_cod_cc",
+  phases: ['s', 'adj', 'v', 'cod', 'cc'],
   timePerPhase: [60],
 };

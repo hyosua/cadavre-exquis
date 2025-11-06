@@ -131,7 +131,7 @@ export const PHASE_DETAILS: Record<string, phaseDetail> = {
  * C'est une "recette" qui utilise les "briques" ci-dessus.
  */
 export interface GamePreset {
-  id: string; // Un identifiant unique (ex: 'type_a')
+  id: string; 
   name: string; // Le nom affiché à l'utilisateur
   example: string; // L'exemple pour l'UI
   difficulty: 'facile' | 'moyen' | 'difficile';
