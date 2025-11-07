@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useGame } from '@/hooks/useGame';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Timer } from '@/components/ui/Timer';
-import { PlayerList } from '@/components/Game/Playerlist';
-import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
-import { Confirm } from '../ui/confirm';
-import { PhaseSteps } from './PhaseSteps';
+import React, { useState } from "react";
+import { useGame } from "@/hooks/useGame";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Timer } from "@/components/ui/Timer";
+import { PlayerList } from "@/components/Game/Playerlist";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import { Confirm } from "../ui/confirm";
+import { PhaseSteps } from "./PhaseSteps";
 
-const MotionButton = motion.create(Button)
+const MotionButton = motion.create(Button);
 
 export function GamePhase() {
   const {
@@ -22,17 +22,17 @@ export function GamePhase() {
     getCurrentSentence,
     leaveGame,
   } = useGame();
-  const [word, setWord] = useState('');
+  const [word, setWord] = useState("");
 
   const buttonControls = useAnimationControls();
 
   if (!game || !currentPlayer) return null;
 
-  const phaseKey = game.config.phases[game.currentPhase]
-  const phaseDetails = game.config.phaseDetails[phaseKey]
+  const phaseKey = game.config.phases[game.currentPhase];
+  const phaseDetails = game.config.phaseDetails[phaseKey];
   const currentPhaseLabel = phaseDetails.titre;
-  const helper = phaseDetails.helper
-  const placeholder = phaseDetails.placeholder
+  const helper = phaseDetails.helper;
+  const placeholder = phaseDetails.placeholder;
   const hasPlayed = hasPlayedCurrentPhase();
   const currentSentence = getCurrentSentence();
 
@@ -41,10 +41,10 @@ export function GamePhase() {
     if (word.trim()) {
       await buttonControls.start({
         scale: [1, 1.1, 1], // Animation "Pop"
-        transition: { duration: 0.2, ease: "easeOut" }
+        transition: { duration: 0.2, ease: "easeOut" },
       });
       submitWord(word.trim());
-      setWord('');
+      setWord("");
     }
   };
 
@@ -91,7 +91,10 @@ export function GamePhase() {
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
 
-          <PhaseSteps phases={game.config.phases} currentPhase={game.currentPhase} />
+          <PhaseSteps
+            phases={game.config.phases}
+            currentPhase={game.currentPhase}
+          />
 
           <div className="mt-6 grid gap-6 w-full">
             <div>
@@ -138,7 +141,7 @@ export function GamePhase() {
                     transition={{ duration: 0.1, ease: "easeOut" }}
                   >
                     <motion.p
-                      className="text-success font-semibold text-sm mt-1"
+                      className="text-success font-semibold text-md mt-1"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [1, 0.6, 1] }}
                       transition={{

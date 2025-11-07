@@ -123,6 +123,12 @@ export const PHASE_DETAILS: Record<string, phaseDetail> = {
     titre: "Groupe nominal sujet",
     helper: "Sujet complet avec ses expansions",
     placeholder: "Le grand magicien aux yeux dorés..."
+  },
+
+  adv: {
+    titre: "Adverbe",
+    helper: "Comment ? Quand ? Où ? Combien ?",
+    placeholder: "Rapidement, souvent, ici, très, bien..."
   }
 }
 
@@ -187,10 +193,10 @@ export const GAME_PRESETS: GamePreset[] = [
   },
   {
   id: 'scene_complete',
-  name: 'CCL + CCT + GNS + VT + Adv + COD + Adj + CCM',
-  example: 'Sur la plage déserte, quand le soleil disparaît derrière la mer, les enfants du village, construisent soigneusement des châteaux immenses en fredonnant des chansons douces.',
+  name: 'CCL + GNS + V + Adv + COD + Adj',
+  example: 'Sur la plage déserte, les enfants du village, construisent soigneusement des châteaux immenses.',
   difficulty: 'difficile',
-  phases: ['ccl', 'cct', 'gns','v','adv','cod','adj','ccm'],
+  phases: ['ccl', 'gns','v','adv','cod','adj'],
   },
 
 

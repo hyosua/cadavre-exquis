@@ -16,18 +16,21 @@ export function PhaseSteps({ phases, currentPhase }: PhaseStepsProps) {
         }
       `}</style>
 
-      <ul className="steps mt-8">
-        {phases.map((p, index) => (
-          <li
-            key={p}
-            className={`step ease-in-out transition-all duration-500 ${
-              index <= currentPhase ? "step-primary" : "step-neutral"
-            }`}
-          >
-            {p}
-          </li>
-        ))}
-      </ul>
+      {/* Ajoutez un conteneur avec overflow-x-auto */}
+      <div className="overflow-x-auto w-full">
+        <ul className="steps mt-8">
+          {phases.map((p, index) => (
+            <li
+              key={p}
+              className={`step ease-in-out transition-all duration-500 ${
+                index <= currentPhase ? "step-primary" : "step-neutral"
+              }`}
+            >
+              {p}
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }
