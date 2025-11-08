@@ -202,7 +202,7 @@ export const GAME_PRESETS: GamePreset[] = [
 
   {
     id: 'custom',
-    name: '🧑‍🔬 Personnalisé',
+    name: 'Personnalisé',
     example: 'Composez vous-même votre structure.',
     difficulty: 'difficile',
     phases: [], // Vide, car l'utilisateur choisira

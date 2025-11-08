@@ -32,7 +32,6 @@ import {
 
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
-import { CustomPhasesSelector } from "./CustomPhase";
 
 export function CreateGameForm() {
   const router = useRouter();
@@ -108,11 +107,6 @@ export function CreateGameForm() {
 
                 {/* Mode de jeu */}
                 <GameModeSelector control={form.control} />
-
-                {/* Composition personnalisée */}
-                {selectedPresetId === "custom" && (
-                  <CustomPhasesSelector control={form.control} />
-                )}
 
                 {/* Temps par phase */}
                 <FormField

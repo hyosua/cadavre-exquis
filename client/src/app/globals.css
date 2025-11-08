@@ -1,10 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
-@import "tailwindcss";
- @plugin "daisyui" {
-   themes: light --default, dark --prefersdark, sunset, dracula, caramellatte;  
- }
+/* globals.css */
 
- @plugin "daisyui/theme" {
+/* 1. Importations de polices (toujours en haut) */
+@import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
+
+/* 2. Importation de Tailwind v4 */
+/* Ceci importe les "base", "components", et "utilities" */
+@import "tailwindcss";
+
+/* 3. Définitions des plugins (syntaxe v4) */
+/* Vous l'aviez déjà, c'est parfait ! */
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, sunset, dracula, caramellatte;
+}
+
+@plugin "daisyui/theme" {
   name: "sunset";
   default: true;
   --color-primary: #4cc9f0;
@@ -12,65 +21,115 @@
 
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
+/* Gardez cette importation */
 
+/* 4. Configuration du thème (syntaxe v4) */
+/* C'est ici que votre ancien `theme.extend` de tailwind.config.ts est migré */
 @theme {
+  /* -- Polices (de votre ancien globals.css) -- */
   --font-title: "Flavors", cursive;
   --font-averia: "Averia Gruesa Libre", system-ui;
+
+  /* -- Couleurs (de votre ancien tailwind.config.ts) -- */
+  /* Couleurs sémantiques personnalisées */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Votre palette de couleurs 'primary' */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0c4a6e;
+
+  /* -- Animations (de votre ancien tailwind.config.ts) -- */
+  --animation-fade-in: fadeIn 0.3s ease-in-out;
+  --animation-slide-up: slideUp 0.3s ease-out;
+  --animation-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* -- Keyframes (de votre ancien tailwind.config.ts) -- */
+  /* Nous les définissons ici pour que les animations ci-dessus fonctionnent */
+  @keyframes fadeIn {
+    '0%': {
+      opacity: '0';
+    },
+    '100%': {
+      opacity: '1';
+    }
+  }
+
+  @keyframes slideUp {
+    '0%': {
+      transform: 'translateY(10px)'; opacity: '0';
+    },
+    '100%': {
+      transform: 'translateY(0)'; opacity: '1';
+    }
+  }
 }
-  .glow-shadow {
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.08),
-      0 2px 20px rgba(94, 169, 209, 0.3),
-      0 2px 4px rgba(0, 255, 255, 0.1);
-    transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  }
 
-  .glow-shadow:hover {
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.15),
-      0 4px 30px rgba(94, 169, 209, 0.5),
-      0 4px 8px rgba(0, 255, 255, 0.2);
-  }
+/* 5. Classes utilitaires personnalisées et Keyframes (de votre ancien globals.css) */
+/* Tout ceci reste inchangé et fonctionne parfaitement */
+.glow-shadow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 2px 20px rgba(94, 169, 209, 0.3),
+    0 2px 4px rgba(0, 255, 255, 0.1);
+  transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
 
-  .glow-shadow:active {
-    transform: scale(0.98);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.15),
-      0 1px 10px rgba(94, 169, 209, 0.5),
-      0 1px 2px rgba(0, 255, 255, 0.2);
-  }
+.glow-shadow:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 4px 30px rgba(94, 169, 209, 0.5),
+    0 4px 8px rgba(0, 255, 255, 0.2);
+}
 
-  .red-glow-shadow {
-    box-shadow: 
-      0 0 0 1px rgba(220, 195, 213, 0.08), 
-      0 2px 20px rgba(215, 106, 189, 0.3),
-      0 2px 4px rgba(216, 150, 218, 0.1);
-      transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  }
+.glow-shadow:active {
+  transform: scale(0.98);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 1px 10px rgba(94, 169, 209, 0.5),
+    0 1px 2px rgba(0, 255, 255, 0.2);
+}
 
-  .red-glow-shadow:hover {
-    box-shadow:
-      0 0 0 1px rgba(220, 195, 213, 0.15),
-      0 4px 30px rgba(215, 106, 189, 0.5),
-      0 4px 8px rgba(216, 150, 218, 0.2);
-  }
+.red-glow-shadow {
+  box-shadow:
+    0 0 0 1px rgba(220, 195, 213, 0.08),
+    0 2px 20px rgba(215, 106, 189, 0.3),
+    0 2px 4px rgba(216, 150, 218, 0.1);
+  transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
 
-  .red-glow-shadow:active {
-    transform: scale(0.98);
-    box-shadow:
-      0 0 0 1px rgba(220, 195, 213, 0.15),
-      0 1px 10px rgba(215, 106, 189, 0.5),
-      0 1px 2px rgba(216, 150, 218, 0.2);
-  }
+.red-glow-shadow:hover {
+  box-shadow:
+    0 0 0 1px rgba(220, 195, 213, 0.15),
+    0 4px 30px rgba(215, 106, 189, 0.5),
+    0 4px 8px rgba(216, 150, 218, 0.2);
+}
 
-  .glow-small {
-    box-shadow: 0 8px 34px -6px rgba(34, 211, 238, 0.25)
-  }
+.red-glow-shadow:active {
+  transform: scale(0.98);
+  box-shadow:
+    0 0 0 1px rgba(220, 195, 213, 0.15),
+    0 1px 10px rgba(215, 106, 189, 0.5),
+    0 1px 2px rgba(216, 150, 218, 0.2);
+}
+
+.glow-small {
+  box-shadow: 0 8px 34px -6px rgba(34, 211, 238, 0.25);
+}
 
 
 @layer utilities {
 
-  
   [data-slot='collapsible-content'] {
     overflow: hidden;
     transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease-out;
@@ -97,6 +156,7 @@
       opacity: 0;
       transform: translateY(-4px);
     }
+
     to {
       max-height: var(--radix-collapsible-content-height);
       opacity: 1;
@@ -110,6 +170,7 @@
       opacity: 1;
       transform: translateY(0);
     }
+
     to {
       max-height: 0;
       opacity: 0;
@@ -118,18 +179,22 @@
   }
 
   @keyframes pulse-shadow {
-    0%, 100% {
+
+    0%,
+    100% {
       /* Couleur de base et ombre normale */
       box-shadow: 0 3px 12px -3px rgba(69, 211, 219, 0.2), 0 4px 6px -4px rgba(157, 191, 193, 0.2);
     }
+
     50% {
       /* Ombre accentuée avec une couleur secondaire/primaire subtile */
-      box-shadow: 0 0 15px rgba(60, 144, 177, 0.4), 0 0 12px rgba(78, 114, 255, 0.2); 
+      box-shadow: 0 0 15px rgba(60, 144, 177, 0.4), 0 0 12px rgba(78, 114, 255, 0.2);
     }
 
   }
 
   .animate-pulse-shadow {
-    animation: pulse-shadow 5s ease-in-out infinite; /* 4 secondes, fluide, en boucle */
+    animation: pulse-shadow 5s ease-in-out infinite;
+    /* 4 secondes, fluide, en boucle */
   }
-}   
+}

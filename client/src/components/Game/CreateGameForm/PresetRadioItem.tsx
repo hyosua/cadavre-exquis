@@ -21,7 +21,7 @@ export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
       htmlFor={preset.id}
       className={cn(
         "flex flex-col rounded-lg border-2 p-4 cursor-pointer",
-        "hover:text-primary hover:text-lg hover:font-bold transition-all",
+        "hover:bg-primary/10  transition-all",
         "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary peer-data-[state=checked]:text-primary"
       )}
     >
