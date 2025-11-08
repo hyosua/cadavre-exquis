@@ -39,6 +39,7 @@ export const difficultyLabels: Record<GamePreset["difficulty"], string> = {
   facile: "Facile",
   moyen: "Moyen",
   difficile: "Difficile",
+  personnalisé: "Personnalisé"
 };
 
 export const DEFAULT_VALUES: GameConfigValues = {

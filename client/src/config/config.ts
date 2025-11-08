@@ -140,7 +140,7 @@ export interface GamePreset {
   id: string; 
   name: string; // Le nom affiché à l'utilisateur
   example: string; // L'exemple pour l'UI
-  difficulty: 'facile' | 'moyen' | 'difficile';
+  difficulty: 'facile' | 'moyen' | 'difficile' | 'personnalisé';
   phases: string[]; // La liste des briques (ex: ['s', 'v', 'cod'])
 }
 
@@ -204,7 +204,7 @@ export const GAME_PRESETS: GamePreset[] = [
     id: 'custom',
     name: 'Personnalisé',
     example: 'Composez vous-même votre structure.',
-    difficulty: 'difficile',
+    difficulty: 'personnalisé',
     phases: [], // Vide, car l'utilisateur choisira
   },
 ];

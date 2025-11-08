@@ -33,8 +33,6 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
     return selectedPreset ? [selectedPreset.difficulty] : ["facile"];
   }, [selectedPresetId]);
 
-  const customPreset = GAME_PRESETS.find((p) => p.id === "custom");
-
   return (
     <>
       <FormField
@@ -84,23 +82,6 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
                         </AccordionContent>
                       </AccordionItem>
                     )
-                  )}
-
-                  {/* Accordéon Personnalisé */}
-                  {customPreset && (
-                    <AccordionItem value="custom" className="">
-                      <AccordionTrigger className="text-base">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">Personnalisé</span>
-                          <span className="text-xs text-muted-foreground">
-                            (Composez vous-même)
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4">
-                        <PresetRadioItem preset={customPreset} />
-                      </AccordionContent>
-                    </AccordionItem>
                   )}
                 </Accordion>
               </RadioGroup>
