@@ -1,14 +1,10 @@
 /* globals.css */
 
-/* 1. Importations de polices (toujours en haut) */
 @import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
 
-/* 2. Importation de Tailwind v4 */
-/* Ceci importe les "base", "components", et "utilities" */
 @import "tailwindcss";
 
-/* 3. Définitions des plugins (syntaxe v4) */
-/* Vous l'aviez déjà, c'est parfait ! */
+
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, sunset, dracula, caramellatte;
 }
@@ -21,23 +17,75 @@
 
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
-/* Gardez cette importation */
 
-/* 4. Configuration du thème (syntaxe v4) */
-/* C'est ici que votre ancien `theme.extend` de tailwind.config.ts est migré */
+/* ----------------------------------------------------------- */
+/* 4. BLOC @theme (Le "Pont" entre Shadcn et Tailwind) */
+/* Ceci dit à bg-background d'utiliser var(--background) */
+/* ----------------------------------------------------------- */
 @theme {
-  /* -- Polices (de votre ancien globals.css) -- */
+  /* -- Polices -- */
   --font-title: "Flavors", cursive;
   --font-averia: "Averia Gruesa Libre", system-ui;
 
-  /* -- Couleurs (de votre ancien tailwind.config.ts) -- */
-  /* Couleurs sémantiques personnalisées */
+  /* -- Animations -- */
+  --animation-fade-in: fadeIn 0.3s ease-in-out;
+  --animation-slide-up: slideUp 0.3s ease-out;
+  --animation-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes fadeIn {
+    '0%': {
+      opacity: '0'
+    }
+
+    ,
+    '100%': {
+      opacity: '1'
+    }
+  }
+
+  @keyframes slideUp {
+    '0%': {
+      transform: 'translateY(10px)'; opacity: '0'
+    }
+
+    ,
+    '100%': {
+      transform: 'translateY(0)'; opacity: '1'
+    }
+  }
+
+  /* -- "Pont" des couleurs Shadcn -- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-  /* Votre palette de couleurs 'primary' */
+  /* * CONFLIT DE COULEUR "PRIMARY" :
+   * Shadcn et votre palette custom se battent pour "primary".
+   * J'ai choisi de prioriser la palette custom (primary-50...900)
+   * et d'utiliser "primary-shadcn" pour celle de Shadcn.
+   */
+  --color-primary-shadcn: var(--primary);
+  /* Renommée */
+  --color-primary-shadcn-foreground: var(--primary-foreground);
+  /* Renommée */
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Votre palette "primary" custom (celle-ci gagne) */
+  /* Vous utiliserez bg-primary-500, etc. */
   --color-primary-50: #f0f9ff;
   --color-primary-100: #e0f2fe;
   --color-primary-200: #bae6fd;
@@ -46,16 +94,15 @@
   --color-primary-500: #0ea5e9;
   --color-primary-600: #0284c7;
   --color-primary-700: #0369a1;
-  --color-primary-800: #075985;
+  --color-prefers-primary-800: #075985;
   --color-primary-900: #0c4a6e;
 
-  /* -- Animations (de votre ancien tailwind.config.ts) -- */
+  /* -- Animations  -- */
   --animation-fade-in: fadeIn 0.3s ease-in-out;
   --animation-slide-up: slideUp 0.3s ease-out;
   --animation-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
-  /* -- Keyframes (de votre ancien tailwind.config.ts) -- */
-  /* Nous les définissons ici pour que les animations ci-dessus fonctionnent */
+  /* -- Keyframes -- */
   @keyframes fadeIn {
     '0%': {
       opacity: '0';
