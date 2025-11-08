@@ -1,5 +1,6 @@
 import { GAME_PRESETS, GamePreset } from "@/config/config";
 import { useMemo } from "react";
+import { Control } from "react-hook-form";
 import {
   FormControl,
   FormDescription,
@@ -16,10 +17,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PresetRadioItem } from "./PresetRadioItem";
-import { groupedPresets, difficultyLabels } from "./config";
+import { groupedPresets, difficultyLabels, GameConfigValues } from "./config";
 
 interface GameModeSelectorProps {
-  control: any;
+  control: Control<GameConfigValues>;
 }
 
 export const GameModeSelector = ({ control }: GameModeSelectorProps) => {

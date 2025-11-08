@@ -1,6 +1,6 @@
 export type GameStatus = 'waiting' | 'playing' | 'voting' | 'finished';
 
-export interface phaseDetail {
+export interface PhaseDetail {
   titre: string;
   helper: string;
   placeholder: string;
@@ -8,7 +8,7 @@ export interface phaseDetail {
 
 export interface GameConfig {
   phases: string[];
-  phaseDetails: Record<string, phaseDetail>;
+  phaseDetails: Record<string, PhaseDetail>;
   timePerPhase: number;
 }
 

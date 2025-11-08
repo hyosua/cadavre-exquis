@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 import { useGame } from "@/hooks/useGame";
 import { useGameStore } from "@/store/gameStore";
-import { GameConfig } from "@/types/game.type";
+import { GameConfig, PhaseDetail } from "@/types/game.type";
 import { PHASE_DETAILS, GAME_PRESETS } from "@/config/config";
 
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ import {
 
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
-import { CustomPhasesSelector } from "./CustomPhaseSelector";
+import { CustomPhasesSelector } from "./CustomPhase";
 
 export function CreateGameForm() {
   const router = useRouter();
@@ -67,7 +67,7 @@ export function CreateGameForm() {
     const selectedPhaseDetails = data.phases.reduce((acc, phaseKey) => {
       acc[phaseKey] = PHASE_DETAILS[phaseKey];
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, PhaseDetail>);
 
     const config: GameConfig = {
       phases: data.phases,

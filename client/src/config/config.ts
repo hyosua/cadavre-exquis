@@ -1,7 +1,7 @@
 // config.ts
 'use client'
 
-import type { GameConfig, phaseDetail } from "@/types/game.type"
+import type { GameConfig, PhaseDetail } from "@/types/game.type"
 
 export const DEFAULT_CONFIG: GameConfig = {
     phases : ['s','adj','v','cod','cc'],
@@ -41,7 +41,7 @@ export const DEFAULT_CONFIG: GameConfig = {
     timePerPhase: 60
 }
 
-export const PHASE_DETAILS: Record<string, phaseDetail> = {
+export const PHASE_DETAILS: Record<string, PhaseDetail> = {
   s: {
     titre: "Sujet",
     helper: "Qui? Quoi?",
