@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { phrases } from '@/lib/phrases';
-import { ChevronDown } from 'lucide-react';
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { phrases } from "@/lib/phrases";
+import { ChevronDown } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { useEffect, useMemo, useRef, useState } from 'react';
+} from "@/components/ui/collapsible";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // Small typewriter text animation component
 function TypeText({
-
   typingSpeed = 70,
   pause = 950,
 }: {
@@ -26,7 +25,10 @@ function TypeText({
   const [subIndex, setSubIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
   const [blink, setBlink] = useState(true);
-  const current = useMemo(() => phrases[index % phrases.length], [phrases, index]);
+  const current = useMemo(
+    () => phrases[index % phrases.length],
+    [phrases, index]
+  );
 
   useEffect(() => {
     const blinkTimer = setInterval(() => setBlink((b) => !b), 500);
@@ -34,30 +36,37 @@ function TypeText({
   }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!deleting && subIndex < current.length) {
-        setSubIndex((v) => v + 1);
-        return;
-      }
-      if (!deleting && subIndex === current.length) {
-        setDeleting(true);
-        return;
-      }
-      if (deleting && subIndex > 0) {
-        setSubIndex((v) => v - 1);
-        return;
-      }
-      if (deleting && subIndex === 0) {
-        setDeleting(false);
-        setIndex((i) => i + 1);
-      }
-    }, deleting ? Math.max(typingSpeed / 2, 25) : (subIndex === current.length ? pause : typingSpeed));
+    const timeout = setTimeout(
+      () => {
+        if (!deleting && subIndex < current.length) {
+          setSubIndex((v) => v + 1);
+          return;
+        }
+        if (!deleting && subIndex === current.length) {
+          setDeleting(true);
+          return;
+        }
+        if (deleting && subIndex > 0) {
+          setSubIndex((v) => v - 1);
+          return;
+        }
+        if (deleting && subIndex === 0) {
+          setDeleting(false);
+          setIndex((i) => i + 1);
+        }
+      },
+      deleting
+        ? Math.max(typingSpeed / 2, 25)
+        : subIndex === current.length
+        ? pause
+        : typingSpeed
+    );
 
     return () => clearTimeout(timeout);
   }, [current, deleting, pause, subIndex, typingSpeed]);
 
   return (
-    <div className="mx-auto inline-flex items-center text-2xl sm:text-4xl text-base-content">
+    <div className="mx-auto inline-flex items-center text-2xl sm:text-4xl text-foreground">
       <span className="whitespace-pre">{current.slice(0, subIndex)}</span>
     </div>
   );
@@ -96,7 +105,7 @@ export default function Home() {
           <Button
             onClick={() => router.push("/create")}
             variant="ghost"
-            className="h-12 red-glow-shadow  rounded-xl hover:bg-base-200 hover:text-secondary cursor-pointer"
+            className="h-12 red-glow-shadow  hover:bg-muted hover:text-secondary cursor-pointer"
           >
             Créer une partie
           </Button>
@@ -104,7 +113,7 @@ export default function Home() {
           <Button
             variant="ghost"
             onClick={() => router.push("/join")}
-            className="h-12 glow-shadow rounded-xl hover:bg-base-200 hover:text-primary  cursor-pointer"
+            className="h-12 glow-shadow  hover:bg-muted hover:text-primary  cursor-pointer"
           >
             Rejoindre une partie
           </Button>
@@ -114,7 +123,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Collapsible className="bg-neutral rounded-2xl shadow-xl p-6">
+          <Collapsible className="bg-card rounded-2xl shadow-xl p-6">
             <CollapsibleTrigger className="space-y-1 flex justify-between items-center w-full">
               <h2 className="text-xl font-semibold">
                 Créez des phrases loufoques à plusieurs !
@@ -125,12 +134,12 @@ export default function Home() {
             <CollapsibleContent className=" mt-2">
               <ol className="list-none space-y-4 pt-4">
                 {/* ÉTAPE 1: Création */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     1.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       Un joueur crée une partie et{" "}
                       <span className="font-bold">partage le code</span>.
                     </p>
@@ -138,12 +147,12 @@ export default function Home() {
                 </li>
 
                 {/* ÉTAPE 2: Écriture */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     2.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       À chaque phase, les joueurs contribuent{" "}
                       <span className="font-bold">simultanément</span> en
                       écrivant un mot correspondant à une{" "}
@@ -154,12 +163,12 @@ export default function Home() {
                 </li>
 
                 {/* ÉTAPE 3: Rotation */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     3.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       Les mots de tous les joueurs sont assemblés pour former
                       les <span className="font-bold">phrases finales</span>.{" "}
                     </p>
@@ -167,12 +176,12 @@ export default function Home() {
                 </li>
 
                 {/* ÉTAPE 4: Vote */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     4.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       <span className="font-bold">Votez</span> pour la phrase la
                       plus innatendue ou la plus drôle!
                     </p>
@@ -180,12 +189,12 @@ export default function Home() {
                 </li>
 
                 {/* ÉTAPE 5: Résultat */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     5.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       Découvrez le{" "}
                       <span className="font-bold">classement final</span>.
                     </p>
@@ -193,12 +202,12 @@ export default function Home() {
                 </li>
 
                 {/* ÉTAPE 6: Rejouez */}
-                <li className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
-                  <div className="flex-shrink-0 text-2xl font-extrabold text-base-content/80 w-8 text-center">
+                <li className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                  <div className="flex-shrink-0 text-2xl font-extrabold text-foreground/80 w-8 text-center">
                     6.
                   </div>
                   <div>
-                    <p className="text-base sm:text-lg text-base-content">
+                    <p className="bg-muted sm:text-lg text-foreground">
                       <span className="font-bold">Rejouez ?</span>
                     </p>
                   </div>

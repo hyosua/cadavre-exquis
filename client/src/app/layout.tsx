@@ -1,12 +1,13 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { SocketManager } from '@/components/SocketManager';
-import { ToastProvider } from '@/components/providers/ToastProvider';
-
+import type { Metadata } from "next";
+import "./globals.css";
+import { SocketManager } from "@/components/SocketManager";
+import { ToastProvider } from "@/components/providers/ToastProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
-  title: 'Cadavre Exquis',
-  description: 'Le jeu d\'écriture collaborative délirant !',
+  title: "Cadavre Exquis",
+  description: "Le jeu d'écriture collaborative délirant !",
 };
 
 export default function RootLayout({
@@ -15,13 +16,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" data-theme="sunset">
+    <html lang="fr" suppressHydrationWarning>
       <body>
-        <SocketManager />
-        
-        {children}
-      
-        <ToastProvider />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          <SocketManager />
+          {children}
+          <ToastProvider />
+        </ThemeProvider>
       </body>
     </html>
   );

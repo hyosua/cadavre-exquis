@@ -3,180 +3,183 @@
 @import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
 
 @import "tailwindcss";
-
-
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark, sunset, dracula, caramellatte;
-}
-
-@plugin "daisyui/theme" {
-  name: "sunset";
-  default: true;
-  --color-primary: #4cc9f0;
-}
-
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
 
-/* ----------------------------------------------------------- */
-/* 4. BLOC @theme (Le "Pont" entre Shadcn et Tailwind) */
-/* Ceci dit à bg-background d'utiliser var(--background) */
-/* ----------------------------------------------------------- */
+@layer base {
+  :root {
+    --background: 0.9735 0.0261 90.0953;
+    --foreground: 0.3092 0.0518 219.6516;
+    --card: 0.9306 0.0260 92.4020;
+    --card-foreground: 0.3092 0.0518 219.6516;
+    --popover: 0.9306 0.0260 92.4020;
+    --popover-foreground: 0.3092 0.0518 219.6516;
+    --primary: 0.5924 0.2025 355.8943;
+    --primary-foreground: 1.0000 0 0;
+    --secondary: 0.6437 0.1019 187.3840;
+    --secondary-foreground: 1.0000 0 0;
+    --muted: 0.6979 0.0159 196.7940;
+    --muted-foreground: 0.3092 0.0518 219.6516;
+    --accent: 0.5808 0.1732 39.5003;
+    --accent-foreground: 1.0000 0 0;
+    --destructive: 0.5863 0.2064 27.1172;
+    --destructive-foreground: 1.0000 0 0;
+    --border: 0.6537 0.0197 205.2618;
+    --input: 0.6537 0.0197 205.2618;
+    --ring: 0.5924 0.2025 355.8943;
+    --chart-1: 0.6149 0.1394 244.9273;
+    --chart-2: 0.6437 0.1019 187.3840;
+    --chart-3: 0.5924 0.2025 355.8943;
+    --chart-4: 0.5808 0.1732 39.5003;
+    --chart-5: 0.5863 0.2064 27.1172;
+    --radius: 1.5rem;
+  }
+
+  .dark {
+    --background: 0.2673 0.0486 219.8169;
+    --foreground: 0.6979 0.0159 196.7940;
+    --card: 0.3092 0.0518 219.6516;
+    --card-foreground: 0.6979 0.0159 196.7940;
+    --popover: 0.3092 0.0518 219.6516;
+    --popover-foreground: 0.6979 0.0159 196.7940;
+    --primary: 0.5924 0.2025 355.8943;
+    --primary-foreground: 1.0000 0 0;
+    --secondary: 0.6437 0.1019 187.3840;
+    --secondary-foreground: 1.0000 0 0;
+    --muted: 0.5230 0.0283 219.1365;
+    --muted-foreground: 0.6979 0.0159 196.7940;
+    --accent: 0.5808 0.1732 39.5003;
+    --accent-foreground: 1.0000 0 0;
+    --destructive: 0.5863 0.2064 27.1172;
+    --destructive-foreground: 1.0000 0 0;
+    --border: 0.5230 0.0283 219.1365;
+    --input: 0.5230 0.0283 219.1365;
+    --ring: 0.5924 0.2025 355.8943;
+    --chart-1: 0.6149 0.1394 244.9273;
+    --chart-2: 0.6437 0.1019 187.3840;
+    --chart-3: 0.5924 0.2025 355.8943;
+    --chart-4: 0.5808 0.1732 39.5003;
+    --chart-5: 0.5863 0.2064 27.1172;
+  }
+
+  * {
+    border-color: oklch(var(--border));
+  }
+
+  body {
+    background-color: oklch(var(--background));
+    color: oklch(var(--foreground));
+    font-family: Ubuntu, ui-sans-serif, sans-serif, system-ui;
+    letter-spacing: 0.025em;
+  }
+}
+
 @theme {
-  /* -- Polices -- */
+  --font-sans: Ubuntu, ui-sans-serif, sans-serif, system-ui;
+  --font-serif: Cutive, ui-serif, serif;
+  --font-mono: Space Mono, monospace;
   --font-title: "Flavors", cursive;
   --font-averia: "Averia Gruesa Libre", system-ui;
 
-  /* -- Animations -- */
+  --color-background: oklch(var(--background));
+  --color-foreground: oklch(var(--foreground));
+  --color-card: oklch(var(--card));
+  --color-card-foreground: oklch(var(--card-foreground));
+  --color-popover: oklch(var(--popover));
+  --color-popover-foreground: oklch(var(--popover-foreground));
+  --color-primary: oklch(var(--primary));
+  --color-primary-foreground: oklch(var(--primary-foreground));
+  --color-secondary: oklch(var(--secondary));
+  --color-secondary-foreground: oklch(var(--secondary-foreground));
+  --color-muted: oklch(var(--muted));
+  --color-muted-foreground: oklch(var(--muted-foreground));
+  --color-accent: oklch(var(--accent));
+  --color-accent-foreground: oklch(var(--accent-foreground));
+  --color-destructive: oklch(var(--destructive));
+  --color-destructive-foreground: oklch(var(--destructive-foreground));
+  --color-border: oklch(var(--border));
+  --color-input: oklch(var(--input));
+  --color-ring: oklch(var(--ring));
+  --color-chart-1: oklch(var(--chart-1));
+  --color-chart-2: oklch(var(--chart-2));
+  --color-chart-3: oklch(var(--chart-3));
+  --color-chart-4: oklch(var(--chart-4));
+  --color-chart-5: oklch(var(--chart-5));
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: 2px 2px 4px 1px hsl(196 83% 10% / 0.07);
+  --shadow-xs: 2px 2px 4px 1px hsl(196 83% 10% / 0.07);
+  --shadow-sm: 2px 2px 4px 1px hsl(196 83% 10% / 0.15), 2px 1px 2px 0px hsl(196 83% 10% / 0.15);
+  --shadow: 2px 2px 4px 1px hsl(196 83% 10% / 0.15), 2px 1px 2px 0px hsl(196 83% 10% / 0.15);
+  --shadow-md: 2px 2px 4px 1px hsl(196 83% 10% / 0.15), 2px 2px 4px 0px hsl(196 83% 10% / 0.15);
+  --shadow-lg: 2px 2px 4px 1px hsl(196 83% 10% / 0.15), 2px 4px 6px 0px hsl(196 83% 10% / 0.15);
+  --shadow-xl: 2px 2px 4px 1px hsl(196 83% 10% / 0.15), 2px 8px 10px 0px hsl(196 83% 10% / 0.15);
+  --shadow-2xl: 2px 2px 4px 1px hsl(196 83% 10% / 0.38);
+
   --animation-fade-in: fadeIn 0.3s ease-in-out;
   --animation-slide-up: slideUp 0.3s ease-out;
   --animation-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
   @keyframes fadeIn {
-    '0%': {
-      opacity: '0'
+    from {
+      opacity: 0;
     }
 
-    ,
-    '100%': {
-      opacity: '1'
-    }
-  }
-
-  @keyframes slideUp {
-    '0%': {
-      transform: 'translateY(10px)'; opacity: '0'
-    }
-
-    ,
-    '100%': {
-      transform: 'translateY(0)'; opacity: '1'
-    }
-  }
-
-  /* -- "Pont" des couleurs Shadcn -- */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-
-  /* * CONFLIT DE COULEUR "PRIMARY" :
-   * Shadcn et votre palette custom se battent pour "primary".
-   * J'ai choisi de prioriser la palette custom (primary-50...900)
-   * et d'utiliser "primary-shadcn" pour celle de Shadcn.
-   */
-  --color-primary-shadcn: var(--primary);
-  /* Renommée */
-  --color-primary-shadcn-foreground: var(--primary-foreground);
-  /* Renommée */
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  /* Votre palette "primary" custom (celle-ci gagne) */
-  /* Vous utiliserez bg-primary-500, etc. */
-  --color-primary-50: #f0f9ff;
-  --color-primary-100: #e0f2fe;
-  --color-primary-200: #bae6fd;
-  --color-primary-300: #7dd3fc;
-  --color-primary-400: #38bdf8;
-  --color-primary-500: #0ea5e9;
-  --color-primary-600: #0284c7;
-  --color-primary-700: #0369a1;
-  --color-prefers-primary-800: #075985;
-  --color-primary-900: #0c4a6e;
-
-  /* -- Animations  -- */
-  --animation-fade-in: fadeIn 0.3s ease-in-out;
-  --animation-slide-up: slideUp 0.3s ease-out;
-  --animation-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-
-  /* -- Keyframes -- */
-  @keyframes fadeIn {
-    '0%': {
-      opacity: '0';
-    },
-    '100%': {
-      opacity: '1';
+    to {
+      opacity: 1;
     }
   }
 
   @keyframes slideUp {
-    '0%': {
-      transform: 'translateY(10px)'; opacity: '0';
-    },
-    '100%': {
-      transform: 'translateY(0)'; opacity: '1';
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
 }
 
-/* 5. Classes utilitaires personnalisées et Keyframes (de votre ancien globals.css) */
-/* Tout ceci reste inchangé et fonctionne parfaitement */
 .glow-shadow {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 2px 20px rgba(94, 169, 209, 0.3),
-    0 2px 4px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 2px 20px rgba(94, 169, 209, 0.3), 0 2px 4px rgba(0, 255, 255, 0.1);
   transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
 .glow-shadow:hover {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 4px 30px rgba(94, 169, 209, 0.5),
-    0 4px 8px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 4px 30px rgba(94, 169, 209, 0.5), 0 4px 8px rgba(0, 255, 255, 0.2);
 }
 
 .glow-shadow:active {
   transform: scale(0.98);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 1px 10px rgba(94, 169, 209, 0.5),
-    0 1px 2px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 1px 10px rgba(94, 169, 209, 0.5), 0 1px 2px rgba(0, 255, 255, 0.2);
 }
 
 .red-glow-shadow {
-  box-shadow:
-    0 0 0 1px rgba(220, 195, 213, 0.08),
-    0 2px 20px rgba(215, 106, 189, 0.3),
-    0 2px 4px rgba(216, 150, 218, 0.1);
+  box-shadow: 0 0 0 1px rgba(220, 195, 213, 0.08), 0 2px 20px rgba(215, 106, 189, 0.3), 0 2px 4px rgba(216, 150, 218, 0.1);
   transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
 .red-glow-shadow:hover {
-  box-shadow:
-    0 0 0 1px rgba(220, 195, 213, 0.15),
-    0 4px 30px rgba(215, 106, 189, 0.5),
-    0 4px 8px rgba(216, 150, 218, 0.2);
+  box-shadow: 0 0 0 1px rgba(220, 195, 213, 0.15), 0 4px 30px rgba(215, 106, 189, 0.5), 0 4px 8px rgba(216, 150, 218, 0.2);
 }
 
 .red-glow-shadow:active {
   transform: scale(0.98);
-  box-shadow:
-    0 0 0 1px rgba(220, 195, 213, 0.15),
-    0 1px 10px rgba(215, 106, 189, 0.5),
-    0 1px 2px rgba(216, 150, 218, 0.2);
+  box-shadow: 0 0 0 1px rgba(220, 195, 213, 0.15), 0 1px 10px rgba(215, 106, 189, 0.5), 0 1px 2px rgba(216, 150, 218, 0.2);
 }
 
 .glow-small {
   box-shadow: 0 8px 34px -6px rgba(34, 211, 238, 0.25);
 }
 
-
 @layer utilities {
-
   [data-slot='collapsible-content'] {
     overflow: hidden;
     transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease-out;
@@ -229,19 +232,15 @@
 
     0%,
     100% {
-      /* Couleur de base et ombre normale */
       box-shadow: 0 3px 12px -3px rgba(69, 211, 219, 0.2), 0 4px 6px -4px rgba(157, 191, 193, 0.2);
     }
 
     50% {
-      /* Ombre accentuée avec une couleur secondaire/primaire subtile */
       box-shadow: 0 0 15px rgba(60, 144, 177, 0.4), 0 0 12px rgba(78, 114, 255, 0.2);
     }
-
   }
 
   .animate-pulse-shadow {
     animation: pulse-shadow 5s ease-in-out infinite;
-    /* 4 secondes, fluide, en boucle */
   }
 }
