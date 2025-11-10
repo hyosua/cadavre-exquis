@@ -8,18 +8,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button, type ButtonProps } from "@/components/ui/button"
-import { type ReactNode } from "react"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { type ReactNode } from "react";
 
 type ConfirmProps = {
-  message?: string
-  onConfirm?: () => void
-  buttonName?: string | ReactNode
-  disableCondition?: boolean
-} & Omit<ButtonProps, 'onClick' | 'disabled' | 'children'>
+  message?: string;
+  onConfirm?: () => void;
+  buttonName?: string | ReactNode;
+  disableCondition?: boolean;
+} & React.ComponentProps<typeof Button>;
 
-export function Confirm({ 
+export function Confirm({
   message = "Cette action est irréversible",
   buttonName = "Valider",
   disableCondition = false,
@@ -32,7 +32,7 @@ export function Confirm({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button 
+        <Button
           variant={variant}
           size={size}
           className={className}
@@ -45,9 +45,7 @@ export function Confirm({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Êtes-vous sûr?</AlertDialogTitle>
-          <AlertDialogDescription>
-            {message}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Annuler</AlertDialogCancel>
@@ -55,5 +53,5 @@ export function Confirm({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

@@ -49,13 +49,13 @@ export function GamePhase() {
   };
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 bg-background">
       <div className="max-w-4xl mx-auto mt-8">
         <motion.div
           initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
           animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="bg-base-300 flex items-center justify-center flex-col rounded-2xl shadow-xl p-8 "
+          className="bg-card text-card-foreground flex items-center justify-center flex-col rounded-2xl shadow-xl p-8"
         >
           <div className="text-center mb-2">
             <h1 className="text-3xl font-bold mb-2">
@@ -86,7 +86,9 @@ export function GamePhase() {
                 {currentPhaseLabel.toUpperCase()}
               </motion.p>
             </AnimatePresence>
-            <span className="text-xl italic font-semibold">{helper}</span>
+            <span className="text-xl italic font-semibold text-muted-foreground">
+              {helper}
+            </span>
           </div>
 
           <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
@@ -111,7 +113,7 @@ export function GamePhase() {
                   >
                     <Input
                       value={word}
-                      className="md:text-xl placeholder:text-gray-500 sm:text-xl placeholder:text-sm  sm:placeholder:text-lg placeholder:truncate"
+                      className="md:text-xl placeholder:text-muted-foreground/60 sm:text-xl placeholder:text-sm sm:placeholder:text-lg placeholder:truncate"
                       onChange={(e) => setWord(e.target.value)}
                       placeholder={placeholder}
                       maxLength={50}
@@ -130,7 +132,7 @@ export function GamePhase() {
                 ) : (
                   <motion.div
                     key="confirmation"
-                    className=" border-success rounded-lg p-2 text-center"
+                    className="border border-green-500/50 dark:border-green-400/50 rounded-lg p-2 text-center bg-green-500/10 dark:bg-green-400/10"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{
@@ -141,7 +143,7 @@ export function GamePhase() {
                     transition={{ duration: 0.1, ease: "easeOut" }}
                   >
                     <motion.p
-                      className="text-success font-semibold text-md mt-1"
+                      className="text-green-700 dark:text-green-400 font-semibold text-md mt-1"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [1, 0.6, 1] }}
                       transition={{
@@ -166,7 +168,7 @@ export function GamePhase() {
               <Confirm
                 message="Vous êtes sur le point de quitter la partie."
                 buttonName="Quitter"
-                className="hover:bg-error "
+                className="hover:bg-destructive hover:text-destructive-foreground"
                 onConfirm={leaveGame}
               />
             </div>

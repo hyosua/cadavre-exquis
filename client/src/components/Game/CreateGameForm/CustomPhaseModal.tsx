@@ -191,7 +191,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
-                  className={`flex items-center gap-3 p-3 rounded-lg border bg-card shadow-sm hover:shadow-md transition-all cursor-move ${
+                  className={`flex items-center gap-3 p-3 rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all cursor-move ${
                     draggedItem?.id === phase.id
                       ? "opacity-50 scale-[0.98]"
                       : ""
@@ -245,7 +245,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                 key={phase.id}
                 type="button"
                 onClick={() => addPhase(phase)}
-                className="group text-left p-3 rounded-lg border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all hover:shadow-sm"
+                className="group text-left p-3 rounded-lg border bg-card text-card-foreground hover:border-primary/50 hover:bg-primary/5 transition-all hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
@@ -267,7 +267,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
       </div>
 
       {/* Info */}
-      <div className="text-xs text-muted-foreground bg-muted/50 rounded p-3 space-y-1">
+      <div className="text-xs text-muted-foreground bg-muted/50 rounded-lg p-3 space-y-1">
         <p>
           💡 <strong>Cliquez</strong> sur un élément pour l&apos;ajouter
         </p>

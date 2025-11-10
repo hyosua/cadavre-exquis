@@ -23,7 +23,7 @@ export function PhaseSteps({ phases, currentPhase }: PhaseStepsProps) {
             <li
               key={p}
               className={`step ease-in-out transition-all duration-500 ${
-                index <= currentPhase ? "step-primary" : "step-neutral"
+                index <= currentPhase ? "step-primary" : "step-muted"
               }`}
             >
               {p}

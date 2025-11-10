@@ -78,7 +78,7 @@ export function CreateGameForm() {
   };
 
   return (
-    <div className="bg-base-300 min-h-screen p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -138,11 +138,11 @@ export function CreateGameForm() {
                 />
               </CardContent>
 
-              <CardFooter className="flex gap-2 sm:gap-8">
+              <CardFooter className="flex sm:flex-row justify-center gap-2 sm:gap-8">
                 <Button
                   variant={"destructive"}
                   size="lg"
-                  className="w-full"
+                  className="w-1/2"
                   disabled={isSubmitting}
                   onClick={() => router.back()}
                 >
@@ -151,7 +151,7 @@ export function CreateGameForm() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full"
+                  className="w-1/2"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && (

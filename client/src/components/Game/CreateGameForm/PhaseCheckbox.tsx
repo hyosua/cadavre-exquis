@@ -1,4 +1,4 @@
-import { phaseDetail } from "@/types/game.type";
+import { PhaseDetail } from "@/types/game.type";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
@@ -9,7 +9,7 @@ import {
 
 interface PhaseCheckboxProps {
   phaseKey: string;
-  detail: phaseDetail;
+  detail: PhaseDetail;
   field: {
     value: string[];
     onChange: (value: string[]) => void;

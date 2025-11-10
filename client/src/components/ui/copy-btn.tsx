@@ -61,7 +61,7 @@ const CodeCopyBtn: React.FC<CodeCopyBtnProps> = ({ codeToCopy }) => {
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 >
-                  <Check size={12} className="text-white" />
+                  <Check size={12} className="" />
                 </motion.span>
               ) : (
                 <motion.span
@@ -76,7 +76,7 @@ const CodeCopyBtn: React.FC<CodeCopyBtnProps> = ({ codeToCopy }) => {
             </AnimatePresence>
           </Button>
         </TooltipTrigger>
-        <TooltipContent className="bg-accent text-base-300 font-semibold">
+        <TooltipContent className="bg-accent font-semibold">
           <p>Copié !</p>
         </TooltipContent>
       </Tooltip>
