@@ -76,7 +76,7 @@ const CodeCopyBtn: React.FC<CodeCopyBtnProps> = ({ codeToCopy }) => {
             </AnimatePresence>
           </Button>
         </TooltipTrigger>
-        <TooltipContent className="bg-accent font-semibold">
+        <TooltipContent className="bg-accent font-semibold text-accent-foreground">
           <p>Copié !</p>
         </TooltipContent>
       </Tooltip>

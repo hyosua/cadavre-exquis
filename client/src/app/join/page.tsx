@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useGame } from '@/hooks/useGame';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'
-import { motion } from 'framer-motion';
-import Loader from '@/components/ui/loader';
-
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useGame } from "@/hooks/useGame";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import Loader from "@/components/ui/loader";
 
 export default function JoinGame() {
   const router = useRouter();
   const { joinGame, game } = useGame();
-  const [pseudo, setPseudo] = useState('');
-  const [code, setCode] = useState('');
-  const [error, setError] = useState('');
+  const [pseudo, setPseudo] = useState("");
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
   const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
@@ -25,31 +24,31 @@ export default function JoinGame() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!pseudo.trim()) {
-      setError('Veuillez entrer un pseudo');
+      setError("Veuillez entrer un pseudo");
       return;
     }
 
     if (!code.trim()) {
-      setError('Veuillez entrer le code de la partie');
+      setError("Veuillez entrer le code de la partie");
       return;
     }
 
     if (code.length !== 6) {
-      setError('Le code doit contenir 6 caractères');
+      setError("Le code doit contenir 6 caractères");
       return;
     }
     joinGame(code.toUpperCase(), pseudo.trim());
-    setIsJoining(true); 
+    setIsJoining(true);
   };
-  
+
   if (isJoining) {
     return (
       <div className="min-h-screen flex flex-col gap-4 items-center justify-center">
-          <Loader />
-          <p className="font-bold">Connexion à la partie...</p>
-          <p className="text-sm ">Code: {code}</p>
+        <Loader />
+        <p className="font-bold">Connexion à la partie...</p>
+        <p className="text-sm ">Code: {code}</p>
       </div>
     );
   }
@@ -57,11 +56,11 @@ export default function JoinGame() {
   return (
     <div className="min-h-screen  flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <motion.div 
-          initial={{opacity: 0, filter: 'blur(8px)', scale: 0.8 }}
-          animate={{opacity: 1, filter: 'blur(0px)', scale: 1 }}
-          transition={{duration: 0.2, ease:'easeOut'}}
-          className="bg-base-300 rounded-2xl shadow-xl p-8 glow-shadow"
+        <motion.div
+          initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
+          animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="bg-card rounded-2xl shadow-xl p-8 dark:glow-shadow"
         >
           <h1 className="text-3xl font-bold mb-6 text-center">
             Rejoindre une partie
@@ -72,11 +71,11 @@ export default function JoinGame() {
               value={pseudo}
               onChange={(e) => {
                 setPseudo(e.target.value);
-                setError('');
+                setError("");
               }}
               placeholder="Entrez votre pseudo"
               maxLength={20}
-              className='text-primary'
+              className="text-lg"
               autoFocus
             />
 
@@ -84,7 +83,7 @@ export default function JoinGame() {
               value={code}
               onChange={(e) => {
                 setCode(e.target.value.toUpperCase());
-                setError('');
+                setError("");
               }}
               placeholder="ABC123"
               maxLength={6}
@@ -92,8 +91,8 @@ export default function JoinGame() {
             />
 
             {error && (
-              <div className=" border bg-error/15 border-error rounded-lg p-3">
-                <p className="text-sm text-error">{error}</p>
+              <div className=" border border-destructive rounded-sm p-3">
+                <p className="text-sm text-destructive">{error}</p>
               </div>
             )}
 
@@ -103,7 +102,7 @@ export default function JoinGame() {
               </Button>
               <Button
                 type="button"
-                onClick={() => router.push('/')}
+                onClick={() => router.push("/")}
                 variant={"ghost"}
                 className="w-full hover:bg-error"
               >

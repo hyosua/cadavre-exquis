@@ -14,9 +14,9 @@ export function VotingPhase() {
   const voted = hasVoted();
 
   return (
-    <div className="min-h-screen p-4 bg-background">
+    <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.15)] bg-card text-card-foreground rounded-2xl p-8 animate-in fade-in duration-500">
+        <div className=" bg-card text-card-foreground rounded-2xl p-8 animate-in fade-in duration-500">
           <div className="text-center mb-8">
             <h1 className="text-4xl text-primary font-bold mb-2">Vote</h1>
             <p className="font-semibold text-foreground">
@@ -38,7 +38,7 @@ export function VotingPhase() {
                     animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                     key={sentence.id}
-                    className="bg-muted/50 border border-border rounded-lg p-4 hover:bg-muted/70 transition-colors"
+                    className=" border border-border rounded-lg p-4 hover:bg-muted/70 transition-colors"
                   >
                     <div className="flex flex-col items-center sm:items-center justify-center sm:justify-between sm:flex-row gap-4">
                       <div className="flex-1 w-full">
@@ -49,7 +49,7 @@ export function VotingPhase() {
                           {fullSentence}
                         </p>
                         {voted && (
-                          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">
+                          <p className="text-sm text-accent font-semibold">
                             {voteCount} vote{voteCount > 1 ? "s" : ""}
                           </p>
                         )}

@@ -7,7 +7,7 @@ import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import { motion } from "framer-motion";
 import CodeCopyBtn from "../ui/copy-btn";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 
 export function GameLobby() {
   const { game, currentPlayer, startGame, cancelGame, leaveGame } = useGame();
@@ -29,7 +29,7 @@ export function GameLobby() {
             <h1 className="text-4xl text-primary font-bold mb-2">
               Salle d&apos;attente
             </h1>
-            <div className="inline-block bg-secondary text-secondary-foreground px-6 py-3 rounded-lg">
+            <div className="inline-block px-6 py-3 rounded-lg">
               <p className="text-sm mb-1">Code de la partie</p>
               <div className="flex items-baseline gap-4">
                 <p className="text-3xl font-mono font-bold text-primary">
@@ -45,7 +45,7 @@ export function GameLobby() {
             currentPlayerId={currentPlayer.id}
           />
 
-          <div className="mt-4 sm:mt-6 bg-muted text-muted-foreground rounded-lg p-2 sm:p-4">
+          <div className="mt-4 sm:mt-6 text-muted-foreground rounded-lg p-2 sm:p-4">
             <h4 className="font-semibold mb-2 text-foreground">
               Configuration
             </h4>
@@ -58,20 +58,20 @@ export function GameLobby() {
           {isHost && (
             <div className="mt-4 sm:mt-6">
               {!canStart && (
-                <p className="text-center text-amber-600 dark:text-amber-500 mb-2 text-sm">
+                <p className="text-center mb-2 text-sm cursor-pointer">
                   Il faut au moins 2 joueurs pour commencer
                 </p>
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <Confirm
                   message="Vous êtes sur le point d'annuler la partie"
                   buttonName="Annuler"
-                  className="hover:bg-destructive hover:text-destructive-foreground"
+                  className="w-1/2 hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
                   onConfirm={cancelGame}
                 />
                 <Button
                   onClick={startGame}
-                  className="w-full"
+                  className="w-1/2"
                   disabled={!canStart}
                   size="lg"
                 >
@@ -83,9 +83,9 @@ export function GameLobby() {
 
           {!isHost && (
             <div className="flex flex-col items-center gap-4 sm:gap-8">
-              <p className="mt-4 sm:mt-6 text-center text-sm text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-2">
+              <p className="mt-4 sm:mt-6 text-center text-sm text-accent font-semibold flex items-center gap-2">
                 En attente que l&apos;hôte démarre la partie
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="loading loading-dots loading-xs text-accent"></span>
               </p>
               <Confirm
                 message="Vous êtes sur le point de quitter la partie."

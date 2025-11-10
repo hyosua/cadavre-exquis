@@ -88,7 +88,7 @@ export default function Home() {
           transition={{ duration: 0.3 }}
           className="text-center mb-10 sm:mb-14"
         >
-          <h1 className="text-5xl font-title sm:text-8xl font-bold text-secondary ">
+          <h1 className="text-5xl font-title sm:text-8xl font-bold text-primary ">
             Cadavre Exquis
           </h1>
           <div className="mt-4 font-averia min-h-[2rem] sm:min-h-[3rem]">
@@ -105,7 +105,7 @@ export default function Home() {
           <Button
             onClick={() => router.push("/create")}
             variant="outline"
-            className="h-12 dark:red-glow-shadow  hover: hover:text-secondary-foreground cursor-pointer"
+            className="h-12 dark:red-glow-shadow    cursor-pointer"
           >
             Créer une partie
           </Button>
@@ -113,7 +113,7 @@ export default function Home() {
           <Button
             variant="outline"
             onClick={() => router.push("/join")}
-            className="h-12 dark:glow-shadow  hover: hover:text-primary-foreground  cursor-pointer"
+            className="h-12 dark:glow-shadow   cursor-pointer"
           >
             Rejoindre une partie
           </Button>

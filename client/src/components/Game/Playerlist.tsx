@@ -24,7 +24,7 @@ export function PlayerList({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-secondary/50 border border-border rounded-lg shadow-[0_8px_34px_-6px_hsl(var(--primary)/0.15)] p-4"
+      className="border-2 rounded-lg  p-4"
     >
       <h3 className="text-lg font-semibold mb-3">Joueurs ({players.length})</h3>
       <div className="space-y-2">
@@ -34,7 +34,7 @@ export function PlayerList({
             className={`flex items-center justify-between p-2 rounded transition-colors ${
               player.id === currentPlayerId
                 ? "border border-primary  bg-card"
-                : "bg-card"
+                : "border border-muted bg-card"
             }`}
           >
             <div className="flex items-center space-x-2">
@@ -47,7 +47,7 @@ export function PlayerList({
               {player.isHost && (
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/30"
+                  className="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-400 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/30"
                 >
                   Hôte
                 </Badge>

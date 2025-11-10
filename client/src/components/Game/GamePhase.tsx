@@ -132,7 +132,7 @@ export function GamePhase() {
                 ) : (
                   <motion.div
                     key="confirmation"
-                    className="border border-green-500/50 dark:border-green-400/50 rounded-lg p-2 text-center bg-green-500/10 dark:bg-green-400/10"
+                    className="animate-pulse rounded-lg p-2 text-center"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{
@@ -143,7 +143,7 @@ export function GamePhase() {
                     transition={{ duration: 0.1, ease: "easeOut" }}
                   >
                     <motion.p
-                      className="text-green-700 dark:text-green-400 font-semibold text-md mt-1"
+                      className="text-success font-semibold text-md mt-1"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: [1, 0.6, 1] }}
                       transition={{
