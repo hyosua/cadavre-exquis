@@ -4,12 +4,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { socketService } from '@/services/socketService';
 import { useGameStore } from '@/store/gameStore';
-import { useToastStore } from '@/store/toastStore';
+import { toast } from 'sonner';
 import { Game, Player } from '@/types/game.type';
 
 export function useSocket() {
   const router = useRouter();
-  const { showToast } = useToastStore();
   const {
     setGame,
     setTimeLeft,
@@ -50,12 +49,12 @@ export function useSocket() {
       setGame(data.game);
       setError(null);
       router.push(`/game/${data.game.id}`);
-      showToast('success', `Connecté en tant que ${data.player.pseudo}`);
+      toast.success(`Connecté en tant que ${data.player.pseudo}`);
     });
 
     socket.on('rejoin_failed', (data: { message: string }) => {
       console.error('Rejoin failed:', data.message);
-      showToast('error', `${data.message}`);
+      toast.error(`${data.message}`);
       // Clear invalid stored data
       useGameStore.getState().setPersistedGameRef(null);
       setCurrentPlayer(null);
@@ -63,7 +62,7 @@ export function useSocket() {
     });
 
     socket.on('game_created', (data: { gameId: string; code: string }) => {
-      showToast('success', 'Partie créée');
+      toast.success('Partie créée');
       onGameCreated?.(data.gameId);
       useGameStore.getState().setPersistedGameRef({ id: data.gameId, code: data.code });
     });
@@ -72,7 +71,7 @@ export function useSocket() {
       console.log('Game deleted by server');
       resetGame()
       router.push('/');
-      showToast('info', 'Partie supprimée');
+      toast.info('Partie supprimée');
     });
 
     socket.on('game_left', () => {
@@ -85,7 +84,7 @@ export function useSocket() {
       console.log('Player kicked out by server')
       resetGame()
       router.push('/');
-      showToast('warning', 'Vous avez été exclu du jeu');
+      toast.warning('Vous avez été exclu de la partie');
 
     })
 
@@ -93,25 +92,23 @@ export function useSocket() {
       console.log('Game canceled by server');
       resetGame()
       router.push('/');
-      showToast('warning', 'Partie annulée');
-
     });
 
     socket.on('assigned_host', (data: { player: Player, message: string }) => {
       console.log('server: new host assigned');
       setCurrentPlayer(data.player);
-      showToast('info', data.message);
+      toast.info(data.message);
 
     });
 
     socket.on('error', (data: { message: string }) => {
       setError(data.message)
-      showToast('error', data.message);
+      toast.error(data.message);
     });
 
     socket.on('join_failed', (data: { message: string }) => {
       setError(data.message)
-      showToast('error', data.message);
+      toast.error(data.message);
       router.push('/');
     });
 
@@ -129,7 +126,7 @@ export function useSocket() {
         'current_player','game_state','phase_started','timer_update', 'assigned_host'
       ].forEach((e) => socket.off(e));
     };
-  }, [hasHydrated, showToast, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer, router]);
+  }, [hasHydrated, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer, router]);
 
   return socketService;
 }

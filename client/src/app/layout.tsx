@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SocketManager } from "@/components/SocketManager";
-import { ToastProvider } from "@/components/providers/ToastProvider";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/header";
 
@@ -27,7 +27,7 @@ export default function RootLayout({
           <Header />
           <SocketManager />
           {children}
-          <ToastProvider />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

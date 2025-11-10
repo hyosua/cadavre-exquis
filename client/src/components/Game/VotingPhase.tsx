@@ -72,7 +72,7 @@ export function VotingPhase() {
           </div>
 
           {voted && (
-            <p className="text-center mt-6 text-green-600 dark:text-green-400 font-semibold">
+            <p className="text-center mt-6 text-accent font-semibold">
               Vote enregistré ! En attente des autres joueurs...
             </p>
           )}

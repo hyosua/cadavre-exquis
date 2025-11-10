@@ -31,7 +31,7 @@ export function Results() {
   return (
     <div className="min-h-screen p-4 bg-background">
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-card text-card-foreground rounded-2xl p-8 animate-in fade-in duration-500">
+        <div className="bg-card shadow-xl text-card-foreground rounded-2xl p-8 animate-in fade-in duration-500">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-primary mb-2">Résultats</h1>
             <p className="font-semibold text-foreground">

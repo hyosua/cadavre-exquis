@@ -104,16 +104,16 @@ export default function Home() {
         >
           <Button
             onClick={() => router.push("/create")}
-            variant="outline"
-            className="h-12 dark:red-glow-shadow    cursor-pointer"
+            variant="secondary"
+            className="h-12 dark:red-glow-shadow  shadow-md cursor-pointer"
           >
             Créer une partie
           </Button>
 
           <Button
-            variant="outline"
             onClick={() => router.push("/join")}
-            className="h-12 dark:glow-shadow   cursor-pointer"
+            variant="secondary"
+            className="h-12 dark:glow-shadow  shadow-md cursor-pointer"
           >
             Rejoindre une partie
           </Button>
