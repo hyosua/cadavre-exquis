@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { phrases } from "@/lib/phrases";
@@ -73,7 +73,6 @@ function TypeText({
 }
 
 export default function Home() {
-  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -103,19 +102,21 @@ export default function Home() {
           transition={{ duration: 0.3 }}
         >
           <Button
-            onClick={() => router.push("/create")}
             variant="secondary"
             className="h-12 dark:red-glow-shadow  shadow-md cursor-pointer"
           >
-            Créer une partie
+            <Link href="/create" passHref>
+              Créer une partie
+            </Link>
           </Button>
 
           <Button
-            onClick={() => router.push("/join")}
             variant="secondary"
             className="h-12 dark:glow-shadow  shadow-md cursor-pointer"
           >
-            Rejoindre une partie
+            <Link href="/join" passHref>
+              Rejoindre une partie
+            </Link>
           </Button>
         </motion.div>
         <motion.div
