@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -78,7 +78,7 @@ export function CreateGameForm() {
   };
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 animate-in fade-in duration-300">
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

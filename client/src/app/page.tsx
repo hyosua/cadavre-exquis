@@ -102,21 +102,19 @@ export default function Home() {
           transition={{ duration: 0.3 }}
         >
           <Button
+            asChild
             variant="secondary"
             className="h-12 dark:red-glow-shadow  shadow-md cursor-pointer"
           >
-            <Link href="/create" passHref>
-              Créer une partie
-            </Link>
+            <Link href="/create">Créer une partie</Link>
           </Button>
 
           <Button
+            asChild
             variant="secondary"
             className="h-12 dark:glow-shadow  shadow-md cursor-pointer"
           >
-            <Link href="/join" passHref>
-              Rejoindre une partie
-            </Link>
+            <Link href="/join">Rejoindre une partie</Link>
           </Button>
         </motion.div>
         <motion.div
