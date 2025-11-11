@@ -1,8 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Loader from "@/components/ui/loader";
-import { CreateGameFormSkeleton } from "@/components/squeletons/CreateGameSkeleton";
+import { CreateGameFormShell } from "@/components/Game/CreateGameForm/CreateGameFormShell";
 
 const DynamicCreateGameForm = dynamic(
   () =>
@@ -10,7 +9,7 @@ const DynamicCreateGameForm = dynamic(
       (mod) => mod.CreateGameForm
     ),
   {
-    loading: () => <CreateGameFormSkeleton />,
+    loading: () => <CreateGameFormShell />,
     ssr: false,
   }
 );
