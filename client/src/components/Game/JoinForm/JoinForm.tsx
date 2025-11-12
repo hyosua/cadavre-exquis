@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useGame } from "@/hooks/useGame";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
 import Loader from "@/components/ui/loader";
+import Link from "next/link";
 
 export default function JoinGame() {
   const router = useRouter();
@@ -54,7 +54,7 @@ export default function JoinGame() {
   }
 
   return (
-    <div className="min-h-screen  flex items-center justify-center p-4">
+    <div className="min-h-screen  flex items-center justify-center p-4 bg-muted/70">
       <div className="max-w-md w-full">
         <div className="bg-card rounded-2xl shadow-xl p-8 dark:glow-shadow">
           <h1 className="text-3xl font-bold mb-6 text-center">
@@ -96,12 +96,12 @@ export default function JoinGame() {
                 Rejoindre
               </Button>
               <Button
+                asChild
                 type="button"
-                onClick={() => router.push("/")}
                 variant={"ghost"}
                 className="w-full hover:bg-error"
               >
-                Retour
+                <Link href="/">Retour</Link>
               </Button>
             </div>
           </form>

@@ -33,6 +33,7 @@ import {
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 // Variants pour le conteneur principal
 const containerVariants = {
@@ -117,7 +118,7 @@ export function CreateGameForm() {
   };
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 bg-muted/70">
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -196,13 +197,13 @@ export function CreateGameForm() {
                 <CardFooter className="flex sm:flex-row justify-center gap-2 sm:gap-8">
                   <motion.div variants={itemVariants} className="w-1/2">
                     <Button
-                      variant={"destructive"}
+                      asChild
+                      variant={"ghost"}
                       size="lg"
                       className="w-full"
                       disabled={isSubmitting}
-                      onClick={() => router.back()}
                     >
-                      Annuler
+                      <Link href="/">Annuler</Link>
                     </Button>
                   </motion.div>
                   <motion.div variants={itemVariants} className="w-1/2">
