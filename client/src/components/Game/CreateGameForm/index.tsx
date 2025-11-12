@@ -78,7 +78,7 @@ export function CreateGameForm() {
   };
 
   return (
-    <div className="min-h-screen p-4 animate-in fade-in duration-300">
+    <div className="min-h-screen p-4">
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
