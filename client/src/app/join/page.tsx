@@ -1,117 +1,18 @@
+// src/app/join/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useGame } from "@/hooks/useGame";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
-import Loader from "@/components/ui/loader";
+import dynamic from "next/dynamic";
+import { JoinFormSkeleton } from "@/components/Game/JoinForm/Join.skeleton";
 
-export default function JoinGame() {
-  const router = useRouter();
-  const { joinGame, game } = useGame();
-  const [pseudo, setPseudo] = useState("");
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const [isJoining, setIsJoining] = useState(false);
-
-  useEffect(() => {
-    if (game && isJoining) {
-      router.push(`/game/${game.id}`);
-    }
-  }, [game, isJoining, router]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!pseudo.trim()) {
-      setError("Veuillez entrer un pseudo");
-      return;
-    }
-
-    if (!code.trim()) {
-      setError("Veuillez entrer le code de la partie");
-      return;
-    }
-
-    if (code.length !== 6) {
-      setError("Le code doit contenir 6 caractères");
-      return;
-    }
-    joinGame(code.toUpperCase(), pseudo.trim());
-    setIsJoining(true);
-  };
-
-  if (isJoining) {
-    return (
-      <div className="min-h-screen flex flex-col gap-4 items-center justify-center">
-        <Loader />
-        <p className="font-bold">Connexion à la partie...</p>
-        <p className="text-sm ">Code: {code}</p>
-      </div>
-    );
+const DynamicJoinForm = dynamic(
+  () =>
+    import("@/components/Game/JoinForm/JoinForm").then((mod) => mod.default),
+  {
+    loading: () => <JoinFormSkeleton />,
+    ssr: false,
   }
+);
 
-  return (
-    <div className="min-h-screen  flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <motion.div
-          initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
-          animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="bg-card rounded-2xl shadow-xl p-8 dark:glow-shadow"
-        >
-          <h1 className="text-3xl font-bold mb-6 text-center">
-            Rejoindre une partie
-          </h1>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              value={pseudo}
-              onChange={(e) => {
-                setPseudo(e.target.value);
-                setError("");
-              }}
-              placeholder="Entrez votre pseudo"
-              maxLength={20}
-              className="text-lg"
-              autoFocus
-            />
-
-            <Input
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value.toUpperCase());
-                setError("");
-              }}
-              placeholder="ABC123"
-              maxLength={6}
-              className="uppercase font-mono text-center text-2xl tracking-wider"
-            />
-
-            {error && (
-              <div className=" border border-destructive rounded-sm p-3">
-                <p className="text-sm text-destructive">{error}</p>
-              </div>
-            )}
-
-            <div className="space-y-3">
-              <Button type="submit" className="w-full">
-                Rejoindre
-              </Button>
-              <Button
-                type="button"
-                onClick={() => router.push("/")}
-                variant={"ghost"}
-                className="w-full hover:bg-error"
-              >
-                Retour
-              </Button>
-            </div>
-          </form>
-        </motion.div>
-      </div>
-    </div>
-  );
+export default function JoinPage() {
+  return <DynamicJoinForm />;
 }

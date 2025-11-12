@@ -106,7 +106,9 @@ export default function Home() {
             variant="secondary"
             className="h-12 dark:red-glow-shadow  shadow-md cursor-pointer"
           >
-            <Link href="/create">Créer une partie</Link>
+            <Link href="/create" prefetch={true}>
+              Créer une partie
+            </Link>
           </Button>
 
           <Button
@@ -114,7 +116,9 @@ export default function Home() {
             variant="secondary"
             className="h-12 dark:glow-shadow  shadow-md cursor-pointer"
           >
-            <Link href="/join">Rejoindre une partie</Link>
+            <Link href="/join" prefetch={true}>
+              Rejoindre une partie
+            </Link>
           </Button>
         </motion.div>
         <motion.div

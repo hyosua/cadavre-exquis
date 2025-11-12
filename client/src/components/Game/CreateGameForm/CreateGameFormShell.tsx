@@ -13,12 +13,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export function CreateGameFormShell() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen p-4 animate-in fade-in duration-300">
+    <motion.div
+      className="min-h-screen p-4"
+      initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
+      animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Card>
           <CardHeader>
@@ -83,6 +89,6 @@ export function CreateGameFormShell() {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </motion.div>
   );
 }
