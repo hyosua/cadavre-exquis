@@ -24,16 +24,7 @@ function TypeText({
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
-  const [blink, setBlink] = useState(true);
-  const current = useMemo(
-    () => phrases[index % phrases.length],
-    [phrases, index]
-  );
-
-  useEffect(() => {
-    const blinkTimer = setInterval(() => setBlink((b) => !b), 500);
-    return () => clearInterval(blinkTimer);
-  }, []);
+  const current = useMemo(() => phrases[index % phrases.length], [index]);
 
   useEffect(() => {
     const timeout = setTimeout(

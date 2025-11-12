@@ -32,6 +32,45 @@ import {
 
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
+import { motion } from "framer-motion";
+
+// Variants pour le conteneur principal
+const containerVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(10px)",
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.3,
+      ease: [0.16, 1, 0.3, 1] as const,
+      staggerChildren: 0.1, // Décalage entre chaque enfant
+      delayChildren: 0.1, // Délai avant le début du stagger
+    },
+  },
+};
+
+// Variants pour les éléments enfants
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    filter: "blur(4px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+};
 
 export function CreateGameForm() {
   const router = useRouter();
@@ -82,85 +121,106 @@ export function CreateGameForm() {
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Créer une nouvelle partie</CardTitle>
-              </CardHeader>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Card>
+                <CardHeader>
+                  <motion.div variants={itemVariants}>
+                    <CardTitle>Créer une nouvelle partie</CardTitle>
+                  </motion.div>
+                </CardHeader>
 
-              <CardContent className="space-y-8">
-                {/* Pseudo */}
-                <FormField
-                  control={form.control}
-                  name="pseudo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-semibold">
-                        Pseudo
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Votre nom de joueur" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <CardContent className="space-y-8">
+                  {/* Pseudo */}
+                  <motion.div variants={itemVariants}>
+                    <FormField
+                      control={form.control}
+                      name="pseudo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg font-semibold">
+                            Pseudo
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Votre nom de joueur"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
 
-                {/* Mode de jeu */}
-                <GameModeSelector control={form.control} />
+                  {/* Mode de jeu */}
+                  <motion.div variants={itemVariants}>
+                    <GameModeSelector control={form.control} />
+                  </motion.div>
 
-                {/* Temps par phase */}
-                <FormField
-                  control={form.control}
-                  name="timePerPhase"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-semibold">
-                        Temps par phase
-                      </FormLabel>
-                      <div className="flex items-center gap-4">
-                        <FormControl>
-                          <Slider
-                            defaultValue={field.value}
-                            onValueChange={field.onChange}
-                            max={120}
-                            min={30}
-                            step={5}
-                            className="flex-1"
-                          />
-                        </FormControl>
-                        <span className="font-mono text-lg font-bold w-16 text-center text-primary bg-muted rounded-md px-2 py-1">
-                          {field.value?.[0] || 30}s
-                        </span>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
+                  {/* Temps par phase */}
+                  <motion.div variants={itemVariants}>
+                    <FormField
+                      control={form.control}
+                      name="timePerPhase"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg font-semibold">
+                            Temps par phase
+                          </FormLabel>
+                          <div className="flex items-center gap-4">
+                            <FormControl>
+                              <Slider
+                                defaultValue={field.value}
+                                onValueChange={field.onChange}
+                                max={120}
+                                min={30}
+                                step={5}
+                                className="flex-1"
+                              />
+                            </FormControl>
+                            <span className="font-mono text-lg font-bold w-16 text-center text-primary  rounded-md px-2 py-1">
+                              {field.value?.[0] || 30}s
+                            </span>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                </CardContent>
 
-              <CardFooter className="flex sm:flex-row justify-center gap-2 sm:gap-8">
-                <Button
-                  variant={"destructive"}
-                  size="lg"
-                  className="w-1/2"
-                  disabled={isSubmitting}
-                  onClick={() => router.back()}
-                >
-                  Annuler
-                </Button>
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-1/2"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Créer la partie
-                </Button>
-              </CardFooter>
-            </Card>
+                <CardFooter className="flex sm:flex-row justify-center gap-2 sm:gap-8">
+                  <motion.div variants={itemVariants} className="w-1/2">
+                    <Button
+                      variant={"destructive"}
+                      size="lg"
+                      className="w-full"
+                      disabled={isSubmitting}
+                      onClick={() => router.back()}
+                    >
+                      Annuler
+                    </Button>
+                  </motion.div>
+                  <motion.div variants={itemVariants} className="w-1/2">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      Créer la partie
+                    </Button>
+                  </motion.div>
+                </CardFooter>
+              </Card>
+            </motion.div>
           </form>
         </Form>
       </div>
