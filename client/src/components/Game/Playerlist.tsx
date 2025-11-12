@@ -24,7 +24,7 @@ export function PlayerList({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border-2 rounded-lg  p-4"
+      className="border-2 bg-card shadow-lg rounded-lg  p-4"
     >
       <h3 className="text-lg font-semibold mb-3">Joueurs ({players.length})</h3>
       <div className="space-y-2">

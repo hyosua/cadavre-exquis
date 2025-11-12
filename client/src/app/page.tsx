@@ -95,7 +95,7 @@ export default function Home() {
           <Button
             asChild
             variant="secondary"
-            className="h-12 dark:red-glow-shadow  shadow-md cursor-pointer"
+            className="h-12  shadow-md cursor-pointer"
           >
             <Link href="/create" prefetch={true}>
               Créer une partie
@@ -105,7 +105,7 @@ export default function Home() {
           <Button
             asChild
             variant="secondary"
-            className="h-12 dark:glow-shadow  shadow-md cursor-pointer"
+            className="h-12 shadow-md cursor-pointer"
           >
             <Link href="/join" prefetch={true}>
               Rejoindre une partie
