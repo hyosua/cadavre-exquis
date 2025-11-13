@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 import { useGame } from "@/hooks/useGame";
 import { useGameStore } from "@/store/gameStore";
@@ -12,6 +11,7 @@ import { GameConfig, PhaseDetail } from "@/types/game.type";
 import { PHASE_DETAILS, GAME_PRESETS } from "@/config/config";
 
 import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import {
   Form,
   FormControl,
@@ -49,8 +49,8 @@ const containerVariants = {
     transition: {
       duration: 0.3,
       ease: [0.16, 1, 0.3, 1] as const,
-      staggerChildren: 0.1, // Décalage entre chaque enfant
-      delayChildren: 0.1, // Délai avant le début du stagger
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
     },
   },
 };
@@ -77,6 +77,7 @@ export function CreateGameForm() {
   const router = useRouter();
   const { createGame } = useGame();
   const setOnGameCreated = useGameStore((s) => s.setOnGameCreated);
+  const [isCreating, setIsCreating] = useState(false);
 
   const form = useForm<GameConfigValues>({
     resolver: zodResolver(gameConfigSchema),
@@ -84,7 +85,6 @@ export function CreateGameForm() {
   });
 
   const selectedPresetId = form.watch("presetId");
-  const { isSubmitting } = form.formState;
 
   // Mise à jour des phases selon le preset sélectionné
   useEffect(() => {
@@ -98,23 +98,34 @@ export function CreateGameForm() {
 
   // Configuration de la navigation après création
   useEffect(() => {
-    setOnGameCreated((gameId) => router.push(`/game/${gameId}`));
+    setOnGameCreated((gameId) => {
+      setIsCreating(false);
+      router.push(`/game/${gameId}`);
+    });
     return () => setOnGameCreated(null);
   }, [router, setOnGameCreated]);
 
-  const onSubmit = (data: GameConfigValues) => {
-    const selectedPhaseDetails = data.phases.reduce((acc, phaseKey) => {
-      acc[phaseKey] = PHASE_DETAILS[phaseKey];
-      return acc;
-    }, {} as Record<string, PhaseDetail>);
+  const onSubmit = async (data: GameConfigValues) => {
+    setIsCreating(true);
 
-    const config: GameConfig = {
-      phases: data.phases,
-      timePerPhase: data.timePerPhase[0],
-      phaseDetails: selectedPhaseDetails,
-    };
-    console.log("→ Game config envoyée :", config);
-    createGame(data.pseudo, config);
+    try {
+      const selectedPhaseDetails = data.phases.reduce((acc, phaseKey) => {
+        acc[phaseKey] = PHASE_DETAILS[phaseKey];
+        return acc;
+      }, {} as Record<string, PhaseDetail>);
+
+      const config: GameConfig = {
+        phases: data.phases,
+        timePerPhase: data.timePerPhase[0],
+        phaseDetails: selectedPhaseDetails,
+      };
+
+      console.log("→ Game config envoyée :", config);
+      await createGame(data.pseudo, config);
+    } catch (error) {
+      console.error("Erreur lors de la création:", error);
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -183,7 +194,7 @@ export function CreateGameForm() {
                                 className="flex-1"
                               />
                             </FormControl>
-                            <span className="font-mono text-lg font-bold w-16 text-center text-primary  rounded-md px-2 py-1">
+                            <span className="font-mono text-lg font-bold w-16 text-center text-primary rounded-md px-2 py-1">
                               {field.value?.[0] || 30}s
                             </span>
                           </div>
@@ -201,23 +212,21 @@ export function CreateGameForm() {
                       variant={"ghost"}
                       size="lg"
                       className="w-full"
-                      disabled={isSubmitting}
+                      disabled={isCreating}
                     >
                       <Link href="/">Annuler</Link>
                     </Button>
                   </motion.div>
                   <motion.div variants={itemVariants} className="w-1/2">
-                    <Button
+                    <LoadingButton
                       type="submit"
                       size="lg"
                       className="w-full"
-                      disabled={isSubmitting}
+                      loading={isCreating}
+                      loadingText="Création..."
                     >
-                      {isSubmitting && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
                       Créer la partie
-                    </Button>
+                    </LoadingButton>
                   </motion.div>
                 </CardFooter>
               </Card>
