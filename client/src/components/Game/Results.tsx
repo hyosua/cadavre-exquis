@@ -29,8 +29,6 @@ export function Results() {
         .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount)
     : [];
 
-  const reversedRanking = [...ranking].reverse();
-
   useEffect(() => {
     if (revealedCount < ranking.length) {
       const timer = setTimeout(() => {
