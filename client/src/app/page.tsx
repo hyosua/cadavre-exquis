@@ -118,7 +118,7 @@ export default function Home() {
           transition={{ duration: 0.3 }}
         >
           <Collapsible className="bg-card  rounded-2xl shadow-xl p-6">
-            <CollapsibleTrigger className="space-y-1 flex justify-between items-center w-full">
+            <CollapsibleTrigger className="space-y-1 justify-between flex items-center w-full">
               <h2 className="text-xl font-semibold">
                 Créez des phrases loufoques à plusieurs !
               </h2>

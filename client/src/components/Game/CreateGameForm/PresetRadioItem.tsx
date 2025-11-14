@@ -21,12 +21,17 @@ export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
       htmlFor={preset.id}
       className={cn(
         "flex flex-col rounded-lg border-2 p-4 cursor-pointer",
-        "hover:bg-primary/10  transition-all",
-        "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary peer-data-[state=checked]:text-primary"
+        "hover:bg-primary/20 transition-all",
+        "peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/20",
+        "peer-data-[state=checked]:shadow-lg peer-data-[state=checked]:shadow-primary/20",
+        "[&:has([data-state=checked])]:border-primary",
+        "peer-data-[state=checked]:text-primary"
       )}
     >
-      <span className="font-semibold mb-1">{preset.name}</span>
-      <span className="text-sm text-muted-foreground">
+      <span className={cn("font-semibold mb-1 transition-colors")}>
+        {preset.name}
+      </span>
+      <span className="text-sm text-muted-foreground ">
         <em>&quot;{preset.example}&quot;</em>
       </span>
     </Label>
