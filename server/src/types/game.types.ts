@@ -11,6 +11,8 @@ export interface GameConfig {
   phases: string[];
   phaseDetails: Record<string, PhaseDetail>;
   timePerPhase: number;
+  aiPlayers: AIPlayer[]; 
+
 }
 
 interface BasePlayer {

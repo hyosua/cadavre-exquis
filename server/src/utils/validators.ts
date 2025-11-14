@@ -15,6 +15,14 @@ const gameConfigSchema = z.object({
   phases: z.array(phaseKeySchema).min(1),
   phaseDetails: z.record(z.string(), phaseDetailSchema),
   timePerPhase: z.number().min(10).max(300),
+  aiPlayers: z.array(z.object({
+    id: z.string(),
+    pseudo: z.string().min(2).max(20),
+    isHost: z.literal(false),
+    hasPlayedCurrentPhase: z.literal(false),
+    isConnected: z.literal(true),
+    isAi: z.literal(true),
+  })).optional().default([]),
 });
 
 export const createGameSchema = z.object({

@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { Trash2, Plus } from "lucide-react";
 
 import { useGame } from "@/hooks/useGame";
 import { useGameStore } from "@/store/gameStore";
-import { GameConfig, PhaseDetail } from "@/types/game.type";
+import { AIPlayer, GameConfig, PhaseDetail } from "@/types/game.type";
 import { PHASE_DETAILS, GAME_PRESETS } from "@/config/config";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
@@ -73,11 +75,23 @@ const itemVariants = {
   },
 };
 
+const AI_NAMES = [
+  "Alpha",
+  "Beta",
+  "Gamma",
+  "Delta",
+  "Epsilon",
+  "Zeta",
+  "Eta",
+  "Theta",
+];
+
 export function CreateGameForm() {
   const router = useRouter();
   const { createGame } = useGame();
   const setOnGameCreated = useGameStore((s) => s.setOnGameCreated);
   const [isCreating, setIsCreating] = useState(false);
+  const [aiPlayers, setAiPlayers] = useState<AIPlayer[]>([]);
 
   const form = useForm<GameConfigValues>({
     resolver: zodResolver(gameConfigSchema),
@@ -105,6 +119,29 @@ export function CreateGameForm() {
     return () => setOnGameCreated(null);
   }, [router, setOnGameCreated]);
 
+  const addAiPlayer = () => {
+    const availableNames = AI_NAMES.filter(
+      (name) => !aiPlayers.some((ai) => ai.pseudo === name)
+    );
+
+    if (availableNames.length === 0) return;
+
+    const newAi: AIPlayer = {
+      id: `ai-${Date.now()}`,
+      pseudo: availableNames[Math.floor(Math.random() * availableNames.length)],
+      isAi: true,
+      isHost: false,
+      isConnected: true,
+      hasPlayedCurrentPhase: false,
+    };
+
+    setAiPlayers([...aiPlayers, newAi]);
+  };
+
+  const removeAiPlayer = (aiPlayer: string) => {
+    setAiPlayers(aiPlayers.filter((ai) => ai.id !== aiPlayer));
+  };
+
   const onSubmit = async (data: GameConfigValues) => {
     setIsCreating(true);
 
@@ -118,6 +155,7 @@ export function CreateGameForm() {
         phases: data.phases,
         timePerPhase: data.timePerPhase[0],
         phaseDetails: selectedPhaseDetails,
+        aiPlayers: aiPlayers,
       };
 
       console.log("→ Game config envoyée :", config);
