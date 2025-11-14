@@ -28,7 +28,7 @@ interface GameState {
 
 export const useGameStore = create<GameState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       game: null,
       currentPlayer: null,
       persistedGameRef: null,

@@ -35,15 +35,15 @@ class SocketService {
     return this.socket!;
   }
 
-  emit(event: string, data?: any) {
+  emit<T = unknown>(event: string, data?: T) {
     this.getSocket().emit(event, data);
   }
 
-  on(event: string, callback: (...args: any[]) => void) {
+  on<T = unknown>(event: string, callback: (data: T) => void) {
     this.getSocket().on(event, callback);
   }
 
-  off(event: string, callback?: (...args: any[]) => void) {
+  off<T = unknown>(event: string, callback?: (data: T) => void) {
     this.getSocket().off(event, callback);
   }
 }

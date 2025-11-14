@@ -9,9 +9,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { PhaseCheckbox } from "./PhaseCheckbox";
+import { Control } from "react-hook-form";
 
 interface CustomPhasesSelectorProps {
-  control: any;
+  control: Control;
 }
 
 export const CustomPhasesSelector = ({

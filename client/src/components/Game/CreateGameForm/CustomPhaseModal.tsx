@@ -28,7 +28,6 @@ interface Phase {
 }
 
 export const CustomPhaseModal = ({
-  control,
   open,
   onOpenChange,
 }: CustomPhaseModalProps) => {

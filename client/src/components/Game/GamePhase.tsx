@@ -19,7 +19,6 @@ export function GamePhase() {
     timeLeft,
     submitWord,
     hasPlayedCurrentPhase,
-    getCurrentSentence,
     leaveGame,
   } = useGame();
   const [word, setWord] = useState("");
@@ -34,7 +33,6 @@ export function GamePhase() {
   const helper = phaseDetails.helper;
   const placeholder = phaseDetails.placeholder;
   const hasPlayed = hasPlayedCurrentPhase();
-  const currentSentence = getCurrentSentence();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
