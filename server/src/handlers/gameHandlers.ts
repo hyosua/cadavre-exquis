@@ -24,7 +24,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       socket.emit('game_state', game);
 
       // Sauvegarder le joueur actuel
-      const currentPlayer = game.players.find(p => p.socketId === socket.id);
+      const currentPlayer = game.players.find(p => !p.isAi && p.socketId === socket.id);
       if (currentPlayer) {
         socket.emit('current_player', currentPlayer);
       }
@@ -44,7 +44,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Partie introuvable');
       }
 
-      const player = game.players.find(p => p.socketId === socket.id);
+      const player = game.players.find(p => !p.isAi && p.socketId === socket.id);
       
       if (!player?.isHost) {
         throw new Error('Seul l\'hôte peut annuler la partie');
@@ -70,7 +70,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
 
       socket.join(game.id);
       
-      const currentPlayer = game.players.find(p => p.socketId === socket.id);
+      const currentPlayer = game.players.find(p => !p.isAi && p.socketId === socket.id);
       
       // Notifier le nouveau joueur
       socket.emit('game_state', game);
@@ -97,7 +97,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Partie introuvable');
       }
 
-      const player = game.players.find(p => p.socketId === socket.id);
+      const player = game.players.find(p => !p.isAi && p.socketId === socket.id);
 
       if(!player){
         throw new Error('Joueur introuvable');
@@ -124,7 +124,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
       }
 
       // Vérif sur l'auteur de la requête
-      const requester = game.players.find(p => p.socketId === socket.id);
+      const requester = game.players.find(p => !p.isAi && p.socketId === socket.id);
       if(!requester || requester.id !== game.hostId){
         throw new Error('Seul l\'hôte peut retirer un joueur de la partie.');
       }
@@ -136,11 +136,13 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Joueur à supprimer introuvable')
       }
 
-      io.to(playerToRemove.socketId).emit("kicked_out", {
-        message: 'Vous avez été retiré de la partie par l\'hote.',
-        gameId: gameId
-      })
-
+      if(!playerToRemove.isAi){
+        io.to(playerToRemove.socketId).emit("kicked_out", {
+          message: 'Vous avez été retiré de la partie par l\'hote.',
+          gameId: gameId
+        })
+      }
+      
       await gameService.removePlayer(io, gameId, playerToRemove.id)
 
       // Confirmer à l'hôte
@@ -162,7 +164,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Partie introuvable');
       }
 
-      const player = game.players.find(p => p.socketId === socket.id);
+      const player = game.players.find(p => !p.isAi && p.socketId === socket.id);
       
       if (!player?.isHost) {
         throw new Error('Seul l\'hôte peut démarrer la partie');
@@ -190,7 +192,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Partie introuvable');
       }
 
-      const player = game.players.find(p => p.socketId === socket.id);
+      const player = game.players.find(p => !p.isAi && p.socketId === socket.id);
       
       if (!player) {
         throw new Error('Joueur introuvable');
@@ -225,7 +227,7 @@ export function registerGameHandlers(io: Server, socket: Socket) {
         throw new Error('Partie introuvable');
       }
 
-      const player = game.players.find(p => p.socketId === socket.id);
+      const player = game.players.find(p => !p.isAi && p.socketId === socket.id);
       
       if (!player) {
         throw new Error('Joueur introuvable');

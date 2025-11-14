@@ -21,6 +21,7 @@ export class GameService {
       socketId: hostSocketId,
       pseudo,
       isHost: true,
+      isAi: false,
       hasPlayedCurrentPhase: false,
       isConnected: true,
     };
@@ -70,6 +71,7 @@ export class GameService {
       socketId,
       pseudo,
       isHost: false,
+      isAi: false,
       hasPlayedCurrentPhase: false,
       isConnected: true,
     };
@@ -263,7 +265,7 @@ export class GameService {
     const game = await redisService.getGame(gameId);
     if (!game) return;
 
-    const player = game.players.find(p => p.socketId === socketId);
+    const player = game.players.find(p => !p.isAi && p.socketId === socketId);
     if (!player) return;
 
     player.isConnected = false;
@@ -283,7 +285,6 @@ export class GameService {
   async removePlayer(io: Server, gameId: string, playerId: string): Promise<Game | null>{
     const game = await redisService.getGame(gameId);
 
-
     if(!game) {
       throw new Error('Partie Introuvable');
     }
@@ -296,50 +297,92 @@ export class GameService {
       throw new Error('Joueur Introuvable');
     }
 
-
     const player = game.players[playerIdx];
+    const wasHost = player.isHost;
+    
+    if(player.isAi){ 
+      game.players.splice(playerIdx,1);
+      console.log(`🗑️ IA ${player.pseudo} a été supprimé de la partie ${gameId}`)
+    } else {
+      // supprimer le mapping redis du joueur
+      await redisService.deletePlayerGame(player.socketId);
+      game.players.splice(playerIdx,1);
+      console.log(`🗑️ ${player.pseudo} a été supprimé de la partie ${gameId}`)
 
 
-    // supprimer le mapping redis du joueur
-    await redisService.deletePlayerGame(player.socketId);
-    game.players.splice(playerIdx,1);
-    console.log(`🗑️ ${player.pseudo} a été supprimé de la partie ${gameId}`)
+      // Si la partie est vide, la supprimer
+      if(game.players.length === 0){
+        await this.deleteGame(io, gameId);
+        return null;
+      }
 
 
-    // Si la partie est vide, la supprimer
-    if(game.players.length === 0){
-      await this.deleteGame(io, gameId);
-      return null;
+      // si c'était l'hôte, assigner un nouvel hôte
+      if(wasHost){
+        if(game.players.length === 1 && game.players[0].isAi){
+          // Si le seul joueur restant est une IA, supprimer la partie
+          await this.deleteGame(io, gameId);
+          return null;
+        }
+
+        const newHost = game.players.find(p => !p.isAi && p.isConnected)
+        if(!newHost){
+          // Pas de joueur humain connecté, supprimer la partie
+          await this.deleteGame(io, gameId);
+          return null;
+        }
+
+        if(newHost.isAi){ // ajout de vérif pour Typescript (normalement on ne devrait jamais arriver ici)
+          await this.deleteGame(io, gameId);
+          return null;
+        }
+
+        newHost.isHost = true;
+        game.hostId = newHost.id;
+
+        io.to(newHost.socketId).emit("assigned_host", {
+          player: newHost,
+          message: 'Vous avez été assigné hôte de la partie.',
+        })
+        console.log(`👑 ${newHost.pseudo} est le nouveau hôte!`);
+      }
+
     }
 
+      await redisService.saveGame(game);
 
-    // si c'était l'hôte, assigner un nouvel hôte
-    if(player.isHost){
-      const newHost = game.players[0]
-      newHost.isHost = true;
-      game.hostId = newHost.id;
+      // Notifier les autres joueurs
+      io.to(gameId).emit("player_removed",{ playerId: player.id, pseudo: player.pseudo })
+      io.to(gameId).emit("game_state", game);
 
-      io.to(newHost.socketId).emit("assigned_host", {
-        player: player,
-        message: 'Vous avez été assigné hôte de la partie.',
-      })
-      console.log(`👑 ${newHost.pseudo} est le nouveau hôte!`);
-    }
-
-
-    await redisService.saveGame(game);
-
-
-    // Notifier les autres joueurs
-    io.to(gameId).emit("player_removed",{ playerId: player.id, pseudo: player.pseudo })
-    io.to(gameId).emit("game_state", game);
-
-
-    return game
-
+      return game
 
   }
 
+  async addAIPlayer( io: Server, gameId: string): Promise<Game | null> {
+    try {
+      const game = await redisService.getGame(gameId);
+      if (!game) {
+        throw new Error('Partie introuvable');
+      }
+      const aiPlayer : Player = {
+        id: generateId(),
+        pseudo: `IA_${Math.floor(Math.random() * 1000)}`,
+        isHost: false,
+        isAi: true,
+        hasPlayedCurrentPhase: false,
+        isConnected: true,
+
+      }
+
+      game.players.push(aiPlayer);
+      await redisService.saveGame(game);
+      return game
+    }catch (error){
+      console.error(`Erreur lors de l'ajout du joueur IA:`, error);
+      return null
+    }
+  }
 
   async deleteGame(io: Server, gameId: string): Promise<void> {
     timerService.clearTimer(gameId);
@@ -348,7 +391,9 @@ export class GameService {
     const game = await redisService.getGame(gameId);
     if (game) {
       for (const player of game.players) {
-        await redisService.deletePlayerGame(player.socketId);
+        if (!player.isAi){
+          await redisService.deletePlayerGame(player.socketId);
+        }
       }
       
       // Nettoyer les mots de phase

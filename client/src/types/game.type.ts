@@ -12,17 +12,26 @@ export interface GameConfig {
   timePerPhase: number;
 }
 
-export interface Player {
+interface BasePlayer {
   id: string;
-  socketId: string;
   pseudo: string;
   isHost: boolean;
-  isAi: boolean;
   hasPlayedCurrentPhase: boolean;
   isConnected: boolean;
-  disconnectedAt?: number;
-  gameId?: string;
 }
+
+export interface HumanPlayer extends BasePlayer {
+  socketId: string;
+  isAi: false;
+}
+
+export interface AIPlayer extends BasePlayer {
+  isAi: true;
+  isHost: false;
+  isConnected: true;
+}
+
+export type Player = HumanPlayer | AIPlayer;
 
 export interface Sentence {
   id: string;
