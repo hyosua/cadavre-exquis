@@ -18,6 +18,7 @@ export interface Player {
   socketId: string;
   pseudo: string;
   isHost: boolean;
+  isAi: boolean;
   hasPlayedCurrentPhase: boolean;
   isConnected: boolean;
 }

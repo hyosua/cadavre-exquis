@@ -111,6 +111,16 @@ export default function Home() {
               Rejoindre une partie
             </Link>
           </Button>
+
+          <Button
+            asChild
+            variant="default"
+            className="h-12 shadow-md cursor-pointer"
+          >
+            <Link href="/ia-game" prefetch={true}>
+              Jouez contre l&apos;IA
+            </Link>
+          </Button>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
