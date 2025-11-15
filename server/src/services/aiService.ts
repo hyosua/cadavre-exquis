@@ -10,7 +10,9 @@ export async function getAIMove(game: Game): Promise<string> {
   
   // Extraire les infos nécessaires de l'objet Game
   const currentPhaseIndex = game.currentPhase;
-  const currentPhaseType = game.config.phaseDetails[currentPhaseIndex];
+  const currentPhaseDetails = game.config.phaseDetails[currentPhaseIndex];
+  const currentPhaseType = currentPhaseDetails.titre;
+  const helperText = currentPhaseDetails.helper;
 
   // Le "prompt" est l'étape la plus importante
   const prompt = `
@@ -20,16 +22,17 @@ export async function getAIMove(game: Game): Promise<string> {
     Ta tâche actuelle est d'écrire la partie de la phrase qui correspond à : "${currentPhaseType}"
 
     Instructions :
-    1. Génère un morceau de phrase qui respecte le type donné, ne rien ajouter d'autre.
+    1. Génère un morceau de phrase qui respecte le type donné.
     2. Ta réponse DOIT être courte et ne contenir QUE le morceau de phrase que tu ajoutes.
-    5. N'ajoute pas de guillemets autour de ta réponse.
+    3. N'ajoute pas de guillemets autour de ta réponse.
+    4. Le texte d'aide pour cette phase est : "${helperText}"
 
     Écris maintenant ta partie pour "${currentPhaseType}" :
   `;
 
   try {
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     let text = response.text().trim();
     
     // Nettoyage simple pour s'assurer que Gemini n'ajoute pas de guillemets

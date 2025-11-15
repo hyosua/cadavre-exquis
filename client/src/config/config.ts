@@ -38,7 +38,8 @@ export const DEFAULT_CONFIG: GameConfig = {
       },
     
     },
-    timePerPhase: 60
+    timePerPhase: 60,
+    aiPlayers: []
 }
 
 export const PHASE_DETAILS: Record<string, PhaseDetail> = {

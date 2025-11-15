@@ -3,6 +3,7 @@ import { redisService } from './redisService';
 import { timerService } from './timerService';
 import { generateGameCode, generateId } from '@/utils/generateCode';
 import { Game, GameConfig, Player, Sentence } from '@/types/game.types';
+import { getAIMove } from './aiService';
 
 export class GameService {
   async createGame(hostSocketId: string, pseudo: string, config: GameConfig): Promise<Game> {
@@ -34,7 +35,7 @@ export class GameService {
       config,
       currentPhase: 0,
       phaseStartTime: 0,
-      players: [host],
+      players: [host, ...config.aiPlayers],
       sentences: [],
       votes: [],
       createdAt: Date.now(),
@@ -156,15 +157,40 @@ export class GameService {
     console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
 
     // Vérifier si tous les joueurs ont joué
-    const allPlayed = game.players.every(p => p.hasPlayedCurrentPhase);
+    const allHumansPlayed = game.players.filter(p => !p.isAi).every(p => p.hasPlayedCurrentPhase);
     
-    if (allPlayed) {
+    if (allHumansPlayed) {
+      await this.triggerAiTurn(io, gameId);
       console.log(`✅ All players submitted for phase ${game.currentPhase}`);
       timerService.clearTimer(gameId);
       await this.nextPhase(io, gameId);
     }
 
     return game;
+  }
+
+  async triggerAiTurn(io: Server, gameId: string): Promise<void> {
+    console.log("Déclenchement du tour de l'IA")
+    try {
+      const game = await redisService.getGame(gameId);
+      if(!game || game.status !== 'playing') {
+        throw new Error('Partie introuvable ou non en cours');
+      }
+
+      // trouver les IA qui n'ont pas encore joué
+      const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
+      if(aiPlayers.length === 0) return;
+
+      for (const ai of aiPlayers) {
+        io.in(gameId).emit(`${ai.pseudo} réfléchit...`)
+        const aiWord = await getAIMove(game);
+
+        console.log(`L'IA ${ai.pseudo} a joué le mot: ${aiWord}`)
+        await this.submitWord(io, gameId, ai.id, aiWord);
+      }
+    } catch (error) {
+      console.error("Erreur lors du tour de l'IA:", error);
+    }
   }
 
   async nextPhase(io: Server, gameId: string): Promise<void> {
@@ -244,7 +270,7 @@ export class GameService {
     console.log(`🗳️  ${player.pseudo} voted for sentence ${sentenceId}`);
 
     // Vérifier si tous ont voté
-    if (game.votes.length === game.players.length) {
+    if (game.votes.length >= game.players.filter(p => !p.isAi).length) {
       game.status = 'finished';
       await redisService.saveGame(game);
       
@@ -391,7 +417,9 @@ export class GameService {
     const game = await redisService.getGame(gameId);
     if (game) {
       for (const player of game.players) {
-        if (!player.isAi){
+        if (player.isAi){
+          game.players.splice(game.players.indexOf(player),1)
+        }else{
           await redisService.deletePlayerGame(player.socketId);
         }
       }
