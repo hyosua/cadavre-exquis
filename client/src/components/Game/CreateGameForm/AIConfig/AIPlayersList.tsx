@@ -1,4 +1,4 @@
-import { Bot } from "lucide-react";
+import { Bot, Plus } from "lucide-react";
 import { AIPlayersListProps } from "@/types/ai-config.type";
 import { AIPlayerCard } from "./AIPlayerCard";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function AIPlayersList({
           disabled={aiPlayers.length >= maxPlayers}
           className="gap-2"
         >
-          <Bot size={16} />
+          <Plus size={16} />
           Ajouter
         </Button>
       </div>

@@ -167,7 +167,7 @@ export class GameService {
      for (const ai of aiPlayers) {
       try {
         console.log(`🤖 ${ai.pseudo} is thinking...`);
-        const aiWord = await getAIMove(game);
+        const aiWord = await getAIMove(game, ai.id);
         console.log(`🤖 ${ai.pseudo} played: ${aiWord}`);
         
         await redisService.setPhaseWord(gameId, game.currentPhase, ai.id, aiWord);
@@ -206,7 +206,7 @@ export class GameService {
       }
       for (const ai of aiPlayers) {
         io.in(gameId).emit(`${ai.pseudo} réfléchit...`)
-        const aiWord = await getAIMove(game);
+        const aiWord = await getAIMove(game, ai.id);
 
         console.log(`L'IA ${ai.pseudo} a joué le mot: ${aiWord}`)
         await this.submitWord(io, gameId, ai.id, aiWord);
@@ -418,6 +418,7 @@ export class GameService {
         id: generateId(),
         pseudo: `IA_${Math.floor(Math.random() * 1000)}`,
         isHost: false,
+        creativity: "strict",
         isAi: true,
         hasPlayedCurrentPhase: false,
         isConnected: true,

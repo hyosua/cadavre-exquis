@@ -39,10 +39,17 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
   const settings = creativitySettings[aiCreativity]
 
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash"
-  })
+  const systemInstruction = `
+    Tu es un joueur dans une partie de "cadavre exquis".
+    Tu ne dois JAMAIS répéter les mêmes idées.
+    Tu dois répondre UNIQUEMENT avec le(la) "${currentPhaseType}" demandé(e).
+    Ta réponse doit être brute, sans guillemets, sans majuscule au début, et sans ponctuation finale ni explication.
+  `;
 
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    systemInstruction: systemInstruction  
+  })
   // Générer des contraintes aléatoires pour forcer la variété
   const styles = ['drôle', 'poétique', 'absurde', 'mystérieux', 'quotidien', 'épique'];
   const randomStyle = styles[Math.floor(Math.random() * styles.length)];
@@ -52,17 +59,12 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
   // Le "prompt" est l'étape la plus importante
   const prompt = `
-    Tu es un joueur dans une partie de "cadavre exquis".
-    
     Ta tâche : écrire un(e) "${currentPhaseType}"
-    Voici l'aide donnée aux joueurs pour cette phase : ${helperText}
+    Voici, si besoin une aide pour cette phase : ${helperText}
     
     Contraintes créatives pour cette fois :
     - Style : ${randomStyle}
     - Thème suggéré : ${randomTheme}
-    
-    Ne répète jamais les mêmes idées.
-    Réponds UNIQUEMENT avec le ${currentPhaseType}, sans guillemets, majuscule, ponctuation ni explication.
   `;
 
   try {
@@ -74,7 +76,9 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
         topP: settings.topP,
       }});
     const response = result.response;
+    console.log("Réponse brute de Gemini:", response);
     let text = response.text().trim();
+    console.log("Texte extrait de la réponse:", text);
     
     // Nettoyage simple pour s'assurer que Gemini n'ajoute pas de guillemets ou ponctuation
     text = text.replace(/^["']|["']$/g, '');
