@@ -157,10 +157,31 @@ export class GameService {
     console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
 
     // Vérifier si tous les joueurs ont joué
-    const allHumansPlayed = game.players.filter(p => !p.isAi).every(p => p.hasPlayedCurrentPhase);
+    const allHumansPlayed = game.players
+      .filter(p => !p.isAi)
+      .every(p => p.hasPlayedCurrentPhase);
     
     if (allHumansPlayed) {
-      await this.triggerAiTurn(io, gameId);
+      const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
+
+     for (const ai of aiPlayers) {
+      try {
+        console.log(`🤖 ${ai.pseudo} is thinking...`);
+        const aiWord = await getAIMove(game);
+        console.log(`🤖 ${ai.pseudo} played: ${aiWord}`);
+        
+        await redisService.setPhaseWord(gameId, game.currentPhase, ai.id, aiWord);
+        ai.hasPlayedCurrentPhase = true;
+      } catch (error) {
+        console.error(`❌ Error with AI ${ai.pseudo}:`, error);
+        // Mot par défaut en cas d'erreur
+        const fallbackWord = `un ${game.config.phaseDetails[game.config.phases[game.currentPhase]].titre} étrange`;
+        await redisService.setPhaseWord(gameId, game.currentPhase, ai.id, fallbackWord);
+        ai.hasPlayedCurrentPhase = true;
+      }
+    }
+
+      await redisService.saveGame(game);
       console.log(`✅ All players submitted for phase ${game.currentPhase}`);
       timerService.clearTimer(gameId);
       await this.nextPhase(io, gameId);
@@ -179,8 +200,10 @@ export class GameService {
 
       // trouver les IA qui n'ont pas encore joué
       const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
-      if(aiPlayers.length === 0) return;
-
+      if(aiPlayers.length === 0) {
+        console.log("Aucune IA n'a besoin de jouer")
+        return;
+      }
       for (const ai of aiPlayers) {
         io.in(gameId).emit(`${ai.pseudo} réfléchit...`)
         const aiWord = await getAIMove(game);

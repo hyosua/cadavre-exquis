@@ -112,7 +112,7 @@ export default function Home() {
             </Link>
           </Button>
 
-          <Button
+          {/* <Button
             asChild
             variant="default"
             className="h-12 shadow-md cursor-pointer"
@@ -120,7 +120,7 @@ export default function Home() {
             <Link href="/ia-game" prefetch={true}>
               Jouez contre l&apos;IA
             </Link>
-          </Button>
+          </Button> */}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
