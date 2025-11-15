@@ -52,11 +52,10 @@ export function AIPlayersList({
           </p>
         </div>
       ) : (
-        <div className="text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/30">
-          <Bot className="w-12 h-12 mx-auto mb-2 opacity-30" />
-          <p className="text-sm font-medium">Aucun joueur IA</p>
-          <p className="text-xs mt-1 text-muted-foreground/70">
-            Ajoutez des joueurs IA pour jouer seul ou enrichir la partie !
+        <div className="text-center py-2 sm:py-8 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/30">
+          <Bot className="w-12 h-12 mx-auto mb-1 opacity-30" />
+          <p className="text-xs text-muted-foreground/70">
+            Ajoutez des joueurs IA pour enrichir la partie !
           </p>
         </div>
       )}

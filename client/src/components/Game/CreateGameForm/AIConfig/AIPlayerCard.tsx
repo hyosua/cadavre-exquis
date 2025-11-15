@@ -1,12 +1,12 @@
 import { Bot, Trash2, Sparkles, Brain, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { AICreativity } from "@/types/game.type";
@@ -19,6 +19,7 @@ const creativityConfig = {
     description: "Réponses courtes et directes",
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
+    progressColor: "bg-blue-500",
   },
   equilibre: {
     icon: Brain,
@@ -26,6 +27,7 @@ const creativityConfig = {
     description: "Mix entre précision et créativité",
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
+    progressColor: "bg-purple-500",
   },
   creatif: {
     icon: Sparkles,
@@ -33,6 +35,7 @@ const creativityConfig = {
     description: "Réponses originales et surprenantes",
     color: "text-amber-500",
     bgColor: "bg-amber-500/10",
+    progressColor: "bg-amber-500",
   },
 };
 
@@ -43,6 +46,13 @@ export function AIPlayerCard({
 }: AIPlayerConfigProps) {
   const config = creativityConfig[aiPlayer.creativity];
   const Icon = config.icon;
+
+  const creativityValue =
+    aiPlayer.creativity === "strict"
+      ? 33
+      : aiPlayer.creativity === "equilibre"
+      ? 66
+      : 100;
 
   return (
     <motion.div
@@ -65,15 +75,6 @@ export function AIPlayerCard({
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-base truncate">
-                  {aiPlayer.pseudo}
-                </span>
-                <Badge variant="secondary" className="text-xs flex-shrink-0">
-                  IA
-                </Badge>
-              </div>
-
               {/* Sélecteur de créativité */}
               <Select
                 value={aiPlayer.creativity}
@@ -81,8 +82,20 @@ export function AIPlayerCard({
                   onCreativityChange(aiPlayer.id, value)
                 }
               >
-                <SelectTrigger className="h-8 w-full bg-background/50 border-muted-foreground/20 hover:bg-background hover:border-muted-foreground/40 transition-colors">
-                  <SelectValue />
+                <SelectTrigger
+                  className={`h-8 w-full ${config.bgColor} border-muted-foreground/20 hover:bg-background hover:border-muted-foreground/40 transition-colors`}
+                >
+                  <div className="flex items-center gap-2 w-full">
+                    <span className="font-semibold text-base truncate">
+                      {aiPlayer.pseudo}
+                    </span>
+                    <Badge
+                      variant="secondary"
+                      className="text-xs flex-shrink-0"
+                    >
+                      IA
+                    </Badge>
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {(
@@ -126,24 +139,11 @@ export function AIPlayerCard({
         {/* Indicateur visuel de créativité */}
         <div className="mt-3 flex items-center gap-2">
           <Icon className={`w-3.5 h-3.5 ${config.color}`} />
-          <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{
-                width:
-                  aiPlayer.creativity === "strict"
-                    ? "33%"
-                    : aiPlayer.creativity === "equilibre"
-                    ? "66%"
-                    : "100%",
-              }}
-              className={`h-full ${config.color.replace(
-                "text-",
-                "bg-"
-              )} rounded-full`}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-          </div>
+          <Progress
+            value={creativityValue}
+            indicatorClassName={config.progressColor}
+            className="h-1.5 flex-1"
+          />
         </div>
       </div>
     </motion.div>
