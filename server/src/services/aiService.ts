@@ -72,7 +72,6 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
         temperature: settings.temperature,
         topK: settings.topK,
         topP: settings.topP,
-        maxOutputTokens: 50,
       }});
     const response = result.response;
     console.log("Réponse brute de Gemini:", response);

@@ -75,16 +75,7 @@ const itemVariants = {
   },
 };
 
-const AI_NAMES = [
-  "Alpha",
-  "Beta",
-  "Gamma",
-  "Delta",
-  "Epsilon",
-  "Zeta",
-  "Eta",
-  "Theta",
-];
+const AI_NAMES = ["Alpha", "Gamma", "Zeta"];
 
 export function CreateGameForm() {
   const router = useRouter();
