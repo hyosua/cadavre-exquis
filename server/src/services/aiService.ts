@@ -1,12 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Game } from "@/types/game.types"; 
+import { Game, AIPlayer } from "@/types/game.types"; 
 
 // Initialiser l'API
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+function isAIPlayer(player: any): player is AIPlayer {
+  return player.isAi === true;
+}
 
 // Fonction pour générer la phrase de l'IA
-export async function getAIMove(game: Game): Promise<string> {
+export async function getAIMove(game: Game, aiPlayerId: string): Promise<string> {
   
   // Extraire les infos nécessaires de l'objet Game
   const currentPhaseIndex = game.currentPhase;
@@ -17,6 +20,28 @@ export async function getAIMove(game: Game): Promise<string> {
   const currentPhaseType = currentPhaseDetails.titre;
   console.log("Current phase type:", currentPhaseType);
   const helperText = currentPhaseDetails.helper;
+
+  // Récuperer la créativité du joueur IA
+  const aiPlayer = game.players.find(p => p.id  === aiPlayerId)
+
+  // verif explicite pour que Typescript comprenne le type
+  if (!aiPlayer || !isAIPlayer(aiPlayer)) {
+    return `un ${currentPhaseType} étrange`;
+  }
+
+  const aiCreativity = aiPlayer?.creativity || "strict"
+
+  const creativitySettings = {
+    strict: { temperature: 0.7, topK: 20, topP: 0.8},
+    equilibre: { temperature: 1.0, topK: 30, topP: 0.9},
+    creatif: { temperature: 1.3, topK: 40, topP: 0.95}
+  }
+
+  const settings = creativitySettings[aiCreativity]
+
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash"
+  })
 
   // Générer des contraintes aléatoires pour forcer la variété
   const styles = ['drôle', 'poétique', 'absurde', 'mystérieux', 'quotidien', 'épique'];
@@ -30,18 +55,24 @@ export async function getAIMove(game: Game): Promise<string> {
     Tu es un joueur dans une partie de "cadavre exquis".
     
     Ta tâche : écrire un(e) "${currentPhaseType}"
-    Aide : ${helperText}
+    Voici l'aide donnée aux joueurs pour cette phase : ${helperText}
     
     Contraintes créatives pour cette fois :
     - Style : ${randomStyle}
     - Thème suggéré : ${randomTheme}
     
-    Sois original ! Ne répète jamais les mêmes idées.
-    Réponds UNIQUEMENT avec le ${currentPhaseType}, sans guillemets ni explication.
+    Ne répète jamais les mêmes idées.
+    Réponds UNIQUEMENT avec le ${currentPhaseType}, sans guillemets, majuscule, ponctuation ni explication.
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent({
+      contents: [{role: "user", parts: [{text: prompt}] }],
+      generationConfig: {
+        temperature: settings.temperature,
+        topK: settings.topK,
+        topP: settings.topP,
+      }});
     const response = result.response;
     let text = response.text().trim();
     
@@ -54,6 +85,8 @@ export async function getAIMove(game: Game): Promise<string> {
     if (!text) {
       return `un ${currentPhaseType} étrange`;
     }
+
+    console.log(`🤖 AI (${aiCreativity}): "${text}"`);
 
     return text;
   } catch (error) {

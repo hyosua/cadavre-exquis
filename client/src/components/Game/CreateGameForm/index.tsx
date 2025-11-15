@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, Bot } from "lucide-react";
 
 import { useGame } from "@/hooks/useGame";
 import { useGameStore } from "@/store/gameStore";
@@ -30,13 +29,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 import { gameConfigSchema, GameConfigValues, DEFAULT_VALUES } from "./config";
 import { GameModeSelector } from "./GameModeSelector";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+import { AICreativity } from "@/types/game.type";
+import { AIPlayersList } from "./AIConfig/AIPlayersList";
 // Variants pour le conteneur principal
 const containerVariants = {
   hidden: {
@@ -131,6 +131,7 @@ export function CreateGameForm() {
       pseudo: availableNames[Math.floor(Math.random() * availableNames.length)],
       isAi: true,
       isHost: false,
+      creativity: "strict",
       isConnected: true,
       hasPlayedCurrentPhase: false,
     };
@@ -140,6 +141,12 @@ export function CreateGameForm() {
 
   const removeAiPlayer = (aiPlayer: string) => {
     setAiPlayers(aiPlayers.filter((ai) => ai.id !== aiPlayer));
+  };
+
+  const handleCreativityChange = (id: string, creativity: AICreativity) => {
+    setAiPlayers(
+      aiPlayers.map((ai) => (ai.id === id ? { ...ai, creativity } : ai))
+    );
   };
 
   const onSubmit = async (data: GameConfigValues) => {
@@ -213,71 +220,13 @@ export function CreateGameForm() {
 
                   {/* Joueurs IA */}
                   <motion.div variants={itemVariants}>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <FormLabel className="text-lg font-semibold">
-                          Joueurs IA
-                        </FormLabel>
-                        <Button
-                          type="button"
-                          variant={"outline"}
-                          size="sm"
-                          onClick={addAiPlayer}
-                          disabled={aiPlayers.length >= AI_NAMES.length}
-                          className="gap-2"
-                        >
-                          <Plus size={16} />
-                          Ajouter une IA
-                        </Button>
-                      </div>
-
-                      {aiPlayers.length > 0 ? (
-                        <div className="space-y-2">
-                          {aiPlayers.map((ai) => (
-                            <motion.div
-                              key={ai.id}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: 20 }}
-                              className="flex items-center justify-between p-3 bg-muted rounded-lg border"
-                            >
-                              <div className="flex items-center gap-3">
-                                <Bot className="w-5 h-5 text-primary" />
-                                <span className="font-medium">{ai.pseudo}</span>
-                                <Badge variant="secondary" className="text-xs">
-                                  IA
-                                </Badge>
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeAiPlayer(ai.id)}
-                                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
-                              >
-                                <Trash2 size={16} />
-                              </Button>
-                            </motion.div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg">
-                          <Bot className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Aucun Joueur IA</p>
-                          <p className="text-xs mt-1">
-                            Ajoutez des joueurs IA pour pimenter la partie !
-                          </p>
-                        </div>
-                      )}
-
-                      {aiPlayers.length > 0 && (
-                        <p className="text-sm text-muted-foreground">
-                          {aiPlayers.length} joueur
-                          {aiPlayers.length > 1 ? "s" : ""} IA ajouté
-                          {aiPlayers.length > 1 ? "s" : ""}.
-                        </p>
-                      )}
-                    </div>
+                    <AIPlayersList
+                      aiPlayers={aiPlayers}
+                      onAdd={addAiPlayer}
+                      onRemove={removeAiPlayer}
+                      onCreativityChange={handleCreativityChange}
+                      maxPlayers={AI_NAMES.length}
+                    />
                   </motion.div>
 
                   {/* Temps par phase */}
