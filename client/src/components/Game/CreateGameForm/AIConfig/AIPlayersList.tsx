@@ -7,7 +7,7 @@ export function AIPlayersList({
   aiPlayers,
   onAdd,
   onRemove,
-  onCreativityChange,
+  onPersonnalityChange,
   maxPlayers,
 }: AIPlayersListProps) {
   return (
@@ -16,7 +16,7 @@ export function AIPlayersList({
         <div>
           <h3 className="text-lg font-semibold">Joueurs IA</h3>
           <p className="text-sm text-muted-foreground">
-            Ajoutez des adversaires contrôlés par l&apos;IA
+            Ajoutez des joueurs IA pour enrichir la partie !
           </p>
         </div>
         <Button
@@ -24,7 +24,7 @@ export function AIPlayersList({
           variant="outline"
           size="sm"
           onClick={onAdd}
-          disabled={aiPlayers.length >= maxPlayers}
+          disabled={aiPlayers.length >= 3}
           className="gap-2"
         >
           <Plus size={16} />
@@ -39,7 +39,7 @@ export function AIPlayersList({
               key={ai.id}
               aiPlayer={ai}
               onRemove={onRemove}
-              onCreativityChange={onCreativityChange}
+              onPersonnalityChange={onPersonnalityChange}
             />
           ))}
 
@@ -55,7 +55,7 @@ export function AIPlayersList({
         <div className="text-center py-2 sm:py-8 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/30">
           <Bot className="w-12 h-12 mx-auto mb-1 opacity-30" />
           <p className="text-xs text-muted-foreground/70">
-            Ajoutez des joueurs IA pour enrichir la partie !
+            Chaque joueur a sa propre personnalité
           </p>
         </div>
       )}

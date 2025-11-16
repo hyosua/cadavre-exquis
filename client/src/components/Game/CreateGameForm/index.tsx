@@ -35,7 +35,7 @@ import { GameModeSelector } from "./GameModeSelector";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { AICreativity } from "@/types/game.type";
+import { Personnality } from "@/types/game.type";
 import { AIPlayersList } from "./AIConfig/AIPlayersList";
 // Variants pour le conteneur principal
 const containerVariants = {
@@ -122,7 +122,7 @@ export function CreateGameForm() {
       pseudo: availableNames[Math.floor(Math.random() * availableNames.length)],
       isAi: true,
       isHost: false,
-      creativity: "strict",
+      personnality: "comique",
       isConnected: true,
       hasPlayedCurrentPhase: false,
     };
@@ -134,9 +134,9 @@ export function CreateGameForm() {
     setAiPlayers(aiPlayers.filter((ai) => ai.id !== aiPlayer));
   };
 
-  const handleCreativityChange = (id: string, creativity: AICreativity) => {
+  const handlePersonnalityChange = (id: string, personnality: Personnality) => {
     setAiPlayers(
-      aiPlayers.map((ai) => (ai.id === id ? { ...ai, creativity } : ai))
+      aiPlayers.map((ai) => (ai.id === id ? { ...ai, personnality } : ai))
     );
   };
 
@@ -215,8 +215,8 @@ export function CreateGameForm() {
                       aiPlayers={aiPlayers}
                       onAdd={addAiPlayer}
                       onRemove={removeAiPlayer}
-                      onCreativityChange={handleCreativityChange}
-                      maxPlayers={AI_NAMES.length}
+                      onPersonnalityChange={handlePersonnalityChange}
+                      maxPlayers={3}
                     />
                   </motion.div>
 

@@ -26,14 +26,14 @@ export interface HumanPlayer extends BasePlayer {
   isAi: false;
 }
 
-export type AICreativity = 'strict' | 'equilibre' | 'creatif';
+export type Personnality = 'scientifique' | 'comique' | 'grognon'
 
 export interface AIPlayer extends BasePlayer {
   isAi: true;
-  creativity: AICreativity;
   isHost: false;
+  personnality: Personnality;
   isConnected: true;
-}
+} 
 
 export type Player = HumanPlayer | AIPlayer;
 

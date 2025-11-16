@@ -1,7 +1,6 @@
-import { Bot, Trash2, Sparkles, Brain, Target } from "lucide-react";
+import { Bot, Trash2, Annoyed, Brain, Drama } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -9,50 +8,41 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { AICreativity } from "@/types/game.type";
+import { Personnality } from "@/types/game.type";
 import { AIPlayerConfigProps } from "@/types/ai-config.type";
 
-const creativityConfig = {
-  strict: {
-    icon: Target,
-    label: "Précis",
-    description: "Réponses courtes et directes",
+const personnalityConfig = {
+  scientifique: {
+    icon: Brain,
+    label: "Le Scientifique",
+    description: "Il est froid, descriptif et technique",
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     progressColor: "bg-blue-500",
   },
-  equilibre: {
-    icon: Brain,
-    label: "Équilibré",
-    description: "Mix entre précision et créativité",
+  comique: {
+    icon: Drama,
+    label: "Le Comique",
+    description: "Il répond toujours de manière drôle",
     color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
-    progressColor: "bg-purple-500",
+    bgColor: "bg-purple-500/20",
   },
-  creatif: {
-    icon: Sparkles,
-    label: "Créatif",
-    description: "Réponses originales et surprenantes",
-    color: "text-amber-500",
-    bgColor: "bg-amber-500/10",
-    progressColor: "bg-amber-500",
+  grognon: {
+    icon: Annoyed,
+    label: "Le Grognon",
+    description: "Il voit le monde en noir",
+    color: "text-slate-800",
+    bgColor: "bg-slate-800/20",
   },
 };
 
 export function AIPlayerCard({
   aiPlayer,
   onRemove,
-  onCreativityChange,
+  onPersonnalityChange,
 }: AIPlayerConfigProps) {
-  const config = creativityConfig[aiPlayer.creativity];
+  const config = personnalityConfig[aiPlayer.personnality];
   const Icon = config.icon;
-
-  const creativityValue =
-    aiPlayer.creativity === "strict"
-      ? 33
-      : aiPlayer.creativity === "equilibre"
-      ? 66
-      : 100;
 
   return (
     <motion.div
@@ -71,15 +61,15 @@ export function AIPlayerCard({
           {/* Infos du joueur */}
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
-              <Bot className={`w-5 h-5 ${config.color}`} />
+              <Icon className={`w-5 h-5 ${config.color}`} />
             </div>
 
             <div className="flex-1 min-w-0">
-              {/* Sélecteur de créativité */}
+              {/* Sélecteur de personnalité */}
               <Select
-                value={aiPlayer.creativity}
-                onValueChange={(value: AICreativity) =>
-                  onCreativityChange(aiPlayer.id, value)
+                value={aiPlayer.personnality}
+                onValueChange={(value: Personnality) =>
+                  onPersonnalityChange(aiPlayer.id, value)
                 }
               >
                 <SelectTrigger
@@ -87,7 +77,7 @@ export function AIPlayerCard({
                 >
                   <div className="flex items-center gap-2 w-full">
                     <span className="font-semibold text-base truncate">
-                      {aiPlayer.pseudo}
+                      {config.label}
                     </span>
                     <Badge
                       variant="secondary"
@@ -99,9 +89,9 @@ export function AIPlayerCard({
                 </SelectTrigger>
                 <SelectContent>
                   {(
-                    Object.entries(creativityConfig) as [
-                      AICreativity,
-                      typeof creativityConfig.strict
+                    Object.entries(personnalityConfig) as [
+                      Personnality,
+                      typeof personnalityConfig.comique
                     ][]
                   ).map(([key, cfg]) => {
                     const ItemIcon = cfg.icon;
@@ -136,15 +126,10 @@ export function AIPlayerCard({
           </Button>
         </div>
 
-        {/* Indicateur visuel de créativité */}
-        <div className="mt-3 flex items-center gap-2">
-          <Icon className={`w-3.5 h-3.5 ${config.color}`} />
-          <Progress
-            value={creativityValue}
-            indicatorClassName={config.progressColor}
-            className="h-1.5 flex-1"
-          />
-        </div>
+        {/* Indicateur visuel de personnalité */}
+        <p className="text-sm mt-3 text-center sm:text-lg italic">
+          {config.description}
+        </p>
       </div>
     </motion.div>
   );
