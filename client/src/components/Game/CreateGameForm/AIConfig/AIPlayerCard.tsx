@@ -1,4 +1,6 @@
-import { Bot, Trash2, Annoyed, Brain, Drama } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import { PiMaskSadFill } from "react-icons/pi";
+import { GiClown, GiBrain, GiPirateCaptain } from "react-icons/gi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,26 +15,37 @@ import { AIPlayerConfigProps } from "@/types/ai-config.type";
 
 const personnalityConfig = {
   scientifique: {
-    icon: Brain,
+    icon: GiBrain,
     label: "Le Scientifique",
     description: "Il est froid, descriptif et technique",
     color: "text-blue-500",
+    colorValue: "#4299e1",
     bgColor: "bg-blue-500/10",
     progressColor: "bg-blue-500",
   },
   comique: {
-    icon: Drama,
+    icon: GiClown,
     label: "Le Comique",
     description: "Il répond toujours de manière drôle",
     color: "text-purple-500",
+    colorValue: "#6b21a8",
     bgColor: "bg-purple-500/20",
   },
   grognon: {
-    icon: Annoyed,
+    icon: PiMaskSadFill,
     label: "Le Grognon",
     description: "Il voit le monde en noir",
     color: "text-slate-800",
+    colorValue: "#1E293B",
     bgColor: "bg-slate-800/20",
+  },
+  pirate: {
+    icon: GiPirateCaptain,
+    label: "Le Pirate",
+    description: "Il est obsédé par la piraterie",
+    color: "text-emerald-500",
+    colorValue: "#059669",
+    bgColor: "bg-emerald-500/20",
   },
 };
 
@@ -61,7 +74,7 @@ export function AIPlayerCard({
           {/* Infos du joueur */}
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
-              <Icon className={`w-5 h-5 ${config.color}`} />
+              <Icon size={32} color={config.colorValue} />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -98,7 +111,7 @@ export function AIPlayerCard({
                     return (
                       <SelectItem key={key} value={key}>
                         <div className="flex items-center gap-2">
-                          <ItemIcon className={`w-4 h-4 ${cfg.color}`} />
+                          <ItemIcon size={16} color={cfg.colorValue} />
                           <div className="flex flex-col">
                             <span className="font-medium">{cfg.label}</span>
                             <span className="text-xs text-muted-foreground">

@@ -418,7 +418,7 @@ export class GameService {
         id: generateId(),
         pseudo: `IA_${Math.floor(Math.random() * 1000)}`,
         isHost: false,
-        creativity: "strict",
+        personnality: "comique",
         isAi: true,
         hasPlayedCurrentPhase: false,
         isConnected: true,
