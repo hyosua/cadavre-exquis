@@ -38,9 +38,8 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
   const systemInstruction = `
     Tu es un joueur dans une partie de "cadavre exquis".
-    Tu ne dois JAMAIS répéter les mêmes idées.
     Tu dois répondre UNIQUEMENT avec le type demandé.
-    Ta réponse doit être brute, sans guillemets, sans majuscule au début, et sans ponctuation finale ni explication.
+    Ta réponse doit être sans guillemets, sans majuscule au début, et sans ponctuation finale ni explication.
   `;
 
   const model = genAI.getGenerativeModel({
@@ -54,16 +53,40 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
   const themes = ['nature', 'cuisine', 'technologie', 'animaux', 'espace', 'histoire', 'action'];
   const randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
-  // Le "prompt" est l'étape la plus importante
-  const prompt = `
-    Ta tâche : écrire un(e) "${currentPhaseType}"
-    Voici, si besoin une aide pour cette phase : ${helperText}
-    Si le type demandé est un verbe, conjugue-le à la 3ème personne du singulier
-    
-    Contraintes créatives pour cette fois :
-    ${aiCreativity !== 'strict' ? ` -Style: ${randomStyle}` : ''}
-    - Thème suggéré : ${randomTheme}
-  `;
+  let lengthInstruction = "";
+  let creativityInstruction = "";
+
+  switch (aiCreativity) {
+    case "strict":
+      lengthInstruction = "Réponds en peu de mots.";
+      creativityInstruction = ``;
+      break;
+    case "equilibre":
+      lengthInstruction = "Réponse concise.";
+      creativityInstruction = `Thème: ${randomTheme}.`;
+      break;
+    case "creatif":
+      lengthInstruction = "Réponse originale.";
+      creativityInstruction = `Style: ${randomStyle}. Thème: ${randomTheme}.`;
+      break;
+  }
+
+  // 2. Construire un prompt court
+  const promptParts = [
+    `Phase: ${currentPhaseType}`,
+    `Règle: ${lengthInstruction}`,
+    `Inspiration: ${creativityInstruction}`
+  ];
+
+  if (helperText) {
+    promptParts.push(`Aide: ${helperText}`);
+  }
+
+  if (currentPhaseType.toLowerCase().includes('verbe')) {
+    promptParts.push('Note: conjugue le verbe (3e pers. sing.)');
+  }
+
+  const prompt = promptParts.join('\n');
 
   try {
     const result = await model.generateContent({
