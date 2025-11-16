@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { PiMaskSadFill } from "react-icons/pi";
-import { GiClown, GiBrain, GiPirateCaptain } from "react-icons/gi";
+import { GiClown, GiBrain, GiPirateSkull } from "react-icons/gi";
+import { IoIosRose } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,7 +18,7 @@ const personnalityConfig = {
   scientifique: {
     icon: GiBrain,
     label: "Le Scientifique",
-    description: "Il est froid, descriptif et technique",
+    description: "est froid, descriptif et technique",
     color: "text-blue-500",
     colorValue: "#4299e1",
     bgColor: "bg-blue-500/10",
@@ -26,7 +27,7 @@ const personnalityConfig = {
   comique: {
     icon: GiClown,
     label: "Le Comique",
-    description: "Il répond toujours de manière drôle",
+    description: "répond toujours de manière absurde",
     color: "text-purple-500",
     colorValue: "#6b21a8",
     bgColor: "bg-purple-500/20",
@@ -34,18 +35,26 @@ const personnalityConfig = {
   grognon: {
     icon: PiMaskSadFill,
     label: "Le Grognon",
-    description: "Il voit le monde en noir",
+    description: "voit le monde en noir",
     color: "text-slate-800",
     colorValue: "#1E293B",
     bgColor: "bg-slate-800/20",
   },
   pirate: {
-    icon: GiPirateCaptain,
+    icon: GiPirateSkull,
     label: "Le Pirate",
-    description: "Il est obsédé par la piraterie",
+    description: "est obsédé par la piraterie",
     color: "text-emerald-500",
     colorValue: "#059669",
     bgColor: "bg-emerald-500/20",
+  },
+  romantique: {
+    icon: IoIosRose,
+    label: "Le Romantique",
+    description: "est rempli d'amour et de passion",
+    color: "text-pink-500",
+    colorValue: "#db2777",
+    bgColor: "bg-pink-500/20",
   },
 };
 
@@ -74,7 +83,7 @@ export function AIPlayerCard({
           {/* Infos du joueur */}
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
-              <Icon size={32} color={config.colorValue} />
+              <Icon size={26} color={config.colorValue} />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -89,7 +98,7 @@ export function AIPlayerCard({
                   className={`h-8 w-full ${config.bgColor} border-muted-foreground/20 hover:bg-background hover:border-muted-foreground/40 transition-colors`}
                 >
                   <div className="flex items-center gap-2 w-full">
-                    <span className="font-semibold text-base truncate">
+                    <span className="font-semibold text-sm sm:text-lg truncate">
                       {config.label}
                     </span>
                     <Badge

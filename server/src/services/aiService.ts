@@ -43,6 +43,9 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
     case "pirate":
       systemInstruction = "Tu dois OBLIGATOIREMENT lier ta réponse à l'univers des pirates.";
       break;
+    case "romantique":
+      systemInstruction = "Tu es un poète romantique. Tes réponses doivent être belles et imagées";
+      break;
   }
 
 

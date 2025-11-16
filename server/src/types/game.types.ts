@@ -28,7 +28,7 @@ export interface HumanPlayer extends BasePlayer {
   isAi: false;
 }
 
-export type Personnality = 'scientifique' | 'comique' | 'grognon' | 'pirate'
+export type Personnality = 'scientifique' | 'comique' | 'grognon' | 'pirate' | 'romantique'
 
 export interface AIPlayer extends BasePlayer {
   isAi: true;

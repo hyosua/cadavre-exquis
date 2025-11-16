@@ -22,7 +22,7 @@ const gameConfigSchema = z.object({
     hasPlayedCurrentPhase: z.literal(false),
     isConnected: z.literal(true),
     isAi: z.literal(true),
-    personnality: z.enum(["scientifique", "comique", "grognon", "pirate"]),
+    personnality: z.enum(["scientifique", "comique", "grognon", "pirate", "romantique"]),
   })).optional().default([]),
 });
 
