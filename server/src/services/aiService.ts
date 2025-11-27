@@ -63,9 +63,9 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
     `Règle: tes mots doivent correspondre à la phase grammaticale, ni plus ni moins.`,
   ];
 
-  if (helperText) {
-    promptParts.push(`Aide: ${helperText}`);
-  }
+    // if (helperText) {
+    //   promptParts.push(`Aide: ${helperText}`);
+    // }
 
   if (currentPhaseType.toLowerCase().includes('verbe')) {
     promptParts.push('Note: conjugue le verbe (3e pers. sing.)');
