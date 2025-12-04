@@ -18,6 +18,7 @@ export function useSocket() {
     setIsConnected,
     setCurrentPlayer,
     onGameCreated,
+    updatePlayerStatus,
     currentPlayer,
     persistedGameRef,      // <— nouvelle ref
     hasHydrated,           // <— flag de réhydratation
@@ -112,6 +113,11 @@ export function useSocket() {
       router.push('/');
     });
 
+    socket.on('player_status_update', (data: { playerId: string, status: 'thinking' | 'played' }) => {
+      console.log(`Update player ${data.playerId}: ${data.status}`);
+      updatePlayerStatus(data.playerId, data.status);
+    });
+
     socket.on('current_player', (player) => setCurrentPlayer(player));
     socket.on('game_state', (game: Game) => {
       console.log("game_state: ",game)
@@ -123,10 +129,10 @@ export function useSocket() {
     return () => {
       [
         'connect', 'game_deleted','game_left','rejoin_game','disconnect','rejoin_failed','join_failed','player_reconnected','kicked_out','game_created','game_canceled','error',
-        'current_player','game_state','phase_started','timer_update', 'assigned_host'
+        'current_player','game_state','phase_started','timer_update', 'assigned_host', 'player_status_update'
       ].forEach((e) => socket.off(e));
     };
-  }, [hasHydrated, currentPlayer?.id, persistedGameRef?.id, onGameCreated, setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer, router]);
+  }, [hasHydrated, currentPlayer?.id, persistedGameRef?.id, onGameCreated,  setGame, setTimeLeft, setError,resetGame, leaveGame, setIsConnected, setCurrentPlayer,updatePlayerStatus, router]);
 
   return socketService;
 }

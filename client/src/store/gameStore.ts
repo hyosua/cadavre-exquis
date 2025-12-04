@@ -24,6 +24,7 @@ interface GameState {
   setOnGameCreated: (callback: ((gameId: string) => void) | null) => void;
   resetGame: () => void;
   leaveGame: () => void;
+  updatePlayerStatus: (playerId: string, status: 'thinking' | 'played') => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -52,6 +53,31 @@ export const useGameStore = create<GameState>()(
           set({ persistedGameRef: { id: game.id, code: (game as Game).code } });
         }
 
+      },
+      updatePlayerStatus: (playerId, status) => {
+        set((state) => {
+          if (!state.game) return {};
+
+          const updatedPlayers = state.game.players.map((p) => {
+            if (p.id === playerId) {
+              return {
+                ...p,
+                // Si 'thinking', on active le flag visuel
+                isThinking: status === 'thinking',
+                // Si 'played', on valide la phase (ce que le client regarde)
+                hasPlayedCurrentPhase: status === 'played' ? true : p.hasPlayedCurrentPhase,
+              };
+            }
+            return p;
+          });
+
+          return {
+            game: {
+              ...state.game,
+              players: updatedPlayers,
+            },
+          };
+        });
       },
       setCurrentPlayer: (player) =>
         set({ currentPlayer: player ? player : null }),

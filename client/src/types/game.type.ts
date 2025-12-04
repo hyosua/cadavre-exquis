@@ -19,6 +19,7 @@ interface BasePlayer {
   isHost: boolean;
   hasPlayedCurrentPhase: boolean;
   isConnected: boolean;
+  isThinking?: boolean;
 }
 
 export interface HumanPlayer extends BasePlayer {

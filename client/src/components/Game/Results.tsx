@@ -1,22 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useGame } from "@/hooks/useGame";
 import { RankingEntry, Sentence } from "@/types/game.type";
 import { Button } from "@/components/ui/button";
 import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import CodeCopyBtn from "@/components/ui/copy-btn";
+import { motion, Variants } from "framer-motion";
+import { Trophy, Medal, Quote, RotateCcw, DoorOpen } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export function Results() {
   const { game, currentPlayer, startGame, leaveGame } = useGame();
-  const [revealedCount, setRevealedCount] = useState(0);
-  const [isRevealing, setIsRevealing] = useState(true);
+
+  if (!game || !currentPlayer) return null;
 
   interface Vote {
     sentenceId: string;
   }
 
+  // Calcul du classement
   const ranking: RankingEntry[] = game?.sentences
     ? game.sentences
         .map((sentence: Sentence) => ({
@@ -29,163 +33,177 @@ export function Results() {
         .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount)
     : [];
 
-  useEffect(() => {
-    if (revealedCount < ranking.length) {
-      const timer = setTimeout(() => {
-        setRevealedCount((prev) => prev + 1);
-      }, 800);
-      return () => clearTimeout(timer);
-    } else {
-      setIsRevealing(false);
-    }
-  }, [revealedCount, ranking.length]);
-
-  if (!game || !currentPlayer) return null;
   const isHost = currentPlayer.isHost;
-  const canStart = game.players.length >= 1;
+  const canStart = game.players.length >= 2; // Généralement 2 minimum pour jouer
 
-  const getRank = (index: number) => {
-    return index + 1;
+  // Variants pour l'animation en cascade (Stagger)
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.6,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", stiffness: 100, damping: 15 },
+    },
   };
 
   return (
-    <>
-      <div className="bg-card shadow-xl text-card-foreground rounded-2xl p-8 animate-in fade-in duration-500">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Résultats</h1>
-          <p className="font-semibold text-foreground">
-            Classement des meilleures phrases
-          </p>
-        </div>
-
-        <div className="space-y-4 relative">
-          {ranking.map((entry, index) => {
-            const isRevealed = ranking.length - 1 - index < revealedCount;
-            const isWinner = index === 0;
-            const rank = getRank(index);
-
-            if (!isRevealed) return null;
-
-            return (
-              <div
-                key={entry.sentence.id}
-                className={`rounded-xl p-6 transition-all duration-700 transform ${
-                  isWinner && !isRevealing
-                    ? "scale-105 shadow-2xl bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-900/40 dark:via-yellow-900/40 dark:to-amber-900/40 border-2 border-amber-300 dark:border-amber-600"
-                    : isWinner
-                    ? "bg-gradient-to-br  shadow-2xl from-amber-50 via-yellow-50 to-amber-50 dark:from-amber-900/40 dark:via-yellow-900/40 dark:to-amber-900/40 border-2 border-amber-300 dark:border-amber-600"
-                    : "bg-white shadow-2xl dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
-                } ${
-                  isRevealed
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
-                style={{
-                  animation: isRevealed ? "slideIn 0.6s ease-out" : "none",
-                  position: "relative",
-                }}
-              >
-                {/* Effet spotlight pour le gagnant */}
-                {isWinner && !isRevealing && (
-                  <>
-                    <div className="absolute inset-0 bg-gradient-radial from-amber-300/30 via-transparent to-transparent rounded-xl animate-pulse pointer-events-none" />
-                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-400/40 to-yellow-400/40 rounded-xl blur-sm opacity-50 animate-pulse pointer-events-none" />
-                  </>
-                )}
-
-                <div className="flex items-start justify-between relative z-10">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className={`text-lg font-bold ${
-                          isWinner ? "text-amber-300" : "text-slate-300"
-                        }`}
-                      >
-                        #{rank}
-                      </span>
-                      <span
-                        className={`text-sm font-semibold px-3 py-1 rounded-full ${
-                          isWinner
-                            ? "bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
-                        }`}
-                      >
-                        {entry.voteCount} vote{entry.voteCount > 1 ? "s" : ""}
-                      </span>
-                      <span className="self-end">
-                        <CodeCopyBtn codeToCopy={entry.words.join(" ")} />
-                      </span>
-                    </div>
-                    <p
-                      className={`text-lg ${
-                        isWinner
-                          ? "text-amber-900 dark:text-amber-50 font-semibold text-xl"
-                          : "text-slate-700 dark:text-slate-200 font-semibold"
-                      }`}
-                    >
-                      {entry.words.join(" ")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+    <div className="max-w-2xl mx-auto space-y-8 pb-12">
+      {/* En-tête */}
+      <div className="text-center space-y-2 pt-4">
+        <h1 className="text-4xl font-extrabold tracking-tight text-primary">
+          Le Verdict
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Voici les chefs-d&apos;œuvre de cette manche
+        </p>
       </div>
 
-      {!isRevealing && (
-        <div className="flex justify-center mt-4 mb-4 gap-2 animate-in fade-in duration-500">
-          {isHost && (
-            <>
-              <Button
-                onClick={startGame}
-                disabled={!canStart}
-                className="w-full max-w-28"
-                size="lg"
-              >
-                Rejouer
-              </Button>
-            </>
-          )}
+      {/* Liste des résultats */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="space-y-4"
+      >
+        {ranking.map((entry, index) => {
+          const rank = index + 1;
+          const isWinner = rank === 1;
 
-          {!isHost && (
-            <p className="mt-6 text-center text-lg text-accent-foreground">
+          return (
+            <motion.div
+              key={entry.sentence.id}
+              variants={itemVariants}
+              className={`group relative overflow-hidden rounded-xl border p-5 transition-all
+                ${
+                  isWinner
+                    ? "bg-amber-50/50 dark:bg-amber-950/10 border-amber-200 dark:border-amber-800 shadow-lg shadow-amber-500/10"
+                    : "bg-card border-border shadow-sm hover:shadow-md"
+                }
+              `}
+            >
+              {/* Décoration subtile pour le vainqueur */}
+              {isWinner && (
+                <div className="absolute top-0 right-0 p-3 opacity-10">
+                  <Trophy size={100} className="text-amber-500 rotate-12" />
+                </div>
+              )}
+
+              <div className="relative z-10 flex gap-4">
+                {/* Colonne Rang */}
+                <div className="flex flex-col items-center justify-start pt-1 min-w-[3rem]">
+                  {isWinner ? (
+                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-full text-amber-600 dark:text-amber-400 mb-1">
+                      <Trophy size={24} />
+                    </div>
+                  ) : (
+                    <div className="font-bold text-2xl text-muted-foreground/50">
+                      #{rank}
+                    </div>
+                  )}
+                </div>
+
+                {/* Contenu Phrase */}
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex gap-2">
+                      <Badge
+                        variant={isWinner ? "default" : "secondary"}
+                        className={
+                          isWinner
+                            ? "bg-amber-500 hover:bg-amber-600 text-white"
+                            : ""
+                        }
+                      >
+                        {entry.voteCount} vote{entry.voteCount > 1 ? "s" : ""}
+                      </Badge>
+                      {isWinner && (
+                        <span className="text-xs font-medium text-amber-600 dark:text-amber-400 self-center uppercase tracking-widest">
+                          Vainqueur
+                        </span>
+                      )}
+                    </div>
+
+                    <CodeCopyBtn codeToCopy={entry.words.join(" ")} />
+                  </div>
+
+                  <blockquote
+                    className={`relative text-lg font-medium leading-relaxed ${
+                      isWinner
+                        ? "text-foreground text-xl"
+                        : "text-foreground/80"
+                    }`}
+                  >
+                    <Quote className="absolute -left-4 -top-2 h-3 w-3 text-muted-foreground/30 transform -scale-x-100" />
+                    {entry.words.join(" ")}
+                    <Quote className="inline-block ml-1 h-3 w-3 text-muted-foreground/30 align-top" />
+                  </blockquote>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Actions de fin de manche */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: ranking.length * 0.6 + 0.5 }} // Apparaît après toutes les cartes
+        className="space-y-6 pt-6"
+      >
+        <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
+          {isHost ? (
+            <Button
+              onClick={startGame}
+              disabled={!canStart}
+              size="lg"
+              className="w-full sm:w-auto px-8 gap-2 font-semibold shadow-lg shadow-primary/20"
+            >
+              <RotateCcw size={18} /> Rejouer une manche
+            </Button>
+          ) : (
+            <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-4 py-2 rounded-lg">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+              </span>
               En attente que l&apos;hôte redémarre la partie...
-            </p>
+            </div>
           )}
-        </div>
-      )}
 
-      {!isRevealing && (
-        <div className="animate-in fade-in duration-500">
+          <Confirm
+            message="Vous êtes sur le point de quitter la partie."
+            buttonName={
+              <span className="flex items-center gap-2">
+                <DoorOpen size={18} /> Quitter
+              </span>
+            }
+            variant="outline"
+            className="w-full sm:w-auto"
+            onConfirm={leaveGame}
+          />
+        </div>
+
+        {/* Liste des joueurs discrète en bas */}
+        <div className="opacity-80 hover:opacity-100 transition-opacity">
           <PlayerList
             players={game.players}
             currentPlayerId={currentPlayer.id}
           />
-          <div className="py-4 text-center">
-            <Confirm
-              message="Vous êtes sur le point de quitter la partie."
-              buttonName="Quitter"
-              variant={"destructive"}
-              className="hover:bg-destructive hover:text-destructive-foreground"
-              onConfirm={leaveGame}
-            />
-          </div>
         </div>
-      )}
-
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </>
+      </motion.div>
+    </div>
   );
 }

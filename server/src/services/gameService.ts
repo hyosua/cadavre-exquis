@@ -124,6 +124,9 @@ export class GameService {
 
     console.log(`🚀 Game ${gameId} started with ${game.players.length} players`);
 
+    // Déclencher les IA pour la toute première phase (Phase 0)
+    this.triggerAIPlayers(io, gameId);
+
     return game;
   }
 
@@ -137,6 +140,8 @@ export class GameService {
     if (game.status !== 'playing') {
       throw new Error('La partie n\'est pas en cours');
     }
+    // Sauvegarder le mot
+    await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
 
     const player = game.players.find(p => p.id === playerId);
     if (!player) {
@@ -146,75 +151,104 @@ export class GameService {
     if (player.hasPlayedCurrentPhase) {
       throw new Error('Vous avez déjà joué');
     }
-
-    // Sauvegarder le mot
-    await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
-    
+ 
     // Marquer le joueur comme ayant joué
     player.hasPlayedCurrentPhase = true;
+
     await redisService.saveGame(game);
 
     console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
 
-    // Vérifier si tous les joueurs ont joué
-    const allHumansPlayed = game.players
-      .filter(p => !p.isAi)
-      .every(p => p.hasPlayedCurrentPhase);
-    
-    if (allHumansPlayed) {
-      const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
+    io.to(gameId).emit('game_state', game);
 
-     for (const ai of aiPlayers) {
-      try {
-        console.log(`🤖 ${ai.pseudo} is thinking...`);
-        const aiWord = await getAIMove(game, ai.id);
-        console.log(`🤖 ${ai.pseudo} played: ${aiWord}`);
-        
-        await redisService.setPhaseWord(gameId, game.currentPhase, ai.id, aiWord);
-        ai.hasPlayedCurrentPhase = true;
-      } catch (error) {
-        console.error(`❌ Error with AI ${ai.pseudo}:`, error);
-        // Mot par défaut en cas d'erreur
-        const fallbackWord = `un ${game.config.phaseDetails[game.config.phases[game.currentPhase]].titre} étrange`;
-        await redisService.setPhaseWord(gameId, game.currentPhase, ai.id, fallbackWord);
-        ai.hasPlayedCurrentPhase = true;
-      }
-    }
-
-      await redisService.saveGame(game);
-      console.log(`✅ All players submitted for phase ${game.currentPhase}`);
-      timerService.clearTimer(gameId);
-      await this.nextPhase(io, gameId);
-    }
+    await this.checkAndAdvancePhase(io, gameId);
 
     return game;
   }
 
-  async triggerAiTurn(io: Server, gameId: string): Promise<void> {
-    console.log("Déclenchement du tour de l'IA")
-    try {
-      const game = await redisService.getGame(gameId);
-      if(!game || game.status !== 'playing') {
-        throw new Error('Partie introuvable ou non en cours');
-      }
+  /**
+ * Déclenche le tour des IAs de manière indépendante
+ */
+  async triggerAIPlayers(io: Server, gameId: string): Promise<void> {
+    const game = await redisService.getGame(gameId);
+    if (!game) return;
 
-      // trouver les IA qui n'ont pas encore joué
-      const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
-      if(aiPlayers.length === 0) {
-        console.log("Aucune IA n'a besoin de jouer")
-        return;
-      }
-      for (const ai of aiPlayers) {
-        io.in(gameId).emit(`${ai.pseudo} réfléchit...`)
-        const aiWord = await getAIMove(game, ai.id);
+    const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
 
-        console.log(`L'IA ${ai.pseudo} a joué le mot: ${aiWord}`)
-        await this.submitWord(io, gameId, ai.id, aiWord);
+    // On lance le processus pour chaque IA sans attendre (Promise.all non bloquant pour le flux principal)
+    aiPlayers.forEach(async (ai) => {
+      try {
+        // 1. Simuler un délai de réflexion "humain" (entre 2 et 8 secondes par exemple)
+        // Cela évite que toutes les IA répondent instantanément au début du tour
+        const delay = Math.random() * 6000 + 2000; 
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+
+        // Vérifier si la phase n'a pas changé pendant le délai (cas rare mais possible)
+        const freshGameCheck = await redisService.getGame(gameId);
+        if (!freshGameCheck || freshGameCheck.currentPhase !== game.currentPhase) return;
+
+        // 2. Notifier le client que l'IA réfléchit
+        console.log(`🧠 ${ai.pseudo} réflechit...`);
+        io.to(gameId).emit('player_status_update', { 
+        playerId: ai.id, 
+        status: 'thinking'
+      });
+
+        // 3. Générer le mot via Gemini
+        const aiWord = await getAIMove(freshGameCheck, ai.id); // Utilise ta fonction importée
+        
+        // 4. Sauvegarder le résultat
+        await redisService.setPhaseWord(gameId, freshGameCheck.currentPhase, ai.id, aiWord);
+        
+        // Mise à jour de l'objet local pour la vérification suivante
+        ai.hasPlayedCurrentPhase = true; 
+        
+        // Récupérer le jeu à jour pour marquer le flag
+        const updatedGame = await redisService.getGame(gameId);
+        const updatedPlayer = updatedGame?.players.find(p => p.id === ai.id);
+        if (updatedPlayer) updatedPlayer.hasPlayedCurrentPhase = true;
+        if (updatedGame) await redisService.saveGame(updatedGame);
+
+        console.log(`🤖 ${ai.pseudo} a joué: ${aiWord}`);
+
+        // 5. Notifier que l'IA a joué
+        io.to(gameId).emit('player_status_update', { 
+        playerId: ai.id, 
+        status: 'played' 
+      });
+        
+        // Renvoyer l'état global du jeu pour mettre à jour les jauges/listes
+        if (updatedGame) io.to(gameId).emit('game_state', updatedGame);
+
+        // 6. Vérifier si c'était le dernier joueur (Humains + IA confondus)
+        await this.checkAndAdvancePhase(io, gameId);
+
+      } catch (error) {
+        console.error(`❌ Error with AI ${ai.pseudo}:`, error);
+        // Fallback en cas d'erreur critique de l'IA pour ne pas bloquer le jeu
+        // ... logique de fallback ...
       }
-    } catch (error) {
-      console.error("Erreur lors du tour de l'IA:", error);
-    }
+    });
   }
+
+/**
+ * Méthode utilitaire pour vérifier si tout le monde a joué
+ */
+async checkAndAdvancePhase(io: Server, gameId: string): Promise<void> {
+    const game = await redisService.getGame(gameId);
+    if (!game) return;
+
+    // Vérifie si TOUS les joueurs (IA + Humains) ont joué
+    const allPlayersPlayed = game.players.every(p => p.hasPlayedCurrentPhase);
+
+    if (allPlayersPlayed) {
+        console.log(`✅ All players submitted for phase ${game.currentPhase}`);
+        timerService.clearTimer(gameId);
+        await this.nextPhase(io, gameId);
+    }
+}
+
 
   async nextPhase(io: Server, gameId: string): Promise<void> {
     const game = await redisService.getGame(gameId);
@@ -263,6 +297,9 @@ export class GameService {
       io.to(gameId).emit('game_state', game);
       
       console.log(`➡️  Game ${gameId} moved to phase ${game.currentPhase}`);
+
+      // Déclencher le tour des ia
+      this.triggerAIPlayers(io, gameId);
     }
   }
 
