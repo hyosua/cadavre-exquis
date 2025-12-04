@@ -6,9 +6,17 @@ import { Label } from "@/components/ui/label";
 
 interface PresetRadioItemProps {
   preset: GamePreset;
+  customTitle?: string;
+  customDescription?: string;
+  onClick?: () => void;
 }
 
-export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
+export const PresetRadioItem = ({
+  preset,
+  customTitle,
+  customDescription,
+  onClick,
+}: PresetRadioItemProps) => (
   <FormItem>
     <FormControl>
       <RadioGroupItem
@@ -19,6 +27,7 @@ export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
     </FormControl>
     <Label
       htmlFor={preset.id}
+      onClick={onClick}
       className={cn(
         "flex flex-col rounded-lg border-2 p-4 cursor-pointer",
         "hover:bg-primary/20 transition-all",
@@ -29,10 +38,11 @@ export const PresetRadioItem = ({ preset }: PresetRadioItemProps) => (
       )}
     >
       <span className={cn("font-semibold mb-1 transition-colors")}>
-        {preset.name}
+        {/*On affiche le titre du preset personnalisé sinon preset normal*/}
+        {customTitle || preset.name}
       </span>
       <span className="text-sm text-muted-foreground ">
-        <em>&quot;{preset.example}&quot;</em>
+        <em>&quot;{customDescription || preset.example}&quot;</em>
       </span>
     </Label>
   </FormItem>

@@ -274,9 +274,6 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
           🔄 <strong>Glissez-déposez</strong> dans la composition pour
           réorganiser
         </p>
-        <p>
-          ❌ <strong>Cliquez sur x</strong> pour retirer un élément
-        </p>
       </div>
     </div>
   );

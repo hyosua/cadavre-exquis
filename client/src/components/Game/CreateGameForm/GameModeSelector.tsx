@@ -1,7 +1,7 @@
 // GameModeSelector.tsx
 import { useState, useMemo } from "react";
-import { Control } from "react-hook-form";
-import { GAME_PRESETS, GamePreset } from "@/config/config";
+import { Control, useWatch } from "react-hook-form";
+import { GAME_PRESETS, GamePreset, PHASE_DETAILS } from "@/config/config";
 import {
   Accordion,
   AccordionContent,
@@ -26,7 +26,20 @@ interface GameModeSelectorProps {
 
 export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
   const [customModalOpen, setCustomModalOpen] = useState(false);
-  const selectedPresetId = control._formValues.presetId;
+
+  // On observe phases pour mettre à jour le label dynamiquement
+  const selectedPhases = useWatch({ control, name: "phases" });
+  const selectedPresetId = useWatch({ control, name: "presetId" });
+
+  // Label dynamique pour le mode personnalisé
+  const customPhaseLabel = useMemo(() => {
+    if (!selectedPhases || selectedPhases.length === 0)
+      return "Composez votre structure...";
+
+    // Transforme ['s', 'v'] en "Sujet + Verbe"
+    return selectedPhases.map((p) => PHASE_DETAILS[p]?.titre || p).join(" + ");
+  }, [selectedPhases]);
+
   // Trouve la difficulté du preset sélectionné
   const defaultAccordionValue = useMemo(() => {
     const selectedPreset = GAME_PRESETS.find((p) => p.id === selectedPresetId);
@@ -48,6 +61,7 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
               <RadioGroup
                 onValueChange={(value) => {
                   field.onChange(value);
+                  // Ouvre le modal uniquement si on change VERS mode custom
                   if (value === "custom") {
                     setCustomModalOpen(true);
                   }
@@ -76,9 +90,30 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
                           }
                         </AccordionTrigger>
                         <AccordionContent className="px-4 pb-4 space-y-2">
-                          {presets.map((preset) => (
-                            <PresetRadioItem key={preset.id} preset={preset} />
-                          ))}
+                          {presets.map((preset) => {
+                            const isCustom = preset.id === "custom";
+
+                            return (
+                              <PresetRadioItem
+                                key={preset.id}
+                                preset={preset}
+                                // si custom avec phases, on change le titre
+                                customTitle={
+                                  isCustom && preset.phases.length > 0
+                                    ? "Votre composition"
+                                    : undefined
+                                }
+                                customDescription={
+                                  isCustom ? customPhaseLabel : undefined
+                                }
+                                onClick={() => {
+                                  if (isCustom) {
+                                    setCustomModalOpen(true);
+                                  }
+                                }}
+                              />
+                            );
+                          })}
                         </AccordionContent>
                       </AccordionItem>
                     )
