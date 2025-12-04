@@ -37,6 +37,7 @@ import Link from "next/link";
 
 import { Personnality } from "@/types/game.type";
 import { AIPlayersList } from "./AIConfig/AIPlayersList";
+import { personnalityConfig } from "./AIConfig/AIPlayerCard";
 // Variants pour le conteneur principal
 const containerVariants = {
   hidden: {
@@ -75,8 +76,6 @@ const itemVariants = {
   },
 };
 
-const AI_NAMES = ["Alpha", "Gamma", "Zeta", "Beta"];
-
 export function CreateGameForm() {
   const router = useRouter();
   const { createGame } = useGame();
@@ -111,18 +110,27 @@ export function CreateGameForm() {
   }, [router, setOnGameCreated]);
 
   const addAiPlayer = () => {
-    const availableNames = AI_NAMES.filter(
+    const allPersonalities = Object.keys(personnalityConfig) as Personnality[];
+    const availablePersonalities = allPersonalities.filter(
       (name) => !aiPlayers.some((ai) => ai.pseudo === name)
     );
 
-    if (availableNames.length === 0) return;
+    if (availablePersonalities.length === 0) return;
+
+    const randomPersonality =
+      availablePersonalities[
+        Math.floor(Math.random() * availablePersonalities.length)
+      ];
+
+    // On récupère le label associé (ex: "Le Pirate")
+    const nameFromConfig = personnalityConfig[randomPersonality].label;
 
     const newAi: AIPlayer = {
       id: `ai-${Date.now()}`,
-      pseudo: availableNames[Math.floor(Math.random() * availableNames.length)],
+      pseudo: nameFromConfig,
       isAi: true,
       isHost: false,
-      personnality: "comique",
+      personnality: randomPersonality,
       isConnected: true,
       hasPlayedCurrentPhase: false,
     };
@@ -134,9 +142,18 @@ export function CreateGameForm() {
     setAiPlayers(aiPlayers.filter((ai) => ai.id !== aiPlayer));
   };
 
-  const handlePersonnalityChange = (id: string, personnality: Personnality) => {
+  const handlePersonnalityChange = (
+    id: string,
+    newPersonnality: Personnality
+  ) => {
+    const newName = personnalityConfig[newPersonnality].label;
+
     setAiPlayers(
-      aiPlayers.map((ai) => (ai.id === id ? { ...ai, personnality } : ai))
+      aiPlayers.map((ai) =>
+        ai.id === id
+          ? { ...ai, personnality: newPersonnality, pseudo: newName }
+          : ai
+      )
     );
   };
 

@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 import { Personnality } from "@/types/game.type";
 import { AIPlayerConfigProps } from "@/types/ai-config.type";
 
-const personnalityConfig = {
+export const personnalityConfig = {
   scientifique: {
     icon: GiBrain,
     label: "Le Scientifique",
