@@ -92,7 +92,7 @@ export function Results() {
                 ${
                   isTop
                     ? "bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border-slate-300 dark:border-slate-700 shadow-xl"
-                    : "bg-card/50 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
+                    : "bg-card/70 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
                 }
               `}
               >
@@ -137,12 +137,12 @@ export function Results() {
                   </div>
 
                   {/* Citation principale */}
-                  <div className="relative">
-                    <div className="absolute -left-2 top-0 text-6xl font-serif text-border/20 leading-none">
-                      "
+                  <div className=" flex justify-center">
+                    <div className=" text-6xl font-serif text-border/80 leading-none">
+                      &quot;
                     </div>
                     <p
-                      className={`font-serif leading-relaxed pl-6 pr-4 ${
+                      className={`font-serif leading-relaxed pl-4 pr-4 ${
                         isTop
                           ? "text-2xl text-foreground"
                           : "text-xl text-foreground/90"
@@ -150,8 +150,8 @@ export function Results() {
                     >
                       {entry.words.join(" ")}
                     </p>
-                    <div className="absolute -right-2 bottom-0 text-6xl font-serif text-border/20 leading-none">
-                      "
+                    <div className=" text-6xl font-serif text-border/80 leading-none">
+                      &quot;
                     </div>
                   </div>
 
