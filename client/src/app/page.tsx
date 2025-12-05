@@ -78,7 +78,7 @@ export default function Home() {
           transition={{ duration: 0.3 }}
           className="text-center mb-10 sm:mb-14"
         >
-          <h1 className="text-5xl font-title sm:text-8xl font-bold text-primary ">
+          <h1 className="text-5xl font-title sm:text-8xl font-bold text-primary drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] -rotate-2">
             Cadavre Exquis
           </h1>
           <div className="mt-4 font-averia min-h-[2rem] sm:min-h-[3rem]">
@@ -95,39 +95,27 @@ export default function Home() {
           <Button
             asChild
             variant="secondary"
-            className="h-12  shadow-md cursor-pointer"
+            className="h-14 text-lg pop-btn lg:text-xl"
           >
-            <Link href="/create" prefetch={true}>
-              Créer une partie
-            </Link>
+            <Link href="/create">Créer une partie</Link>
           </Button>
 
           <Button
             asChild
             variant="secondary"
-            className="h-12 shadow-md cursor-pointer"
+            className="h-14 text-lg pop-btn lg:text-xl"
           >
             <Link href="/join" prefetch={true}>
               Rejoindre une partie
             </Link>
           </Button>
-
-          {/* <Button
-            asChild
-            variant="default"
-            className="h-12 shadow-md cursor-pointer"
-          >
-            <Link href="/ia-game" prefetch={true}>
-              Jouez contre l&apos;IA
-            </Link>
-          </Button> */}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Collapsible className="bg-card  rounded-2xl shadow-xl p-6">
+          <Collapsible className="pop-btn p-6 overflow-hidden">
             <CollapsibleTrigger className="space-y-1 justify-between flex items-center w-full">
               <h2 className="text-xl font-semibold">
                 Créez des phrases loufoques à plusieurs !
@@ -136,7 +124,7 @@ export default function Home() {
             </CollapsibleTrigger>
 
             <CollapsibleContent className=" mt-2">
-              <ol className="list-none space-y-4 pt-4">
+              <ol className="list-none lg:space-y-4 lg:pt-4">
                 {/* ÉTAPE 1: Création */}
                 <li className="flex items-start gap-3 p-3 rounded-lg">
                   <div className="flex-shrink-0 text-2xl font-extrabold  w-8 text-center">
