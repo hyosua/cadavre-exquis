@@ -8,8 +8,7 @@ import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import CodeCopyBtn from "@/components/ui/copy-btn";
 import { motion, Variants } from "framer-motion";
-import { Trophy, Medal, Quote, RotateCcw, DoorOpen } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { RotateCcw, DoorOpen, QuoteIcon } from "lucide-react";
 
 export function Results() {
   const { game, currentPlayer, startGame, leaveGame } = useGame();
@@ -139,7 +138,7 @@ export function Results() {
                   {/* Citation principale */}
                   <div className=" flex justify-center">
                     <div className=" text-6xl font-serif text-border/80 leading-none">
-                      &quot;
+                      <QuoteIcon fill="oklch(var(--border))" size={14} />
                     </div>
                     <p
                       className={`font-serif leading-relaxed pl-4 pr-4 ${
@@ -151,7 +150,7 @@ export function Results() {
                       {entry.words.join(" ")}
                     </p>
                     <div className=" text-6xl font-serif text-border/80 leading-none">
-                      &quot;
+                      <QuoteIcon fill="oklch(var(--border))" size={14} />
                     </div>
                   </div>
 
