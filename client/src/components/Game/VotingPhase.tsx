@@ -25,7 +25,7 @@ export function VotingPhase() {
             Le moment de vérité !
           </h1>
           <p className="font-semibold text-lg text-muted-foreground font-averia rotate-[-1deg]">
-            Élisez la phrase la plus absurde.
+            Élisez la phrase la plus innatendue, absurde ou drôle.
           </p>
         </div>
 

@@ -2,7 +2,7 @@
 // Modal pour la composition personnalisée
 import React, { useState, useEffect } from "react";
 import { Control, useFormContext } from "react-hook-form";
-import { Plus, X, GripVertical } from "lucide-react";
+import { Plus, X, GripVertical, Ellipsis } from "lucide-react";
 import { PHASE_DETAILS } from "@/config/config";
 import { PhaseDetail } from "@/types/game.type";
 import {
@@ -54,23 +54,34 @@ export const CustomPhaseModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Composez votre structure personnalisée</DialogTitle>
+      <DialogContent className="pop-card max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-foreground p-0 gap-0">
+        <DialogHeader className="p-6 pb-2 bg-primary/70 border-b-2 border-foreground/5">
+          <DialogTitle className="text-2xl font-averia">
+            Créez votre structure
+          </DialogTitle>
           <DialogDescription>
-            Cliquez pour ajouter des éléments, glissez-déposez pour réorganiser
+            Cliquez pour ajouter, Glissez-déposez pour déplacer.
           </DialogDescription>
         </DialogHeader>
 
-        <PhaseBuilder value={tempPhases} onChange={setTempPhases} />
+        <div className="p-6">
+          <PhaseBuilder value={tempPhases} onChange={setTempPhases} />
+        </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={handleCancel}>
+        <DialogFooter className="p-6 bg-muted/30 border-t-2 border-foreground/5 gap-3 sm:gap-0">
+          <Button
+            variant="ghost"
+            onClick={handleCancel}
+            className="hover:bg-destructive/10 hover:text-destructive"
+          >
             Annuler
           </Button>
-          <Button onClick={handleSave} disabled={tempPhases.length === 0}>
-            Valider ({tempPhases.length} élément
-            {tempPhases.length > 1 ? "s" : ""})
+          <Button
+            onClick={handleSave}
+            disabled={tempPhases.length === 0}
+            className="pop-btn text-primary-foreground"
+          >
+            Valider
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -121,11 +132,6 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
     setDraggedItem(phase);
   };
 
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    setDragOverIndex(index);
-  };
-
   const handleDragLeave = () => {
     setDragOverIndex(null);
   };
@@ -137,12 +143,18 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
     if (!draggedItem) return;
 
     const currentIndex = value.indexOf(draggedItem.id);
-    if (currentIndex === dropIndex) return;
+
+    // Ajuster l'index de drop si nécessaire
+    let adjustedDropIndex = dropIndex;
+    if (dropIndex > currentIndex) {
+      adjustedDropIndex = dropIndex - 1;
+    }
+
+    if (currentIndex === adjustedDropIndex) return;
 
     const newPhases = [...value];
     newPhases.splice(currentIndex, 1);
-    const adjustedIndex = dropIndex > currentIndex ? dropIndex - 1 : dropIndex;
-    newPhases.splice(adjustedIndex, 0, draggedItem.id);
+    newPhases.splice(adjustedDropIndex, 0, draggedItem.id);
 
     onChange(newPhases);
     setDraggedItem(null);
@@ -156,52 +168,101 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
   return (
     <div className="space-y-4">
       {/* Zone de composition */}
-      <div className="rounded-lg border-2 border-dashed border-primary/30 bg-muted/30 p-4 min-h-40">
-        <div className="flex items-center gap-2 mb-3">
-          <h4 className="text-sm font-semibold">Ma composition</h4>
-          {selectedPhases.length > 0 && (
-            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
-              {selectedPhases.length} élément
-              {selectedPhases.length > 1 ? "s" : ""}
-            </span>
-          )}
+      <div className="relative rounded-lg border-2 border-dashed border-foreground/30 bg-muted/20 p-4 min-h-40">
+        <div className="absolute -top-3 left-4 bg-background px-2 text-sm font-bold text-foreground/60 uppercase tracking-widest">
+          Votre Phrase
         </div>
 
         {selectedPhases.length === 0 ? (
-          <div className="flex items-center justify-center py-12 text-muted-foreground">
-            <div className="text-center">
-              <p className="text-sm font-medium">Aucun élément sélectionné</p>
-              <p className="text-xs mt-1">
-                Cliquez sur les éléments ci-dessous
-              </p>
+          <div className="h-full flex flex-col items-center justify-center py-10 opacity-40">
+            <div className="border-2 border-dashed border-foreground p-4 rounded-lg mb-2 rotate-3">
+              <Ellipsis className="w-8 h-8" />
             </div>
+            <p className="font-averia text-lg">Déposez des éléments ici !</p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div
+            className="space-y-2 pb-2"
+            onDragOver={(e) => {
+              e.preventDefault();
+              // Détecte si on est en dessous du dernier élément
+              const container = e.currentTarget;
+              const items = Array.from(container.children).filter(
+                (child) => child.getAttribute("data-phase-item") === "true"
+              );
+              const lastChild = items[items.length - 1];
+              if (lastChild) {
+                const lastRect = lastChild.getBoundingClientRect();
+                if (e.clientY > lastRect.bottom + 8) {
+                  setDragOverIndex(selectedPhases.length);
+                }
+              }
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              // Permet de déposer à la fin
+              const container = e.currentTarget;
+              const items = Array.from(container.children).filter(
+                (child) => child.getAttribute("data-phase-item") === "true"
+              );
+              const lastChild = items[items.length - 1];
+              if (lastChild) {
+                const lastRect = lastChild.getBoundingClientRect();
+                if (e.clientY > lastRect.bottom + 8) {
+                  handleDrop(e, selectedPhases.length);
+                }
+              }
+            }}
+            onDragLeave={(e) => {
+              // Ne réinitialiser que si on quitte vraiment le conteneur
+              if (e.currentTarget === e.target) {
+                setDragOverIndex(null);
+              }
+            }}
+          >
             {selectedPhases.map((phase, index) => (
-              <React.Fragment key={phase.id}>
+              <div
+                key={phase.id}
+                data-phase-item="true"
+                className="relative"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const midPoint = rect.top + rect.height / 2;
+                  const dropIndex = e.clientY < midPoint ? index : index + 1;
+                  setDragOverIndex(dropIndex);
+                }}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const midPoint = rect.top + rect.height / 2;
+                  const dropIndex = e.clientY < midPoint ? index : index + 1;
+                  handleDrop(e, dropIndex);
+                }}
+              >
+                {/* Indicateur de drop au-dessus */}
                 {dragOverIndex === index && (
-                  <div className="h-1 bg-primary rounded-full animate-pulse" />
+                  <div className="absolute -top-1 left-0 right-0 h-2 flex items-center z-10">
+                    <div className="h-1 w-full bg-primary rounded-full animate-pulse shadow-lg" />
+                  </div>
                 )}
+
                 <div
                   draggable
                   onDragStart={() => handleDragStart(phase)}
-                  onDragOver={(e) => handleDragOver(e, index)}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
-                  className={`flex items-center gap-3 p-3 rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all cursor-move ${
-                    draggedItem?.id === phase.id
-                      ? "opacity-50 scale-[0.98]"
-                      : ""
-                  }`}
+                  className={`
+                    group relative flex items-center gap-2 p-2 px-3 rounded-lg border-2 border-foreground bg-white text-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,0.1)] cursor-grab active:cursor-grabbing hover:-translate-y-0.5 transition-transform
+                    ${draggedItem?.id === phase.id ? "opacity-20" : ""}
+                  `}
                 >
                   <GripVertical className="w-5 h-5 text-muted-foreground/50 flex-shrink-0" />
                   <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-1 rounded flex-shrink-0">
                     {index + 1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm">
+                    <div className="font-medium text-sm font-averia">
                       {phase.detail.titre}
                     </div>
                     <div className="text-xs text-muted-foreground italic truncate">
@@ -217,12 +278,22 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                     <X className="w-4 h-4 text-destructive" />
                   </button>
                 </div>
-                {dragOverIndex === index + 1 &&
-                  index === selectedPhases.length - 1 && (
-                    <div className="h-1 bg-primary rounded-full animate-pulse" />
-                  )}
-              </React.Fragment>
+
+                {/* Indicateur de drop en-dessous */}
+                {dragOverIndex === index + 1 && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-2 flex items-center z-10">
+                    <div className="h-1 w-full bg-primary rounded-full animate-pulse shadow-lg" />
+                  </div>
+                )}
+              </div>
             ))}
+
+            {/* Zone de drop après le dernier élément */}
+            {dragOverIndex === selectedPhases.length && (
+              <div className="pt-2 flex items-center">
+                <div className="h-1 w-full bg-primary rounded-full animate-pulse shadow-lg" />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -230,7 +301,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
       {/* Phases disponibles */}
       <div className="rounded-lg border bg-background p-4">
         <h4 className="text-sm font-semibold mb-3 text-muted-foreground">
-          Éléments disponibles
+          <span className="text-xl">📚</span> Éléments grammaticaux
         </h4>
 
         {availablePhases.length === 0 ? (
@@ -244,7 +315,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                 key={phase.id}
                 type="button"
                 onClick={() => addPhase(phase)}
-                className="group text-left p-3 rounded-lg border bg-card text-card-foreground hover:border-primary/50 hover:bg-primary/5 transition-all hover:shadow-sm"
+                className="text-left p-3 rounded-lg border-2 border-transparent bg-card hover:border-primary/50 hover:bg-primary/5 hover:shadow-sm hover:translate-1 transition-all active:scale-95 group"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
@@ -255,25 +326,11 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                       {phase.detail.helper}
                     </div>
                   </div>
-                  <div className="flex-shrink-0 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Plus className="w-3.5 h-3.5 text-primary" />
-                  </div>
                 </div>
               </button>
             ))}
           </div>
         )}
-      </div>
-
-      {/* Info */}
-      <div className="text-xs text-muted-foreground bg-muted/50 rounded-lg p-3 space-y-1">
-        <p>
-          💡 <strong>Cliquez</strong> sur un élément pour l&apos;ajouter
-        </p>
-        <p>
-          🔄 <strong>Glissez-déposez</strong> dans la composition pour
-          réorganiser
-        </p>
       </div>
     </div>
   );

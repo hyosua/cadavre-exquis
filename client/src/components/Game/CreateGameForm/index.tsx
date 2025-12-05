@@ -182,8 +182,8 @@ export function CreateGameForm() {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-muted/70">
-      <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
+    <div className="min-h-screen p-4 flex justify-center py-10">
+      <div className="max-w-2xl w-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <motion.div
@@ -191,14 +191,20 @@ export function CreateGameForm() {
               initial="hidden"
               animate="visible"
             >
-              <Card>
-                <CardHeader>
-                  <motion.div variants={itemVariants}>
-                    <CardTitle>Créer une nouvelle partie</CardTitle>
+              {/* STYLE POP-CARD */}
+              <Card className="pop-card p-0 overflow-hidden">
+                <CardHeader className="bg-primary text-primary-foreground border-b-2 border-foreground p-4 sm:p-6">
+                  <motion.div variants={itemVariants} className="text-center">
+                    <CardTitle className="text-3xl font-averia font-bold -rotate-1 drop-shadow-sm">
+                      Créer une partie
+                    </CardTitle>
+                    <p className="text-primary-foreground/80 text-xl font-averia mt-1">
+                      Configurez votre jeu.
+                    </p>
                   </motion.div>
                 </CardHeader>
 
-                <CardContent className="space-y-8">
+                <CardContent className="space-y-8  sm:p-8 bg-card">
                   {/* Pseudo */}
                   <motion.div variants={itemVariants}>
                     <FormField
@@ -206,23 +212,34 @@ export function CreateGameForm() {
                       name="pseudo"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-lg font-semibold">
-                            Pseudo
+                          <FormLabel className="text-lg font-bold font-averia flex items-center gap-2">
+                            <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                              1
+                            </span>
+                            Votre Pseudo
                           </FormLabel>
                           <FormControl>
+                            {/* STYLE POP-INPUT */}
                             <Input
-                              placeholder="Votre nom de joueur"
+                              placeholder="Emil_z0la"
                               {...field}
+                              className="pop-input h-12 text-lg"
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-destructive font-bold" />
                         </FormItem>
                       )}
                     />
                   </motion.div>
 
                   {/* Mode de jeu */}
-                  <motion.div variants={itemVariants}>
+                  <motion.div variants={itemVariants} className="space-y-2">
+                    <div className="text-lg font-bold font-averia flex items-center gap-2">
+                      <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                        2
+                      </span>
+                      Structure de la phrase
+                    </div>
                     <GameModeSelector control={form.control} />
                   </motion.div>
 
@@ -244,10 +261,13 @@ export function CreateGameForm() {
                       name="timePerPhase"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-lg font-semibold">
-                            Temps par phase
+                          <FormLabel className="text-lg font-bold font-averia flex items-center gap-2">
+                            <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                              4
+                            </span>
+                            Pression Temporelle
                           </FormLabel>
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-4 bg-muted/20 p-4 rounded-xl border-2 border-foreground/10">
                             <FormControl>
                               <Slider
                                 defaultValue={field.value}
@@ -255,10 +275,10 @@ export function CreateGameForm() {
                                 max={120}
                                 min={30}
                                 step={5}
-                                className="flex-1"
+                                className="flex-1 cursor-pointer"
                               />
                             </FormControl>
-                            <span className="font-mono text-lg font-bold w-16 text-center text-primary rounded-md px-2 py-1">
+                            <span className="pop-tag bg-white font-mono text-xl font-bold w-20 text-center py-2">
                               {field.value?.[0] || 30}s
                             </span>
                           </div>
@@ -269,13 +289,12 @@ export function CreateGameForm() {
                   </motion.div>
                 </CardContent>
 
-                <CardFooter className="flex sm:flex-row justify-center gap-2 sm:gap-8">
+                <CardFooter className="flex sm:flex-row justify-center gap-4 p-6 bg-muted/30 border-t-2 border-foreground/10">
                   <motion.div variants={itemVariants} className="w-1/2">
                     <Button
                       asChild
-                      variant={"ghost"}
-                      size="lg"
-                      className="w-full"
+                      // STYLE POP-BTN GHOST
+                      className="pop-btn bg-white hover:bg-muted border-2 w-full text-foreground h-12 font-bold"
                       disabled={isCreating}
                     >
                       <Link href="/">Annuler</Link>
@@ -284,12 +303,12 @@ export function CreateGameForm() {
                   <motion.div variants={itemVariants} className="w-1/2">
                     <LoadingButton
                       type="submit"
-                      size="lg"
-                      className="w-full"
+                      // STYLE POP-BTN PRIMARY
+                      className="pop-btn bg-primary text-primary-foreground hover:bg-primary/90 w-full h-12 text-lg font-bold"
                       loading={isCreating}
-                      loadingText="Création..."
+                      loadingText="Construction..."
                     >
-                      Créer la partie
+                      Créer !
                     </LoadingButton>
                   </motion.div>
                 </CardFooter>

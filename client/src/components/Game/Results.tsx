@@ -111,7 +111,7 @@ export function Results() {
               <div className="absolute -top-4 -left-2 z-20 flex">
                 <div
                   className={`
-                  flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 font-bold font-title text-xl
+                  flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 font-bold font-averia text-xl
                   ${
                     rank === 1
                       ? "bg-yellow-400 border-black text-black"
