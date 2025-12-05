@@ -8,7 +8,7 @@ import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import CodeCopyBtn from "@/components/ui/copy-btn";
 import { motion, Variants } from "framer-motion";
-import { RotateCcw, DoorOpen, QuoteIcon } from "lucide-react";
+import { RotateCcw, DoorOpen, Quote } from "lucide-react";
 
 export function Results() {
   const { game, currentPlayer, startGame, leaveGame } = useGame();
@@ -19,7 +19,7 @@ export function Results() {
     sentenceId: string;
   }
 
-  // Calcul du classement
+  // Calcul du classement avec gestion des ex-aequo
   const ranking: RankingEntry[] = game?.sentences
     ? game.sentences
         .map((sentence: Sentence) => ({
@@ -32,10 +32,20 @@ export function Results() {
         .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount)
     : [];
 
-  const isHost = currentPlayer.isHost;
-  const canStart = game.players.length >= 2; // Généralement 2 minimum pour jouer
+  // Calculer le rang réel en tenant compte des ex-aequo
+  const getRealRank = (index: number): number => {
+    if (index === 0) return 1;
+    const currentVotes = ranking[index].voteCount;
+    const previousVotes = ranking[index - 1].voteCount;
+    if (currentVotes === previousVotes) {
+      return getRealRank(index - 1);
+    }
+    return index + 1;
+  };
 
-  // Variants pour l'animation en cascade (Stagger)
+  const isHost = currentPlayer.isHost;
+  const canStart = game.players.length >= 2;
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
@@ -60,12 +70,19 @@ export function Results() {
   return (
     <div className="max-w-2xl mx-auto space-y-8 pb-12">
       {/* En-tête */}
-      <div className="text-center space-y-2 pt-4">
-        <h1 className="text-4xl font-extrabold tracking-tight text-primary">
-          Le Verdict
+      <div className="text-center space-y-4 pt-8 pb-4">
+        <h1 className="text-4xl font-serif font-light tracking-wide text-foreground">
+          Les Chef-d&apos;oeuvres
         </h1>
-        <p className="text-muted-foreground text-lg">
-          Voici les chefs-d&apos;œuvre de cette manche
+        <div className="flex justify-center">
+          <div className="flex items-center gap-3 text-muted-foreground/40">
+            <div className="h-px w-16 bg-current" />
+            <div className="w-2 h-2 rounded-full bg-current" />
+            <div className="h-px w-16 bg-current" />
+          </div>
+        </div>
+        <p className="text-muted-foreground text-sm tracking-wider uppercase">
+          Sélection du jury
         </p>
       </div>
 
@@ -77,7 +94,7 @@ export function Results() {
         className="space-y-6"
       >
         {ranking.map((entry, index) => {
-          const rank = index + 1;
+          const rank = getRealRank(index);
           const isTop = rank === 1;
 
           return (
@@ -91,7 +108,7 @@ export function Results() {
                 ${
                   isTop
                     ? "bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border-slate-300 dark:border-slate-700 shadow-xl"
-                    : "bg-card/70 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
+                    : "bg-card/50 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
                 }
               `}
               >
@@ -136,9 +153,12 @@ export function Results() {
                   </div>
 
                   {/* Citation principale */}
-                  <div className=" flex justify-center">
-                    <div className=" text-6xl font-serif text-border/80 leading-none">
-                      <QuoteIcon fill="oklch(var(--border))" size={14} />
+                  <div className="flex justify-center">
+                    <div className="text-6xl font-serif text-border/20 leading-none">
+                      <Quote
+                        size={14}
+                        fill="color-mix(in oklab, var(--color-border) 20%, transparent)"
+                      />
                     </div>
                     <p
                       className={`font-serif leading-relaxed pl-4 pr-4 ${
@@ -149,8 +169,11 @@ export function Results() {
                     >
                       {entry.words.join(" ")}
                     </p>
-                    <div className=" text-6xl font-serif text-border/80 leading-none">
-                      <QuoteIcon fill="oklch(var(--border))" size={14} />
+                    <div className="text-6xl font-serif text-border/20 leading-none">
+                      <Quote
+                        size={14}
+                        fill="color-mix(in oklab, var(--color-border) 20%, transparent)"
+                      />
                     </div>
                   </div>
 
@@ -170,11 +193,12 @@ export function Results() {
           );
         })}
       </motion.div>
+
       {/* Actions de fin de manche */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: ranking.length * 0.6 + 0.5 }} // Apparaît après toutes les cartes
+        transition={{ delay: ranking.length * 0.6 + 0.5 }}
         className="space-y-6 pt-6"
       >
         <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
