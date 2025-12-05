@@ -75,87 +75,102 @@ export function Results() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="space-y-4"
+        className="space-y-6"
       >
         {ranking.map((entry, index) => {
           const rank = index + 1;
-          const isWinner = rank === 1;
+          const isTop = rank === 1;
 
           return (
             <motion.div
               key={entry.sentence.id}
               variants={itemVariants}
-              className={`group relative overflow-hidden rounded-xl border p-5 transition-all
+              className="group relative"
+            >
+              <div
+                className={`relative overflow-hidden rounded-2xl border transition-all
                 ${
-                  isWinner
-                    ? "bg-amber-50/50 dark:bg-amber-950/10 border-amber-200 dark:border-amber-800 shadow-lg shadow-amber-500/10"
-                    : "bg-card border-border shadow-sm hover:shadow-md"
+                  isTop
+                    ? "bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border-slate-300 dark:border-slate-700 shadow-xl"
+                    : "bg-card/50 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
                 }
               `}
-            >
-              {/* Décoration subtile pour le vainqueur */}
-              {isWinner && (
-                <div className="absolute top-0 right-0 p-3 opacity-10">
-                  <Trophy size={100} className="text-amber-500 rotate-12" />
-                </div>
-              )}
+              >
+                {/* Ligne décorative supérieure subtile */}
+                <div
+                  className={`h-1 w-full ${
+                    isTop
+                      ? "bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400"
+                      : "bg-gradient-to-r from-transparent via-border to-transparent"
+                  }`}
+                />
 
-              <div className="relative z-10 flex gap-4">
-                {/* Colonne Rang */}
-                <div className="flex flex-col items-center justify-start pt-1 min-w-[3rem]">
-                  {isWinner ? (
-                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-full text-amber-600 dark:text-amber-400 mb-1">
-                      <Trophy size={24} />
-                    </div>
-                  ) : (
-                    <div className="font-bold text-2xl text-muted-foreground/50">
-                      #{rank}
-                    </div>
-                  )}
-                </div>
-
-                {/* Contenu Phrase */}
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex gap-2">
-                      <Badge
-                        variant={isWinner ? "default" : "secondary"}
-                        className={
-                          isWinner
-                            ? "bg-amber-500 hover:bg-amber-600 text-white"
-                            : ""
-                        }
+                <div className="p-8 space-y-6">
+                  {/* En-tête avec rang et votes */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`text-sm font-serif italic ${
+                          isTop
+                            ? "text-slate-600 dark:text-slate-400"
+                            : "text-muted-foreground"
+                        }`}
                       >
-                        {entry.voteCount} vote{entry.voteCount > 1 ? "s" : ""}
-                      </Badge>
-                      {isWinner && (
-                        <span className="text-xs font-medium text-amber-600 dark:text-amber-400 self-center uppercase tracking-widest">
-                          Vainqueur
-                        </span>
-                      )}
+                        {rank === 1 && "Lauréat"}
+                        {rank === 2 && "Finaliste"}
+                        {rank === 3 && "Mention"}
+                        {rank > 3 && `Sélection ${rank}`}
+                      </div>
+                      <div className="h-1 w-8 bg-border/50" />
+                      <span
+                        className={`text-xs tracking-wider uppercase ${
+                          isTop
+                            ? "text-slate-600 dark:text-slate-400 font-medium"
+                            : "text-muted-foreground/70"
+                        }`}
+                      >
+                        {entry.voteCount} voix
+                      </span>
                     </div>
 
                     <CodeCopyBtn codeToCopy={entry.words.join(" ")} />
                   </div>
 
-                  <blockquote
-                    className={`relative text-lg font-medium leading-relaxed ${
-                      isWinner
-                        ? "text-foreground text-xl"
-                        : "text-foreground/80"
-                    }`}
-                  >
-                    <Quote className="absolute -left-4 -top-2 h-3 w-3 text-muted-foreground/30 transform -scale-x-100" />
-                    {entry.words.join(" ")}
-                    <Quote className="inline-block ml-1 h-3 w-3 text-muted-foreground/30 align-top" />
-                  </blockquote>
+                  {/* Citation principale */}
+                  <div className="relative">
+                    <div className="absolute -left-2 top-0 text-6xl font-serif text-border/20 leading-none">
+                      "
+                    </div>
+                    <p
+                      className={`font-serif leading-relaxed pl-6 pr-4 ${
+                        isTop
+                          ? "text-2xl text-foreground"
+                          : "text-xl text-foreground/90"
+                      }`}
+                    >
+                      {entry.words.join(" ")}
+                    </p>
+                    <div className="absolute -right-2 bottom-0 text-6xl font-serif text-border/20 leading-none">
+                      "
+                    </div>
+                  </div>
+
+                  {/* Séparateur décoratif pour le lauréat */}
+                  {isTop && (
+                    <div className="flex justify-center pt-2">
+                      <div className="flex items-center gap-2 text-slate-400 dark:text-slate-600">
+                        <div className="h-px w-12 bg-current" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-current" />
+                        <div className="h-px w-12 bg-current" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
           );
         })}
       </motion.div>
-
       {/* Actions de fin de manche */}
       <motion.div
         initial={{ opacity: 0 }}
