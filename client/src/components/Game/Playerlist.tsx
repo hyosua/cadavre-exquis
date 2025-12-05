@@ -1,10 +1,11 @@
+"use client";
+
 import React from "react";
 import { Player } from "@/types/game.type";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGame } from "@/hooks/useGame";
-import { X, Crown, Hourglass } from "lucide-react"; // Ajout de Crown et Hourglass
+import { X, Crown, Hourglass, Check } from "lucide-react";
 import { Confirm } from "../ui/confirm";
-import { Badge } from "@/components/ui/badge";
 import { WritingLoader } from "./WritingLoader";
 
 interface PlayerListProps {
@@ -22,117 +23,134 @@ export function PlayerList({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      // CHANGEMENT ICI : Conteneur plus subtil, moins "lourd"
-      className="bg-card/80 backdrop-blur-sm border shadow-sm rounded-xl p-4"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      // On utilise pop-card pour le conteneur global
+      className="pop-card p-5 bg-card"
     >
-      {/* En-tête avec un petit compteur stylisé */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Joueurs</h3>
-        <Badge variant="secondary" className="text-xs font-normal">
-          {players.length} en ligne
-        </Badge>
+      {/* En-tête Fun */}
+      <div className="flex items-center justify-between mb-6 border-b-2 border-foreground/10 pb-4">
+        <h3 className="text-xl font-averia font-bold -rotate-1">
+          La Troupe ({players.length})
+        </h3>
+        <div className="flex gap-1">
+          {/* Petits ronds décoratifs style mac OS rétro */}
+          <div className="w-3 h-3 rounded-full border-2 border-foreground bg-primary"></div>
+          <div className="w-3 h-3 rounded-full border-2 border-foreground bg-secondary"></div>
+        </div>
       </div>
 
-      <div className="space-y-2.5 font-sans">
-        {players.map((player) => {
-          const isMe = player.id === currentPlayerId;
+      <div className="space-y-3">
+        <AnimatePresence>
+          {players.map((player) => {
+            const isMe = player.id === currentPlayerId;
+            const isHost = player.isHost;
 
-          return (
-            <motion.div
-              layout // Ajoute une animation fluide si la liste change d'ordre
-              key={player.id}
-              className={`flex items-center justify-between p-3 rounded-lg transition-all ${
-                isMe
-                  ? "bg-primary/10 border border-primary/20 shadow-sm" // Style pour le joueur courant : fond subtil coloré
-                  : "bg-card hover:bg-accent/50 border border-border/40" // Style standard : fond neutre, hover léger
-              }`}
-            >
-              {/* --- Partie Gauche : Statut + Pseudo + Badge --- */}
-              <div className="flex items-center gap-3">
-                {/* Indicateur en ligne/hors ligne avec pulsation */}
-                <div className="relative flex h-2.5 w-2.5">
-                  {player.isConnected && (
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  )}
-                  <span
-                    className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                      player.isConnected
-                        ? "bg-green-500"
-                        : "bg-muted-foreground/30"
-                    }`}
-                  ></span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className={`font-medium ${isMe ? "text-primary" : ""}`}>
-                    {player.pseudo}
-                    {isMe && " (Moi)"}
-                  </span>
-
-                  {/* CHANGEMENT ICI : Nouveau badge Hôte beaucoup plus propre */}
-                  {player.isHost && (
-                    <Badge
-                      variant="outline"
-                      className="w-fit gap-1 py-0.5 px-2 text-[10px] uppercase tracking-wider border-amber-500/40 text-amber-600 dark:text-amber-500 bg-amber-500/5"
+            return (
+              <motion.div
+                layout
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                key={player.id}
+                // Chaque joueur est une "pop-base" (petite carte)
+                // Le joueur actif a un fond jaune (ou accent) pour ressortir
+                className={`
+                  pop-base rounded-lg p-3 flex items-center justify-between transition-all
+                  ${
+                    isMe
+                      ? "bg-accent border-yellow-900 "
+                      : "bg-background hover:translate-x-1"
+                  }
+                `}
+              >
+                {/* --- Partie Gauche : Identité --- */}
+                <div className="flex items-center gap-3 overflow-hidden">
+                  {/* Avatar / Indicateur en ligne stylisé */}
+                  <div className="relative flex-shrink-0">
+                    <div
+                      className={`w-8 h-8 rounded-full border-2 border-foreground flex items-center justify-center font-bold text-xs ${
+                        isMe
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
+                      }`}
                     >
-                      <Crown size={10} className="mb-0.5" /> Hôte
-                    </Badge>
-                  )}
-                </div>
-              </div>
+                      {player.pseudo.charAt(0).toUpperCase()}
+                    </div>
+                    {/* Pastille de connexion */}
+                    <span
+                      className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 border-2 border-foreground rounded-full ${
+                        player.isConnected ? "bg-green-400" : "bg-gray-400"
+                      }`}
+                      title={player.isConnected ? "En ligne" : "Hors ligne"}
+                    />
+                  </div>
 
-              {/* --- Partie Droite : Statut de jeu ou Bouton d'exclusion --- */}
-              <div className="flex items-center gap-3 text-sm">
-                {showPlayedStatus && (
-                  <div className="flex justify-end min-w-[80px]">
-                    {player.hasPlayedCurrentPhase ? (
-                      <span className="inline-flex items-center gap-1 text-green-600 dark:text-green-500 font-medium bg-green-500/10 px-2 py-0.5 rounded-md text-xs">
-                        a joué
-                      </span>
-                    ) : player.isThinking ? (
-                      <WritingLoader />
-                    ) : (
-                      // Notre nouveau sablier animé
-                      <motion.div
-                        animate={{ rotate: [0, 180, 180, 360] }}
-                        transition={{
-                          duration: 4,
-                          ease: "easeInOut",
-                          times: [0, 0.1, 0.5, 0.6],
-                          repeat: Infinity,
-                        }}
-                        className="text-muted-foreground/70 inline-block origin-center"
-                        title="En attente..."
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`font-averia font-bold truncate ${
+                          isMe ? "text-foreground" : ""
+                        }`}
                       >
-                        <Hourglass size={18} />
-                      </motion.div>
+                        {player.pseudo} {isMe && "(Moi)"}
+                      </span>
+                    </div>
+
+                    {/* Badge Hôte Cartoon */}
+                    {isHost && (
+                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-amber-600 bg-amber-100 w-fit px-1.5 rounded-sm border border-amber-600/30">
+                        <Crown size={10} strokeWidth={3} /> Chef
+                      </div>
                     )}
                   </div>
-                )}
+                </div>
 
-                {/* Bouton Kick séparé par une petite ligne verticale si le statut est affiché */}
-                {currentPlayer?.isHost && currentPlayerId !== player.id && (
-                  <>
-                    {showPlayedStatus && (
-                      <div className="h-4 w-px bg-border/50"></div>
-                    )}
+                {/* --- Partie Droite : Statut & Actions --- */}
+                <div className="flex items-center gap-3 pl-2">
+                  {showPlayedStatus && (
+                    <div className="flex justify-end min-w-[30px]">
+                      {player.hasPlayedCurrentPhase ? (
+                        <motion.div
+                          initial={{ scale: 0, rotate: -45 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          className="bg-green-500 text-white p-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        >
+                          <Check size={16} strokeWidth={4} />
+                        </motion.div>
+                      ) : player.isThinking ? (
+                        <div className="scale-75 origin-right">
+                          <WritingLoader />
+                        </div>
+                      ) : (
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ repeat: Infinity, duration: 2 }}
+                          className="text-muted-foreground opacity-50"
+                        >
+                          <Hourglass size={20} />
+                        </motion.div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Bouton Kick : Petit carré rouge agressif */}
+                  {currentPlayer?.isHost && currentPlayerId !== player.id && (
                     <Confirm
-                      variant="ghost" // Changé en ghost pour être moins agressif visuellement
+                      variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                      buttonName={<X size={16} />}
-                      message={`Voulez-vous vraiment exclure ${player.pseudo} de la partie ?`}
+                      // Un style un peu plus "bouton d'urgence"
+                      className="h-8 w-8 rounded-md bg-red-100 hover:bg-destructive hover:text-white border-2 border-transparent hover:border-black transition-all"
+                      buttonName={<X size={16} strokeWidth={3} />}
+                      message={`Expulser ${player.pseudo} ? C'est un peu rude, non ?`}
                       onConfirm={() => kickPlayer(player)}
                     />
-                  </>
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

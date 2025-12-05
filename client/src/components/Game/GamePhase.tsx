@@ -10,7 +10,10 @@ import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Confirm } from "../ui/confirm";
 import { PhaseSteps } from "./PhaseSteps";
 
-const MotionButton = motion.create(Button);
+// On n'a plus forcément besoin de MotionButton pour l'effet de clic
+// car la classe CSS .pop-btn gère déjà le "physique" du bouton.
+// Mais on le garde pour les entrées/sorties si besoin.
+const MotionButton = motion(Button);
 
 export function GamePhase() {
   const {
@@ -22,7 +25,6 @@ export function GamePhase() {
     leaveGame,
   } = useGame();
   const [word, setWord] = useState("");
-
   const buttonControls = useAnimationControls();
 
   if (!game || !currentPlayer) return null;
@@ -37,9 +39,10 @@ export function GamePhase() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (word.trim()) {
+      // Petite animation JS en plus du CSS pour le fun
       await buttonControls.start({
-        scale: [1, 1.1, 1], // Animation "Pop"
-        transition: { duration: 0.2, ease: "easeOut" },
+        scale: [1, 1.05, 1],
+        transition: { duration: 0.2 },
       });
       submitWord(word.trim());
       setWord("");
@@ -48,125 +51,140 @@ export function GamePhase() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(8px)", scale: 0.8 }}
-      animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="bg-card text-card-foreground flex items-center justify-center flex-col rounded-2xl shadow-xl p-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
+      // APPLICATION DU STYLE LOUFOQUE ICI : pop-card
+      className="pop-card flex items-center justify-center flex-col p-6 sm:p-10 max-w-2xl mx-auto w-full"
     >
-      <div className="text-center mb-2">
-        <h1 className="text-3xl font-bold mb-2">
-          Phase{" "}
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={game.currentPhase}
-              className="inline-block"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-            >
-              {game.currentPhase + 1}
-            </motion.span>
-          </AnimatePresence>{" "}
-          / {game.config.phases.length}
-        </h1>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.p
+      <div className="text-center mb-6 space-y-2">
+        <div className="inline-flex items-center justify-center gap-2 bg-accent/20 px-4 py-1 rounded-full border-2 border-foreground/10 mb-2">
+          <span className="font-bold text-sm uppercase tracking-widest text-muted-foreground">
+            Manche
+          </span>
+          <h1 className="text-2xl font-bold text-foreground">
+            {/* Animation du chiffre */}
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={game.currentPhase}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                className="inline-block"
+              >
+                {game.currentPhase + 1}
+              </motion.span>
+            </AnimatePresence>
+            <span className="mx-1">/</span>
+            {game.config.phases.length}
+          </h1>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
             key={currentPhaseLabel}
-            className="text-2xl sm:text-5xl text-primary font-semibold"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 1.1, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
           >
-            {currentPhaseLabel.toUpperCase()}
-          </motion.p>
+            <p className="text-4xl sm:text-6xl text-primary font-averia font-bold drop-shadow-sm rotate-1">
+              {currentPhaseLabel}
+            </p>
+          </motion.div>
         </AnimatePresence>
-        <span className="text-xl italic font-semibold text-muted-foreground">
+
+        <p className="text-lg sm:text-xl font-medium text-muted-foreground font-averia">
           {helper}
-        </span>
+        </p>
       </div>
 
-      <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
+      <div className="w-full mb-8">
+        <Timer timeLeft={timeLeft} totalTime={game.config.timePerPhase} />
+      </div>
 
       <PhaseSteps
         phases={game.config.phases}
         currentPhase={game.currentPhase}
       />
 
-      <div className="mt-6 grid gap-6 w-full">
-        <div>
+      <div className="mt-8 grid gap-8 w-full">
+        <div className="relative min-h-[120px]">
           <AnimatePresence mode="wait">
             {!hasPlayed ? (
               <motion.form
                 onSubmit={handleSubmit}
                 className="space-y-4"
                 key="form"
-                initial={{ opacity: 1, scale: 1 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.2, ease: "easeIn" }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
               >
+                {/* APPLICATION DU STYLE INPUT */}
                 <Input
                   value={word}
-                  className="md:text-xl placeholder:text-muted-foreground/60 sm:text-xl placeholder:text-sm sm:placeholder:text-lg placeholder:truncate"
+                  className="pop-input h-14 text-xl sm:text-2xl text-center font-bold"
                   onChange={(e) => setWord(e.target.value)}
                   placeholder={placeholder}
                   maxLength={50}
                   autoFocus
                 />
-                <MotionButton
+
+                {/* APPLICATION DU STYLE BOUTON */}
+                <Button
                   type="submit"
-                  className="w-full"
-                  size="lg"
+                  // On enlève le variant par défaut souvent pour laisser pop-btn gérer
+                  className="pop-btn w-full h-12 text-lg font-bold bg-primary text-primary-foreground hover:bg-primary/90"
                   disabled={!word.trim()}
-                  whileTap={{ scale: 0.95 }}
                 >
-                  Valider
-                </MotionButton>
+                  Valider !
+                </Button>
               </motion.form>
             ) : (
               <motion.div
                 key="confirmation"
-                className="animate-pulse rounded-lg p-2 text-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.8,
-                  transition: { duration: 0.05 },
-                }}
-                transition={{ duration: 0.1, ease: "easeOut" }}
+                className="bg-secondary/10 border-2 border-dashed border-secondary rounded-xl p-6 text-center"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
               >
-                <motion.p
-                  className="text-success font-semibold text-md mt-1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [1, 0.6, 1] }}
-                  transition={{
-                    duration: 2.3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                <motion.div
+                  animate={{
+                    rotate: [0, 5, -5, 0],
+                    scale: [1, 1.1, 1],
                   }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="text-4xl mb-2"
                 >
-                  En attente des autres joueurs...
-                </motion.p>
+                  ⏳
+                </motion.div>
+                <p className="text-foreground font-bold text-lg">
+                  C&apos;est noté !
+                </p>
+                <p className="text-muted-foreground">
+                  On attend les retardataires...
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="space-y-4 pt-4 border-t-2 border-dashed border-foreground/20">
           <PlayerList
             players={game.players}
             currentPlayerId={currentPlayer.id}
             showPlayedStatus={true}
           />
-          <Confirm
-            message="Vous êtes sur le point de quitter la partie."
-            buttonName="Quitter"
-            className="hover:bg-destructive hover:text-destructive-foreground"
-            onConfirm={leaveGame}
-          />
+
+          <div className="flex justify-center">
+            <Confirm
+              message="Voulez-vous vraiment abandonner vos amis ?"
+              buttonName="Quitter la partie"
+              // Tu peux aussi styliser le bouton de Confirm via une prop className si ton composant l'accepte
+              className="pop-btn bg-destructive text-destructive-foreground hover:bg-destructive/90 w-auto px-6"
+              onConfirm={leaveGame}
+            />
+          </div>
         </div>
       </div>
     </motion.div>

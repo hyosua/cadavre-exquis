@@ -8,7 +8,8 @@ import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import CodeCopyBtn from "@/components/ui/copy-btn";
 import { motion, Variants } from "framer-motion";
-import { RotateCcw, DoorOpen, Quote } from "lucide-react";
+import { RotateCcw, DoorOpen, Quote, Trophy, Medal } from "lucide-react";
+import { cn } from "@/lib/utils"; // Assure-toi d'avoir cet utilitaire ou retire-le si non utilisé
 
 export function Results() {
   const { game, currentPlayer, startGame, leaveGame } = useGame();
@@ -19,7 +20,7 @@ export function Results() {
     sentenceId: string;
   }
 
-  // Calcul du classement avec gestion des ex-aequo
+  // Calcul du classement
   const ranking: RankingEntry[] = game?.sentences
     ? game.sentences
         .map((sentence: Sentence) => ({
@@ -32,7 +33,6 @@ export function Results() {
         .sort((a: RankingEntry, b: RankingEntry) => b.voteCount - a.voteCount)
     : [];
 
-  // Calculer le rang réel en tenant compte des ex-aequo
   const getRealRank = (index: number): number => {
     if (index === 0) return 1;
     const currentVotes = ranking[index].voteCount;
@@ -51,38 +51,42 @@ export function Results() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.6,
-        delayChildren: 0.3,
+        staggerChildren: 0.4, // Un peu plus rapide pour le rythme
+        delayChildren: 0.2,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    hidden: { opacity: 0, y: 50, rotate: -2 },
     show: {
       opacity: 1,
       y: 0,
-      scale: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      rotate: 0,
+      transition: { type: "spring", stiffness: 120, damping: 12 },
     },
   };
 
+  // Couleurs dynamiques pour le podium
+  const getRankStyles = (rank: number) => {
+    if (rank === 1)
+      return "bg-yellow-100 border-yellow-500 shadow-[4px_4px_0px_0px_var(--yellow-500)]"; // Or
+    if (rank === 2)
+      return "bg-slate-100 border-slate-500 shadow-[4px_4px_0px_0px_var(--slate-500)]"; // Argent
+    if (rank === 3)
+      return "bg-orange-100 border-orange-500 shadow-[4px_4px_0px_0px_var(--orange-500)]"; // Bronze
+    return "bg-card border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))]"; // Le reste
+  };
+
   return (
-    <div className="max-w-2xl mx-auto space-y-8 pb-12">
-      {/* En-tête */}
-      <div className="text-center space-y-4 pt-8 pb-4">
-        <h1 className="text-4xl font-serif font-light tracking-wide text-foreground">
-          Les Chef-d&apos;oeuvres
+    <div className="max-w-2xl mx-auto space-y-8 pb-12 px-4">
+      {/* En-tête Fun */}
+      <div className="text-center space-y-2 pt-8 pb-6">
+        <h1 className="text-4xl sm:text-6xl font-averia font-bold text-primary drop-shadow-sm -rotate-2">
+          Résultats
         </h1>
-        <div className="flex justify-center">
-          <div className="flex items-center gap-3 text-muted-foreground/40">
-            <div className="h-px w-16 bg-current" />
-            <div className="w-2 h-2 rounded-full bg-current" />
-            <div className="h-px w-16 bg-current" />
-          </div>
-        </div>
-        <p className="text-muted-foreground text-sm tracking-wider uppercase">
-          Sélection du jury
+        <p className="text-muted-foreground font-averia text-lg">
+          Voici les chefs-d&apos;œuvre (ou pas).
         </p>
       </div>
 
@@ -91,7 +95,7 @@ export function Results() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="space-y-6"
+        className="space-y-8"
       >
         {ranking.map((entry, index) => {
           const rank = getRealRank(index);
@@ -101,92 +105,73 @@ export function Results() {
             <motion.div
               key={entry.sentence.id}
               variants={itemVariants}
-              className="group relative"
+              className="relative group"
             >
-              <div
-                className={`relative overflow-hidden rounded-2xl border transition-all
-                ${
-                  isTop
-                    ? "bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 border-slate-300 dark:border-slate-700 shadow-xl"
-                    : "bg-card/50 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md"
-                }
-              `}
-              >
-                {/* Ligne décorative supérieure subtile */}
+              {/* Badge de rang qui dépasse */}
+              <div className="absolute -top-4 -left-2 z-20 flex">
                 <div
-                  className={`h-1 w-full ${
-                    isTop
-                      ? "bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400"
-                      : "bg-gradient-to-r from-transparent via-border to-transparent"
-                  }`}
-                />
+                  className={`
+                  flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 font-bold font-title text-xl
+                  ${
+                    rank === 1
+                      ? "bg-yellow-400 border-black text-black"
+                      : rank === 2
+                      ? "bg-slate-300 border-black text-black"
+                      : rank === 3
+                      ? "bg-orange-300 border-black text-black"
+                      : "bg-white border-black text-black"
+                  }
+                `}
+                >
+                  #{rank}
+                </div>
+              </div>
 
-                <div className="p-8 space-y-6">
-                  {/* En-tête avec rang et votes */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`text-sm font-serif italic ${
-                          isTop
-                            ? "text-slate-600 dark:text-slate-400"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        {rank === 1 && "Lauréat"}
-                        {rank === 2 && "Finaliste"}
-                        {rank === 3 && "Mention"}
-                        {rank > 3 && `Sélection ${rank}`}
-                      </div>
-                      <div className="h-1 w-8 bg-border/50" />
-                      <span
-                        className={`text-xs tracking-wider uppercase ${
-                          isTop
-                            ? "text-slate-600 dark:text-slate-400 font-medium"
-                            : "text-muted-foreground/70"
-                        }`}
-                      >
-                        {entry.voteCount} voix
-                      </span>
-                    </div>
-
-                    <CodeCopyBtn codeToCopy={entry.words.join(" ")} />
-                  </div>
-
-                  {/* Citation principale */}
-                  <div className="flex justify-center">
-                    <div className="text-6xl font-serif text-border/20 leading-none">
-                      <Quote
-                        size={14}
-                        fill="color-mix(in oklab, var(--color-border) 20%, transparent)"
-                      />
-                    </div>
-                    <p
-                      className={`font-serif leading-relaxed pl-4 pr-4 ${
-                        isTop
-                          ? "text-2xl text-foreground"
-                          : "text-xl text-foreground/90"
+              {/* Carte principale */}
+              <div
+                className={`relative rounded-xl border-2 p-4 sm:p-8 transition-transform hover:-translate-y-1 duration-200
+                  ${getRankStyles(rank)}
+                `}
+              >
+                <div className="flex flex-col gap-2">
+                  {/* Phrase */}
+                  <div className="text-center px-2">
+                    <Quote
+                      size={16}
+                      className="inline-block text-foreground rotate-180 align-top mr-2"
+                      fill="var(--color-foreground)"
+                    />
+                    <span
+                      className={`font-averia text-xl sm:text-3xl text-foreground leading-snug ${
+                        isTop ? "font-bold" : ""
                       }`}
                     >
                       {entry.words.join(" ")}
-                    </p>
-                    <div className="text-6xl font-serif text-border/20 leading-none">
-                      <Quote
-                        size={14}
-                        fill="color-mix(in oklab, var(--color-border) 20%, transparent)"
-                      />
-                    </div>
+                    </span>
+                    <Quote
+                      size={14}
+                      className="inline-block text-foreground align-bottom ml-2"
+                      fill="var(--color-foreground)"
+                    />
                   </div>
 
-                  {/* Séparateur décoratif pour le lauréat */}
-                  {isTop && (
-                    <div className="flex justify-center pt-2">
-                      <div className="flex items-center gap-2 text-slate-400 dark:text-slate-600">
-                        <div className="h-px w-12 bg-current" />
-                        <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                        <div className="h-px w-12 bg-current" />
+                  {/* Footer de la carte: Votes & Copie */}
+                  <div className="flex items-center justify-between  pt-2 border-t-2 border-dashed border-foreground/10">
+                    <div className="flex items-center gap-2">
+                      <div className="bg-foreground text-background px-3 py-1 rounded-full font-bold font-averia text-sm">
+                        {entry.voteCount} vote{entry.voteCount > 1 ? "s" : ""}
                       </div>
+                      {isTop && (
+                        <span className="text-sm font-bold text-yellow-600 hidden sm:inline">
+                          Lauréat
+                        </span>
+                      )}
                     </div>
-                  )}
+
+                    <div className="opacity-60 group-hover:opacity-100 transition-opacity">
+                      <CodeCopyBtn codeToCopy={entry.words.join(" ")} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -196,46 +181,40 @@ export function Results() {
 
       {/* Actions de fin de manche */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: ranking.length * 0.6 + 0.5 }}
-        className="space-y-6 pt-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: ranking.length * 0.4 + 0.2 }}
+        className="pt-8 space-y-6 border-t-2 border-foreground/10 mt-8"
       >
         <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
           {isHost ? (
             <Button
               onClick={startGame}
               disabled={!canStart}
-              size="lg"
-              className="w-full sm:w-auto px-8 gap-2 font-semibold shadow-lg shadow-primary/20"
+              // Style "pop-btn" inline
+              className="h-14 px-8 text-lg font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))] bg-primary text-primary-foreground hover:bg-primary/90 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_oklch(var(--foreground))] transition-all active:translate-y-0 active:shadow-none"
             >
-              <RotateCcw size={18} /> Rejouer une manche
+              <RotateCcw className="h-5 w-5" /> Rejouer !
             </Button>
           ) : (
-            <div className="flex items-center gap-2 text-muted-foreground bg-muted/50 px-4 py-2 rounded-lg">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            <div className="bg-muted border-2 border-foreground/20 border-dashed rounded-lg p-4 flex items-center gap-3">
+              <div className="h-3 w-3 bg-primary rounded-full animate-pulse" />
+              <span className="font-averia text-muted-foreground">
+                On attend l&apos;hôte...
               </span>
-              En attente que l&apos;hôte redémarre la partie...
             </div>
           )}
 
           <Confirm
-            message="Vous êtes sur le point de quitter la partie."
-            buttonName={
-              <span className="flex items-center gap-2">
-                <DoorOpen size={18} /> Quitter
-              </span>
-            }
-            variant="outline"
-            className="w-full sm:w-auto"
+            message="Partir maintenant ? C'est triste."
+            buttonName="Quitter"
+            // Style "pop-btn" variante destructive inline
+            className="h-14 px-6 text-lg font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))] bg-white hover:bg-destructive hover:text-white transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_oklch(var(--foreground))] active:translate-y-0 active:shadow-none"
             onConfirm={leaveGame}
           />
         </div>
 
-        {/* Liste des joueurs discrète en bas */}
-        <div className="opacity-80 hover:opacity-100 transition-opacity">
+        <div className="opacity-90">
           <PlayerList
             players={game.players}
             currentPlayerId={currentPlayer.id}
