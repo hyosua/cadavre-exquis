@@ -1,14 +1,10 @@
 "use client";
 
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-} from "lucide-react";
+import { Check, Info, Loader2, X, TriangleAlert } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { Toaster as Sonner } from "sonner";
+
+type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
@@ -17,40 +13,74 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
+      // Position "top-center" est souvent mieux pour un jeu
       position="top-center"
+      // On personnalise les icônes avec un trait un peu plus épais pour le style cartoon
       icons={{
-        success: <CircleCheckIcon className="size-4" />,
-        info: <InfoIcon className="size-4" />,
-        warning: <TriangleAlertIcon className="size-4" />,
-        error: <OctagonXIcon className="size-4" />,
-        loading: <Loader2Icon className="size-4 animate-spin" />,
+        success: <Check className="size-5 text-green-600" strokeWidth={3} />,
+        info: <Info className="size-5 text-blue-600" strokeWidth={3} />,
+        warning: (
+          <TriangleAlert className="size-5 text-orange-500" strokeWidth={3} />
+        ),
+        error: <X className="size-5 text-red-600" strokeWidth={3} />,
+        loading: (
+          <Loader2
+            className="size-5 text-muted-foreground animate-spin"
+            strokeWidth={3}
+          />
+        ),
       }}
-      style={
-        {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-          "--border-radius": "var(--radius)",
-          "--error-bg": "var(--destructive)",
-          "--error-text": "var(--destructive-foreground)",
-          "--error-border": "var(--destructive)",
+      toastOptions={{
+        classNames: {
+          // LA CARTE PRINCIPALE (Style Pop-Card)
+          toast: `
+            group toast 
+            group-[.toaster]:bg-card 
+            group-[.toaster]:text-foreground 
+            group-[.toaster]:border-2 
+            group-[.toaster]:border-foreground 
+            group-[.toaster]:shadow-[4px_4px_0px_0px_oklch(var(--foreground))] 
+            group-[.toaster]:rounded-xl 
+            group-[.toaster]:font-averia 
+            group-[.toaster]:p-4
+            group-[.toaster]:items-start
+          `,
 
-          /* Fond et texte pour SUCCÈS (utilise nos nouvelles variables) */
-          "--success-bg": "oklch(var(--success))",
-          "--success-text": "oklch(var(--success-foreground))",
-          "--success-border": "oklch(var(--success))",
+          // LE TEXTE DE DESCRIPTION
+          description:
+            "group-[.toast]:text-muted-foreground group-[.toast]:font-sans",
 
-          /* Fond et texte pour AVERTISSEMENT */
-          "--warning-bg": "oklch(var(--warning))",
-          "--warning-text": "oklch(var(--warning-foreground))",
-          "--warning-border": "oklch(var(--warning))",
+          // BOUTON D'ACTION (Style Pop-Btn Primary)
+          actionButton: `
+            group-[.toast]:bg-primary 
+            group-[.toast]:text-primary-foreground 
+            group-[.toast]:border-2 
+            group-[.toast]:border-foreground 
+            group-[.toast]:shadow-[2px_2px_0px_0px_oklch(var(--foreground))] 
+            group-[.toast]:font-bold 
+            group-[.toast]:active:translate-y-[2px] 
+            group-[.toast]:active:shadow-none
+          `,
 
-          /* Fond et texte pour INFO */
-          "--info-bg": "oklch(var(--info))",
-          "--info-text": "oklch(var(--info-foreground))",
-          "--info-border": "oklch(var(--info))",
-        } as React.CSSProperties
-      }
+          // BOUTON ANNULER (Style Pop-Btn Ghost)
+          cancelButton: `
+            group-[.toast]:bg-muted 
+            group-[.toast]:text-foreground 
+            group-[.toast]:border-2 
+            group-[.toast]:border-foreground 
+            group-[.toast]:font-bold
+          `,
+
+          // VARIANTES DE COULEUR (Optionnel : teinte légèrement le fond selon le type)
+          error:
+            "group-[.toaster]:bg-red-50 group-[.toaster]:text-red-900 dark:group-[.toaster]:bg-red-950 dark:group-[.toaster]:text-red-50",
+          success:
+            "group-[.toaster]:bg-green-50 group-[.toaster]:text-green-900 dark:group-[.toaster]:bg-green-950 dark:group-[.toaster]:text-green-50",
+          warning:
+            "group-[.toaster]:bg-yellow-50 group-[.toaster]:text-yellow-900 dark:group-[.toaster]:bg-yellow-950 dark:group-[.toaster]:text-yellow-50",
+          info: "group-[.toaster]:bg-blue-50 group-[.toaster]:text-blue-900 dark:group-[.toaster]:bg-blue-950 dark:group-[.toaster]:text-blue-50",
+        },
+      }}
       {...props}
     />
   );

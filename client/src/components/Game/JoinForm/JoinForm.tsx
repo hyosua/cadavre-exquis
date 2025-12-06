@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Ticket, User, ArrowLeft, Gamepad2, AlertTriangle } from "lucide-react";
-import Loader from "@/components/ui/loader"; // Assure-toi que ton Loader est compatible ou utilise une icône spin
+import { Ticket, User, ArrowLeft, AlertTriangle } from "lucide-react";
+import { Card, CardTitle } from "@/components/ui/card";
 
 export default function JoinGame() {
   const router = useRouter();
@@ -75,15 +75,11 @@ export default function JoinGame() {
         transition={{ type: "spring", stiffness: 100 }}
         className="w-full max-w-md"
       >
-        {/* En-tête flottant */}
-        <div className="text-center mb-6">
-          <div className="pop-base inline-flex  p-4 bg-primary text-primary-foreground rounded-full border-4 border-foreground mb-4">
-            <h1 className="text-4xl font-averia font-bold ">Rejoindre</h1>
-          </div>
-        </div>
-
         {/* La Carte Principale (pop-card) */}
-        <div className="pop-card p-8 bg-card relative overflow-hidden">
+        <Card className="pop-card p-8 bg-card relative overflow-hidden">
+          <CardTitle className="text-center text-3xl font-averia font-bold -rotate-1 drop-shadow-sm">
+            Rejoindre une partie
+          </CardTitle>
           {/* Décoration de coin */}
           <div className="absolute -top-10 -right-10 w-24 h-24 bg-yellow-300 rounded-full border-2 border-foreground z-0" />
 
@@ -169,7 +165,7 @@ export default function JoinGame() {
               </div>
             </div>
           </form>
-        </div>
+        </Card>
       </motion.div>
     </div>
   );

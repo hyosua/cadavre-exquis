@@ -124,7 +124,7 @@ export default function Home() {
             </CollapsibleTrigger>
 
             <CollapsibleContent className=" mt-2">
-              <ol className="list-none lg:space-y-4 lg:pt-4">
+              <ol className="font-averia list-none lg:space-y-4 lg:pt-4">
                 {/* ÉTAPE 1: Création */}
                 <li className="flex items-start gap-3 p-3 rounded-lg">
                   <div className="flex-shrink-0 text-2xl font-extrabold  w-8 text-center">

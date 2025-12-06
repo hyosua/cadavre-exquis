@@ -103,9 +103,8 @@ export function GameLobby() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-orange-500 font-bold font-averia flex items-center justify-center gap-2"
+              className="text-center text-accent font-bold font-averia flex items-center justify-center gap-2"
             >
-              <span className="inline-block animate-bounce">👇</span>
               Il faut au moins 2 joueurs !
             </motion.p>
           )}
