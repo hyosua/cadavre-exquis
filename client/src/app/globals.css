@@ -3,7 +3,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&family=Flavors&family=Oi&family=Unbounded:wght@200..900&display=swap');
 
 @import "tailwindcss";
-@plugin "tailwindcss-animate";
 @import "tw-animate-css";
 
 @layer base {
@@ -54,6 +53,8 @@
       --primary: 320 80% 60%;
       --primary-foreground: 0 0% 100%;
       --border: 45 30% 90%;
+      --muted: 260 20% 15%;
+      --muted-foreground: 260 10% 70%;
     }
 
   * {

@@ -223,7 +223,7 @@ export function CreateGameForm() {
                             <Input
                               placeholder="Emil_z0la"
                               {...field}
-                              className="pop-input h-12 text-lg"
+                              className="pop-input h-12 text-lg lg:text-xl"
                             />
                           </FormControl>
                           <FormMessage className="text-destructive font-bold" />
@@ -278,7 +278,7 @@ export function CreateGameForm() {
                                 className="flex-1 cursor-pointer"
                               />
                             </FormControl>
-                            <span className="pop-tag bg-white font-mono text-xl font-bold w-20 text-center py-2">
+                            <span className="pop-tag bg-muted text-muted-foreground font-mono text-xl font-bold w-20 text-center py-2">
                               {field.value?.[0] || 30}s
                             </span>
                           </div>
@@ -294,7 +294,7 @@ export function CreateGameForm() {
                     <Button
                       asChild
                       // STYLE POP-BTN GHOST
-                      className="pop-btn bg-white hover:bg-muted border-2 w-full text-foreground h-12 font-bold"
+                      className="pop-btn bg-muted/20 hover:bg-muted border-2 w-full text-foreground hover:text-muted-foreground h-12 font-bold"
                       disabled={isCreating}
                     >
                       <Link href="/">Annuler</Link>

@@ -78,7 +78,7 @@ export function GameLobby() {
             {game.config.phases.length} phases
           </span>
           {/* Tooltip textuel simple pour les phases si besoin */}
-          <span className="text-xs text-muted-foreground hidden sm:inline">
+          <span className="text-xs text-foreground sm:inline">
             ({game.config.phases.join(", ")})
           </span>
         </div>
@@ -137,9 +137,9 @@ export function GameLobby() {
 
       {/* Actions Invité */}
       {!isHost && (
-        <div className="flex flex-col items-center gap-6 pt-4 border-t-2 border-dashed border-foreground/10">
-          <div className="bg-yellow-300/20 border-2 border-foreground border-dashed rounded-lg p-4 flex items-center gap-3 w-full justify-center">
-            <p className="text-yellow-800 font-bold font-averia">
+        <div className="flex flex-col items-center gap-6 pt-4 border-t-2 border-dashed border-foreground/30">
+          <div className="bg-muted border-2 border-muted-foreground border-dashed rounded-lg p-4 flex items-center gap-3 w-full justify-center">
+            <p className="text-muted-foreground font-bold font-averia">
               Le chef prépare le terrain...
             </p>
           </div>

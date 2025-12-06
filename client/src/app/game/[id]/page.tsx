@@ -28,7 +28,7 @@ export default function Game() {
   }
 
   return (
-    <div className="bg-muted border border-border min-h-screen p-4">
+    <div className="bg-card border border-border min-h-screen p-4">
       <div className="max-w-2xl mx-auto mt-2 sm:mt-8">
         {game.status === "waiting" && <GameLobby />}
         {game.status === "playing" && <GamePhase />}

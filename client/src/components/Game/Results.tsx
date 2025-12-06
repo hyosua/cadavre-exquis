@@ -74,7 +74,7 @@ export function Results() {
       return "bg-slate-100 border-slate-500 shadow-[4px_4px_0px_0px_var(--slate-500)]"; // Argent
     if (rank === 3)
       return "bg-orange-100 border-orange-500 shadow-[4px_4px_0px_0px_var(--orange-500)]"; // Bronze
-    return "bg-card border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))]"; // Le reste
+    return "bg-muted border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))]"; // Le reste
   };
 
   return (
@@ -137,11 +137,11 @@ export function Results() {
                   <div className="text-center px-2">
                     <Quote
                       size={16}
-                      className="inline-block text-foreground rotate-180 align-top mr-2"
-                      fill="var(--color-foreground)"
+                      className="inline-block text-black rotate-180 align-top mr-2"
+                      fill="black"
                     />
                     <span
-                      className={`font-averia text-xl sm:text-3xl text-foreground leading-snug ${
+                      className={`font-averia text-xl sm:text-3xl text-black leading-snug ${
                         isTop ? "font-bold" : ""
                       }`}
                     >
@@ -149,8 +149,8 @@ export function Results() {
                     </span>
                     <Quote
                       size={14}
-                      className="inline-block text-foreground align-bottom ml-2"
-                      fill="var(--color-foreground)"
+                      className="inline-block text-black align-bottom ml-2"
+                      fill="black"
                     />
                   </div>
 
@@ -196,7 +196,7 @@ export function Results() {
               <RotateCcw className="h-5 w-5" /> Rejouer !
             </Button>
           ) : (
-            <div className="bg-muted border-2 border-foreground/20 border-dashed rounded-lg p-4 flex items-center gap-3">
+            <div className="bg-muted border-2 border-foreground border-dashed rounded-lg p-4 flex items-center gap-3">
               <div className="h-3 w-3 bg-primary rounded-full animate-pulse" />
               <span className="font-averia text-muted-foreground">
                 On attend l&apos;hôte...
@@ -208,7 +208,7 @@ export function Results() {
             message="Partir maintenant ? C'est triste."
             buttonName="Quitter"
             // Style "pop-btn" variante destructive inline
-            className="h-14 px-6 text-lg font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))] bg-white hover:bg-destructive hover:text-white transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_oklch(var(--foreground))] active:translate-y-0 active:shadow-none"
+            className="h-14 px-6 text-lg font-bold border-2 border-foreground shadow-[4px_4px_0px_0px_oklch(var(--foreground))] bg-destructive/40 hover:bg-destructive hover:text-white transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_oklch(var(--foreground))] active:translate-y-0 active:shadow-none"
             onConfirm={leaveGame}
           />
         </div>

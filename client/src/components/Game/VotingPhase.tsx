@@ -119,7 +119,7 @@ export function VotingPhase() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 p-4 bg-muted/20 border-2 border-dashed border-muted-foreground/30 rounded-xl text-center"
+            className="mt-8 p-4 bg-muted border-2 border-dashed border-muted-foreground/30 rounded-xl text-center"
           >
             <p className="text-muted-foreground font-averia text-lg">
               Les autres écrivains débattent encore... Patience.

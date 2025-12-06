@@ -10,11 +10,6 @@ import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Confirm } from "../ui/confirm";
 import { PhaseSteps } from "./PhaseSteps";
 
-// On n'a plus forcément besoin de MotionButton pour l'effet de clic
-// car la classe CSS .pop-btn gère déjà le "physique" du bouton.
-// Mais on le garde pour les entrées/sorties si besoin.
-const MotionButton = motion(Button);
-
 export function GamePhase() {
   const {
     game,
@@ -58,8 +53,8 @@ export function GamePhase() {
       className="pop-card flex items-center justify-center flex-col p-6 sm:p-10 max-w-2xl mx-auto w-full"
     >
       <div className="text-center mb-6 space-y-2">
-        <div className="inline-flex items-center justify-center gap-2 bg-accent/20 px-4 py-1 rounded-full border-2 border-foreground/10 mb-2">
-          <span className="font-bold text-sm uppercase tracking-widest text-muted-foreground">
+        <div className="inline-flex items-center justify-center gap-2 bg-secondary/20 px-4 py-1 rounded-full border-2 border-foreground/10 mb-2">
+          <span className="font-bold text-sm uppercase tracking-widest text-foreground">
             Manche
           </span>
           <h1 className="text-2xl font-bold text-foreground">
@@ -124,7 +119,7 @@ export function GamePhase() {
                 {/* APPLICATION DU STYLE INPUT */}
                 <Input
                   value={word}
-                  className="pop-input h-14 text-xl sm:text-2xl text-center font-bold"
+                  className="pop-input h-14 text-xl sm:text-2xl font-bold"
                   onChange={(e) => setWord(e.target.value)}
                   placeholder={placeholder}
                   maxLength={50}
