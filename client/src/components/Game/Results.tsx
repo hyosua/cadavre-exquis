@@ -8,8 +8,7 @@ import { Confirm } from "../ui/confirm";
 import { PlayerList } from "@/components/Game/Playerlist";
 import CodeCopyBtn from "@/components/ui/copy-btn";
 import { motion, Variants } from "framer-motion";
-import { RotateCcw, DoorOpen, Quote, Trophy, Medal } from "lucide-react";
-import { cn } from "@/lib/utils"; // Assure-toi d'avoir cet utilitaire ou retire-le si non utilisé
+import { RotateCcw, Quote } from "lucide-react";
 
 export function Results() {
   const { game, currentPlayer, startGame, leaveGame } = useGame();

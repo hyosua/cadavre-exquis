@@ -140,6 +140,18 @@ export class GameService {
     if (game.status !== 'playing') {
       throw new Error('La partie n\'est pas en cours');
     }
+
+    // formater le mot
+    word = word.trim().toLowerCase();
+    if(game.currentPhase === 0) {
+      word = word.charAt(0).toUpperCase() + word.slice(1);
+    }
+    if(game.currentPhase === game.config.phases.length -1) {
+      if(!word.endsWith('.')){
+        word += '.';
+      }
+    }
+    
     // Sauvegarder le mot
     await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
 
