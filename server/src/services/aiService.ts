@@ -1,5 +1,5 @@
+import { Game, AIPlayer } from "../types/game.types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Game, AIPlayer } from "@/types/game.types"; 
 
 // Initialiser l'API
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");

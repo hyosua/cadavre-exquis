@@ -2,7 +2,7 @@
 // Modal pour la composition personnalisée
 import React, { useState, useEffect } from "react";
 import { Control, useFormContext } from "react-hook-form";
-import { Plus, X, GripVertical, Ellipsis } from "lucide-react";
+import { X, GripVertical, Ellipsis } from "lucide-react";
 import { PHASE_DETAILS } from "@/config/config";
 import { PhaseDetail } from "@/types/game.type";
 import {

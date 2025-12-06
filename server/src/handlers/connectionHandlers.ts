@@ -31,6 +31,7 @@ export function registerConnectionHandlers(io: Server, socket: Socket) {
 
       // attach socket to room and update player's socket id
       socket.join(gameId);
+      if ('socketId' in player)
       player.socketId = socket.id;
       player.isConnected = true;
       await redisService.saveGame(game); 
