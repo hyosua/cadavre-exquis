@@ -6,6 +6,35 @@ import { Game, GameConfig, Player, Sentence } from '@/types/game.types';
 import { getAIMove } from './aiService';
 
 export class GameService {
+  // 🔒 Ajout d'une Map pour gérer les verrous par partie
+  private locks = new Map<string, Promise<any>>();
+
+  /**
+   * 🔒 Méthode utilitaire pour exécuter une action de manière séquentielle pour un gameId
+   * Cela empêche deux joueurs (ou IA) de sauvegarder en même temps et d'écraser les données.
+   */
+  private async withLock<T>(gameId: string, action: () => Promise<T>): Promise<T> {
+    const currentLock = this.locks.get(gameId) || Promise.resolve();
+    
+    // On crée une nouvelle promesse qui attend la précédente avant de s'exécuter
+    const nextLock = currentLock.then(() => action()).catch((e) => {
+        console.error(`Error in lock for game ${gameId}:`, e);
+        throw e;
+    });
+
+    // On met à jour le verrou actuel
+    this.locks.set(gameId, nextLock);
+
+    // Nettoyage du verrou une fois terminé pour ne pas fuiter de mémoire
+    nextLock.finally(() => {
+        if (this.locks.get(gameId) === nextLock) {
+            this.locks.delete(gameId);
+        }
+    });
+
+    return nextLock;
+  }
+  
   async createGame(hostSocketId: string, pseudo: string, config: GameConfig): Promise<Game> {
     const gameId = generateId();
     let code = generateGameCode();
@@ -130,117 +159,101 @@ export class GameService {
     return game;
   }
 
-  async submitWord(io: Server, gameId: string, playerId: string, word: string): Promise<Game> {
-    const game = await redisService.getGame(gameId);
-    
-    if (!game) {
-      throw new Error('Partie introuvable');
-    }
+async submitWord(io: Server, gameId: string, playerId: string, word: string): Promise<Game> {
+    // On enveloppe toute la logique de modification dans le verrou
+    return this.withLock(gameId, async () => {
+        // 1. On recharge TOUJOURS la dernière version du jeu à l'intérieur du verrou
+        const game = await redisService.getGame(gameId);
+        
+        if (!game) throw new Error('Partie introuvable');
+        if (game.status !== 'playing') throw new Error('La partie n\'est pas en cours');
 
-    if (game.status !== 'playing') {
-      throw new Error('La partie n\'est pas en cours');
-    }
+        const player = game.players.find(p => p.id === playerId);
+        if (!player) throw new Error('Joueur introuvable');
+        if (player.hasPlayedCurrentPhase) {
+            // Petit fix : si c'est une IA qui réessaie, on ignore silencieusement
+            if(player.isAi) return game; 
+            throw new Error('Vous avez déjà joué');
+        }
 
-    
-    
-    // Sauvegarder le mot
-    await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
+        // 2. Logique métier
+        word = word.trim().toLowerCase();
+        if(game.currentPhase === 0) {
+            word = word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        if(game.currentPhase === game.config.phases.length - 1) {
+            if(!word.endsWith('.')) word += '.';
+        }
 
-    const player = game.players.find(p => p.id === playerId);
-    if (!player) {
-      throw new Error('Joueur introuvable');
-    }
+        // 3. Sauvegardes
+        // Note: Idéalement setPhaseWord ne devrait pas être nécessaire si on saveGame après, 
+        // mais je le garde au cas où redisService stocke ça ailleurs.
+        await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
+        
+        player.hasPlayedCurrentPhase = true;
+        await redisService.saveGame(game);
 
-    if (player.hasPlayedCurrentPhase) {
-      throw new Error('Vous avez déjà joué');
-    }
- 
-    // Marquer le joueur comme ayant joué
-    player.hasPlayedCurrentPhase = true;
-    
-    // formater le mot
-    word = word.trim().toLowerCase();
-    if(game.currentPhase === 0) {
-      word = word.charAt(0).toUpperCase() + word.slice(1);
-    }
-    if(game.currentPhase === game.config.phases.length -1) {
-      if(!word.endsWith('.')){
-        word += '.';
-      }
-    }
-    await redisService.saveGame(game);
+        console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
 
-    console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
+        // 4. Notifications et Avancement
+        // On n'envoie l'état que maintenant qu'on est sûr que c'est sauvegardé
+        io.to(gameId).emit('game_state', game);
+        
+        // checkAndAdvancePhase est maintenant appelé DANS le verrou, donc sûr.
+        await this.checkAndAdvancePhase(io, game); // Note: j'ai modifié la signature pour passer 'game'
 
-    io.to(gameId).emit('game_state', game);
-
-    await this.checkAndAdvancePhase(io, gameId);
-
-    return game;
+        return game;
+    });
   }
 
   /**
  * Déclenche le tour des IAs de manière indépendante
  */
-  async triggerAIPlayers(io: Server, gameId: string): Promise<void> {
+async triggerAIPlayers(io: Server, gameId: string): Promise<void> {
+    // On récupère une copie initiale juste pour lister les IA
     const game = await redisService.getGame(gameId);
     if (!game) return;
 
     const aiPlayers = game.players.filter(p => p.isAi && !p.hasPlayedCurrentPhase);
 
-    // On lance le processus pour chaque IA sans attendre (Promise.all non bloquant pour le flux principal)
     aiPlayers.forEach(async (ai) => {
       try {
-        // 1. Simuler un délai de réflexion "humain" (entre 2 et 8 secondes par exemple)
-        // Cela évite que toutes les IA répondent instantanément au début du tour
+        // 1. Délai de réflexion
         const delay = Math.random() * 6000 + 2000; 
-        
         await new Promise(resolve => setTimeout(resolve, delay));
 
-        // Vérifier si la phase n'a pas changé pendant le délai (cas rare mais possible)
-        const freshGameCheck = await redisService.getGame(gameId);
-        if (!freshGameCheck || freshGameCheck.currentPhase !== game.currentPhase) return;
+        // 2. Vérification avant de générer (Optimisation)
+        // On re-vérifie sans bloquer si la phase est toujours bonne
+        const checkGame = await redisService.getGame(gameId);
+        if (!checkGame || checkGame.currentPhase !== game.currentPhase) return;
+        
+        // Si l'IA a déjà joué entre temps (ex: appel doublé), on arrête
+        const currentPlayerState = checkGame.players.find(p => p.id === ai.id);
+        if (currentPlayerState?.hasPlayedCurrentPhase) return;
 
-        // 2. Notifier le client que l'IA réfléchit
-        console.log(`🧠 ${ai.pseudo} réflechit...`);
+        // 3. Notification "Thinking"
         io.to(gameId).emit('player_status_update', { 
-        playerId: ai.id, 
-        status: 'thinking'
-      });
+            playerId: ai.id, 
+            status: 'thinking'
+        });
 
-        // 3. Générer le mot via Gemini
-        const aiWord = await getAIMove(freshGameCheck, ai.id); // Utilise ta fonction importée
-        
-        // 4. Sauvegarder le résultat
-        await redisService.setPhaseWord(gameId, freshGameCheck.currentPhase, ai.id, aiWord);
-        
-        // Mise à jour de l'objet local pour la vérification suivante
-        ai.hasPlayedCurrentPhase = true; 
-        
-        // Récupérer le jeu à jour pour marquer le flag
-        const updatedGame = await redisService.getGame(gameId);
-        const updatedPlayer = updatedGame?.players.find(p => p.id === ai.id);
-        if (updatedPlayer) updatedPlayer.hasPlayedCurrentPhase = true;
-        if (updatedGame) await redisService.saveGame(updatedGame);
+        // 4. Génération du mot
+        const aiWord = await getAIMove(checkGame, ai.id);
 
-        console.log(`🤖 ${ai.pseudo} a joué: ${aiWord}`);
-
-        // 5. Notifier que l'IA a joué
+        // 5. Soumission via la méthode centrale sécurisée (Mutex)
+        // On réutilise submitWord qui gère déjà le verrou, la sauvegarde, et l'avancement de phase !
+        await this.submitWord(io, gameId, ai.id, aiWord);
+        
+        // Notification "Played"
         io.to(gameId).emit('player_status_update', { 
-        playerId: ai.id, 
-        status: 'played' 
-      });
-        
-        // Renvoyer l'état global du jeu pour mettre à jour les jauges/listes
-        if (updatedGame) io.to(gameId).emit('game_state', updatedGame);
-
-        // 6. Vérifier si c'était le dernier joueur (Humains + IA confondus)
-        await this.checkAndAdvancePhase(io, gameId);
+            playerId: ai.id, 
+            status: 'played' 
+        });
 
       } catch (error) {
         console.error(`❌ Error with AI ${ai.pseudo}:`, error);
-        // Fallback en cas d'erreur critique de l'IA pour ne pas bloquer le jeu
-        // ... logique de fallback ...
+        // Fallback: On force le passage si l'IA plante vraiment, pour ne pas bloquer
+        // Mais attention, cela demande une logique délicate. Pour l'instant on log juste.
       }
     });
   }
@@ -248,8 +261,7 @@ export class GameService {
 /**
  * Méthode utilitaire pour vérifier si tout le monde a joué
  */
-async checkAndAdvancePhase(io: Server, gameId: string): Promise<void> {
-    const game = await redisService.getGame(gameId);
+async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
     if (!game) return;
 
     // Vérifie si TOUS les joueurs (IA + Humains) ont joué
@@ -257,8 +269,8 @@ async checkAndAdvancePhase(io: Server, gameId: string): Promise<void> {
 
     if (allPlayersPlayed) {
         console.log(`✅ All players submitted for phase ${game.currentPhase}`);
-        timerService.clearTimer(gameId);
-        await this.nextPhase(io, gameId);
+        timerService.clearTimer(game.id);
+        await this.nextPhase(io, game.id);
     }
 }
 
