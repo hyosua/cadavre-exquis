@@ -1,4 +1,4 @@
-import { Bot, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { AIPlayersListProps } from "@/types/ai-config.type";
 import { AIPlayerCard } from "./AIPlayerCard";
 import { Button } from "@/components/ui/button";
