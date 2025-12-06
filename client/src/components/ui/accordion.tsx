@@ -17,7 +17,10 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("border-b border-dashed last:border-b-0", className)}
+      className={cn(
+        "border-b-2 lg:border-b-4 border-dashed last:border-b-0",
+        className
+      )}
       {...props}
     />
   );
@@ -39,7 +42,7 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-300" />
+        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-6 shrink-0 translate-y-0.5 transition-transform duration-300" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
