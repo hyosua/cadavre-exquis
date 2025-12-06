@@ -56,7 +56,7 @@ export default function JoinGame() {
           <Ticket size={64} className="text-primary" />
         </motion.div>
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-title font-bold text-foreground">
+          <h2 className="text-2xl font-averia font-bold text-foreground">
             Vérification du ticket...
           </h2>
           <div className="inline-block bg-card border-2 border-foreground px-4 py-2 rounded-lg font-mono text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">

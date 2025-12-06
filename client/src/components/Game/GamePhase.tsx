@@ -119,7 +119,7 @@ export function GamePhase() {
                 {/* APPLICATION DU STYLE INPUT */}
                 <Input
                   value={word}
-                  className="pop-input h-14 text-xl sm:text-2xl font-bold"
+                  className="pop-input h-14 text-xl lg:text-2xl font-bold"
                   onChange={(e) => setWord(e.target.value)}
                   placeholder={placeholder}
                   maxLength={50}

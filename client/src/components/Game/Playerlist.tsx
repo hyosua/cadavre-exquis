@@ -90,7 +90,7 @@ export function PlayerList({
                     <div className="flex items-center gap-2">
                       <span
                         className={`font-averia font-bold truncate ${
-                          isMe ? "text-muted-foreground" : ""
+                          isMe ? "text-foreground dark:text-muted" : ""
                         }`}
                       >
                         {player.pseudo} {isMe && "(Moi)"}
@@ -119,14 +119,14 @@ export function PlayerList({
                           <Check size={16} strokeWidth={4} />
                         </motion.div>
                       ) : player.isThinking ? (
-                        <div className="scale-75 origin-right">
+                        <div className="text-foreground font-bold origin-right">
                           <WritingLoader />
                         </div>
                       ) : (
                         <motion.div
                           animate={{ rotate: [0, 10, -10, 0] }}
                           transition={{ repeat: Infinity, duration: 2 }}
-                          className="text-muted-foreground opacity-50"
+                          className="text-foreground opacity-50"
                         >
                           <Hourglass size={20} />
                         </motion.div>

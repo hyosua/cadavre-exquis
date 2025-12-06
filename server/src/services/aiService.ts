@@ -18,6 +18,19 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
   const currentPhaseType = currentPhaseDetails.titre;
   const helperText = currentPhaseDetails.helper;
 
+  // Mapping local pour la concision (ou importé)
+  const constraints: Record<string, string> = {
+    s: "Groupe Nominal (Art. + Nom). Pas d'adjectif.",
+    adj: "Adjectif seul.",
+    v: "Verbe conjugué seul.",
+    cod: "Groupe Nominal objet. Pas de verbe.",
+    cc: "Complément (Lieu/Temps). Pas de verbe.",
+    // fallback générique
+    default: "Un seul segment de phrase court."
+  };
+
+  const grammaticalRule = constraints[currentPhaseTypeKey] || constraints.default;
+
   // Récuperer la créativité du joueur IA
   const aiPlayer = game.players.find(p => p.id  === aiPlayerId)
 
@@ -41,7 +54,7 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
       systemInstruction = "Tes réponses doivent être tristes, mélancoliques ou dramatiques";
       break;
     case "pirate":
-      systemInstruction = "Tu dois OBLIGATOIREMENT lier ta réponse à l'univers des pirates.";
+      systemInstruction = "Tu dois lier ta réponse à l'univers des pirates.";
       break;
     case "romantique":
       systemInstruction = "Tu es un poète romantique. Tes réponses doivent être belles et imagées";
@@ -56,11 +69,10 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
   // 2. Construire un prompt court
   const promptParts = [
-    `Règle: Tu es un joueur dans une partie de cadavre exquis
-    Tu dois donner un morceau de phrase correspondant au type demandé.
-    Ta réponse doit être sans explication.`,
-    `Phase: ${currentPhaseType}`,
-    `Règle: tes mots doivent correspondre à la phase grammaticale, ni plus ni moins.`,
+    `Tu dois fournir un mot ou groupe de mots conforme à la règle donnée.`,
+    `Règle GRAMMATICALE: ${currentPhaseDetails.titre}`,
+    `RÈGLE STRICTE: ${grammaticalRule}`,
+    `FORMAT: Pas d'explications.`,
   ];
 
     // if (helperText) {
@@ -76,7 +88,7 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
   try {
     const result = await model.generateContent({
       contents: [{role: "user", parts: [{text: prompt}] }],
-      generationConfig: { temperature: 1.3, topK: 40, topP: 0.95}
+      generationConfig: { temperature: 0.85, topK: 40, topP: 0.95}
     });
     const response = result.response;
     console.log("Réponse brute de Gemini:", response);

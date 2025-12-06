@@ -15,7 +15,7 @@ export function PhaseSteps({ phases, currentPhase }: PhaseStepsProps) {
           {/* Ligne de connexion (sauf pour le premier élément) */}
           {index > 0 && (
             <div
-              className={`absolute left-0 top-4 -z-10 h-1.5 w-full -translate-x-1/2
+              className={`absolute left-0 top-4 z-0 h-1.5 w-full -translate-x-1/2
                 ${
                   // Si l'étape est active ou passée, colore la ligne en 'primary'
                   index <= currentPhase ? "bg-primary" : "bg-muted"
@@ -26,7 +26,7 @@ export function PhaseSteps({ phases, currentPhase }: PhaseStepsProps) {
 
           {/* Cercle de l'étape */}
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300
+            className={`z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300
               ${
                 index <= currentPhase
                   ? "bg-primary text-primary-foreground" // Style "passé" ou "actuel"

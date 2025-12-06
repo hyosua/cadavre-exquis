@@ -36,6 +36,7 @@ export function useGame() {
 
   const kickPlayer = (playerToRemove: Player) => {
     if (game) {
+      console.log("Kicking player:", playerToRemove);
       socketService.emit('kick_player', { gameId: game.id, playerToRemove });
     }
   };

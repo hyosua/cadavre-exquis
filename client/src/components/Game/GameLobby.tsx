@@ -147,8 +147,9 @@ export function GameLobby() {
           <Confirm
             message="Partir déjà ? Vous n'avez même pas commencé !"
             buttonName="Quitter le lobby"
+            variant={"destructive"}
             // Style bouton ghost/pop
-            className="pop-btn bg-transparent hover:bg-muted border-2 border-transparent hover:border-foreground w-auto px-6"
+            className="w-auto px-6"
             onConfirm={leaveGame}
           />
         </div>

@@ -141,16 +141,7 @@ export class GameService {
       throw new Error('La partie n\'est pas en cours');
     }
 
-    // formater le mot
-    word = word.trim().toLowerCase();
-    if(game.currentPhase === 0) {
-      word = word.charAt(0).toUpperCase() + word.slice(1);
-    }
-    if(game.currentPhase === game.config.phases.length -1) {
-      if(!word.endsWith('.')){
-        word += '.';
-      }
-    }
+    
     
     // Sauvegarder le mot
     await redisService.setPhaseWord(gameId, game.currentPhase, playerId, word);
@@ -166,7 +157,17 @@ export class GameService {
  
     // Marquer le joueur comme ayant joué
     player.hasPlayedCurrentPhase = true;
-
+    
+    // formater le mot
+    word = word.trim().toLowerCase();
+    if(game.currentPhase === 0) {
+      word = word.charAt(0).toUpperCase() + word.slice(1);
+    }
+    if(game.currentPhase === game.config.phases.length -1) {
+      if(!word.endsWith('.')){
+        word += '.';
+      }
+    }
     await redisService.saveGame(game);
 
     console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
