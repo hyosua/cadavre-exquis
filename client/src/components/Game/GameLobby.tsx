@@ -113,6 +113,7 @@ export function GameLobby() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Confirm
               message="Voulez-vous vraiment annuler la partie ?"
+              variant={"destructive"}
               buttonName={
                 <span className="flex items-center gap-2">
                   <Ban size={18} /> Annuler tout
