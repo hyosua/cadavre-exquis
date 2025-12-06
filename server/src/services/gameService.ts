@@ -4,6 +4,7 @@ import { timerService } from './timerService';
 import { generateGameCode, generateId } from '@/utils/generateCode';
 import { Game, GameConfig, Player, Sentence } from '@/types/game.types';
 import { getAIMove } from './aiService';
+import { getGhostWord } from '@/utils/ghost-words.data';
 
 export class GameService {
   // 🔒 Ajout d'une Map pour gérer les verrous par partie
@@ -285,7 +286,12 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
 
     // Ajouter les mots aux phrases
     game.sentences.forEach(sentence => {
-      const word = words[sentence.currentPlayerId] || '...';
+      if (!words[sentence.currentPlayerId]) {
+        console.warn(`[NextPhase] Aucun mot trouvé pour le joueur ${sentence.currentPlayerId} à la phase ${game.currentPhase}`);
+        const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
+        words[sentence.currentPlayerId] = randomWord;
+      }
+      const word = words[sentence.currentPlayerId];
       sentence.words.push(word);
     });
 
@@ -312,6 +318,18 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
       
       await redisService.saveGame(game);
       
+      // Gestion des joueurs fantômes pour la nouvelle phase
+      for (const player of game.players) {
+          if (!player.isConnected && !player.isAi) {
+              // Le joueur est parti, on remplit auto pour cette nouvelle phase
+              const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
+              await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
+              player.hasPlayedCurrentPhase = true;
+          }
+      }
+
+      await redisService.saveGame(game);
+
       // Démarrer le nouveau timer
       timerService.startPhaseTimer(io, gameId, game.config.timePerPhase);
       
@@ -354,8 +372,11 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
 
     console.log(`🗳️  ${player.pseudo} voted for sentence ${sentenceId}`);
 
+    // Combien de joueurs humains sont ENCORE connectés ?
+    const activeHumanPlayers = game.players.filter(p => !p.isAi && p.isConnected).length;
+    
     // Vérifier si tous ont voté
-    if (game.votes.length >= game.players.filter(p => !p.isAi).length) {
+    if (game.votes.length >= activeHumanPlayers) {
       game.status = 'finished';
       await redisService.saveGame(game);
       
@@ -370,104 +391,113 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
 
   async handleDisconnect(io: Server, socketId: string): Promise<void> {
     const gameId = await redisService.getPlayerGame(socketId);
-    
     if (!gameId) return;
 
-    const game = await redisService.getGame(gameId);
-    if (!game) return;
+    // On utilise le verrou pour éviter les conflits
+    await this.withLock(gameId, async () => {
+      const game = await redisService.getGame(gameId);
+      if (!game) return;
 
-    const player = game.players.find(p => !p.isAi && p.socketId === socketId);
-    if (!player) return;
+      const player = game.players.find(p => !p.isAi && p.socketId === socketId);
+      if (!player) return;
 
-    player.isConnected = false;
-    await redisService.saveGame(game);
+      player.isConnected = false;
 
-    io.to(gameId).emit('player_left', { playerId: player.id });
-    io.to(gameId).emit('game_state', game);
+      console.log(`👋 ${player.pseudo} disconnected from game ${gameId}`);
 
-    console.log(`👋 ${player.pseudo} disconnected from game ${gameId}`);
+      // 2. Gestion de l'Hôte : Si l'hôte part, on transmet la couronne
+        if (player.isHost) {
+            const newHost = game.players.find(p => p.isConnected && !p.isAi && p.id !== player.id);
+            if (newHost && !newHost.isAi) {
+                player.isHost = false;
+                newHost.isHost = true;
+                game.hostId = newHost.id;
+                io.to(newHost.socketId).emit("assigned_host", { 
+                    player: newHost, 
+                    message: "Le chef s'est déconnecté, vous reprenez les rennes!" 
+                });
+            }
+        }
 
-    // Si c'était l'hôte et que le jeu est en attente, supprimer la partie
-    // if (player.isHost && game.status === 'waiting') {
-    //   await this.deleteGame(io, gameId);
-    // }
+        // 3. Si le jeu est en cours 
+        if (game.status === 'playing') {
+            // Si le joueur devait jouer dans cette phase mais ne l'a pas fait
+            if (!player.hasPlayedCurrentPhase) {
+                console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
+                const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
+                console.log('👻 Auto-played word:', randomWord);
+                await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
+                player.hasPlayedCurrentPhase = true;
+            }
+        } 
+        else if (game.status === 'waiting') {
+             // Si on est en salle d'attente, là on peut supprimer proprement
+             const idx = game.players.findIndex(p => p.id === player.id);
+             if(idx !== -1) game.players.splice(idx, 1);
+             
+             // Si plus personne, supprimer la game
+             if(game.players.length === 0) {
+                 await this.deleteGame(io, gameId);
+                 return;
+             }
+        }
+
+        await redisService.saveGame(game);
+        
+        io.to(gameId).emit('player_left', { playerId: player.id, status: game.status });
+        io.to(gameId).emit('game_state', game);
+
+        // Vérifier si cette déconnexion permet de passer à la phase suivante
+        if (game.status === 'playing') {
+            await this.checkAndAdvancePhase(io, game);
+        }
+    })
   }
 
-  async removePlayer(io: Server, gameId: string, playerId: string): Promise<Game | null>{
-    const game = await redisService.getGame(gameId);
+  async removePlayer(io: Server, gameId: string, playerId: string): Promise<Game | null> {
+    return this.withLock(gameId, async () => {
+        const game = await redisService.getGame(gameId);
+        if (!game) throw new Error('Partie introuvable');
 
-    if(!game) {
-      throw new Error('Partie Introuvable');
-    }
+        const player = game.players.find(p => p.id === playerId);
+        if (!player) throw new Error('Joueur introuvable');
 
-
-    const playerIdx = game.players.findIndex(p => p.id === playerId);
-
-
-    if(playerIdx === -1){
-      throw new Error('Joueur Introuvable');
-    }
-
-    const player = game.players[playerIdx];
-    const wasHost = player.isHost;
-    
-    if(player.isAi){ 
-      game.players.splice(playerIdx,1);
-      console.log(`🗑️ IA ${player.pseudo} a été supprimé de la partie ${gameId}`)
-    } else {
-      // supprimer le mapping redis du joueur
-      await redisService.deletePlayerGame(player.socketId);
-      game.players.splice(playerIdx,1);
-      console.log(`🗑️ ${player.pseudo} a été supprimé de la partie ${gameId}`)
-
-
-      // Si la partie est vide, la supprimer
-      if(game.players.length === 0){
-        await this.deleteGame(io, gameId);
-        return null;
-      }
-
-
-      // si c'était l'hôte, assigner un nouvel hôte
-      if(wasHost){
-        if(game.players.length === 1 && game.players[0].isAi){
-          // Si le seul joueur restant est une IA, supprimer la partie
-          await this.deleteGame(io, gameId);
-          return null;
+        // Cas 1 : En attente -> Suppression réelle
+        if (game.status === 'waiting') {
+            game.players = game.players.filter(p => p.id !== playerId);
+            if(!player.isAi){
+              await redisService.deletePlayerGame(player.socketId);
+            }
+            // ... gestion host si besoin (identique handleDisconnect) ...
+        } 
+        // Cas 2 : En jeu -> Suppression "logique" (Ghost Mode)
+        else {
+            player.isConnected = false;             
+            // On force le mapping Redis à expirer ou on le supprime pour qu'il ne puisse pas reco
+            if(!player.isAi){
+              await redisService.deletePlayerGame(player.socketId);
+            }
+            
+            // Auto-play si besoin pour ne pas bloquer
+            if (!player.hasPlayedCurrentPhase) {
+              console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
+                const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
+                console.log('👻 Auto-played word:', randomWord);
+                await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
+                player.hasPlayedCurrentPhase = true;
+            }
         }
 
-        const newHost = game.players.find(p => !p.isAi && p.isConnected)
-        if(!newHost){
-          // Pas de joueur humain connecté, supprimer la partie
-          await this.deleteGame(io, gameId);
-          return null;
+        await redisService.saveGame(game);
+        io.to(gameId).emit("player_removed", { playerId, pseudo: player.pseudo });
+        io.to(gameId).emit("game_state", game);
+
+        if (game.status === 'playing') {
+             await this.checkAndAdvancePhase(io, game);
         }
 
-        if(newHost.isAi){ // ajout de vérif pour Typescript (normalement on ne devrait jamais arriver ici)
-          await this.deleteGame(io, gameId);
-          return null;
-        }
-
-        newHost.isHost = true;
-        game.hostId = newHost.id;
-
-        io.to(newHost.socketId).emit("assigned_host", {
-          player: newHost,
-          message: 'Vous avez été assigné hôte de la partie.',
-        })
-        console.log(`👑 ${newHost.pseudo} est le nouveau hôte!`);
-      }
-
-    }
-
-      await redisService.saveGame(game);
-
-      // Notifier les autres joueurs
-      io.to(gameId).emit("player_removed",{ playerId: player.id, pseudo: player.pseudo })
-      io.to(gameId).emit("game_state", game);
-
-      return game
-
+        return game;
+    });
   }
 
   async addAIPlayer( io: Server, gameId: string): Promise<Game | null> {
@@ -531,7 +561,10 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
 
     for (const player of game.players) {
       if (!words[player.id]) {
-        await redisService.setPhaseWord(gameId, game.currentPhase, player.id, '...');
+        console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
+                const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
+                console.log('👻 Auto-played word:', randomWord);
+        await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
         player.hasPlayedCurrentPhase = true;
       }
     }

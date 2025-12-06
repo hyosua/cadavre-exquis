@@ -1,3 +1,4 @@
+import { getGhostWord } from "@/utils/ghost-words.data";
 import { Game, AIPlayer } from "../types/game.types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -16,7 +17,7 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
   const currentPhaseTypeKey = game.config.phases[currentPhaseIndex];
   const currentPhaseDetails = game.config.phaseDetails[currentPhaseTypeKey];
   const currentPhaseType = currentPhaseDetails.titre;
-  const helperText = currentPhaseDetails.helper;
+  // const helperText = currentPhaseDetails.helper;
 
   // Mapping local pour la concision (ou importé)
   const constraints: Record<string, string> = {
@@ -36,7 +37,8 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
   // verif explicite pour que Typescript comprenne le type
   if (!aiPlayer || !isAIPlayer(aiPlayer)) {
-    return `un ${currentPhaseType} étrange`;
+    console.warn(`[AI] Joueur ${aiPlayerId} invalide. Utilisation GhostWord.`);
+    return getGhostWord(currentPhaseTypeKey);
   }
 
   const aiPersonnality = aiPlayer?.personnality || "comique"
@@ -101,7 +103,8 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
     // Réponse de repli simple si l'IA ne renvoie rien
     if (!text) {
-      return `un ${currentPhaseType} étrange`;
+      console.warn(`[AI] Réponse vide pour ${aiPersonnality}. Utilisation GhostWord.`);
+      return getGhostWord(currentPhaseTypeKey);
     }
 
     console.log(`🤖 AI (${aiPersonnality}): "${text}"`);
@@ -110,6 +113,7 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
   } catch (error) {
     console.error("Erreur de l'API Gemini:", error);
     // Fournir une réponse de repli en cas d'échec de l'API
-    return `un ${currentPhaseType} mystérieux`;
+    console.log(`[AI] Fallback activé pour phase: ${currentPhaseTypeKey}`);
+    return getGhostWord(currentPhaseTypeKey);
   }
 }
