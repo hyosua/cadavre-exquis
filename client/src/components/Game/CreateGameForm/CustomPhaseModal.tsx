@@ -55,7 +55,7 @@ export const CustomPhaseModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="pop-card max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-foreground p-0 gap-0">
-        <DialogHeader className="p-6 pb-2 bg-primary/70 border-b-2 border-foreground/5">
+        <DialogHeader className="p-6 pb-2 bg-primary/70 border-b-2 border-foreground">
           <DialogTitle className="text-2xl font-averia">
             Créez votre structure
           </DialogTitle>
@@ -262,7 +262,7 @@ const PhaseBuilder = ({ value, onChange }: PhaseBuilderProps) => {
                     {index + 1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm font-averia">
+                    <div className="font-medium text-secondary text-sm font-averia">
                       {phase.detail.titre}
                     </div>
                     <div className="text-xs text-muted-foreground italic truncate">

@@ -86,8 +86,8 @@ export default function JoinGame() {
           <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
             {/* Input Pseudo */}
             <div className="space-y-2">
-              <label className="text-sm font-bold font-averia flex items-center gap-2 ml-1">
-                <User size={16} /> Ton Pseudo
+              <label className="text-lg sm:text-xl font-bold font-averia flex items-center gap-2 ml-1">
+                <User size={20} /> Ton Pseudo
               </label>
               <Input
                 value={pseudo}
@@ -98,15 +98,15 @@ export default function JoinGame() {
                 placeholder="Ex: victor_Hugo"
                 maxLength={20}
                 // Style pop-input
-                className="pop-input h-12 text-lg px-4"
+                className="pop-input h-12 px-4 text-lg sm:text-2xl"
                 autoFocus
               />
             </div>
 
             {/* Input Code (Style Ticket) */}
             <div className="space-y-2">
-              <label className="text-sm font-bold font-averia flex items-center gap-2 ml-1">
-                <Ticket size={16} /> Code de la partie
+              <label className="text-lg sm:text-xl font-bold font-averia flex items-center gap-2 ml-1">
+                <Ticket size={20} /> Code de la partie
               </label>
               <div className="relative">
                 <Input
@@ -118,10 +118,10 @@ export default function JoinGame() {
                   placeholder="ABC123"
                   maxLength={6}
                   // Style pop-input spécifique pour le code
-                  className="pop-input h-20 text-4xl text-center font-mono tracking-[0.2em] uppercase placeholder:text-muted-foreground/20 bg-yellow-50 focus-visible:bg-white transition-colors"
+                  className="pop-input text-2xl sm:text-4xl h-20 text-center font-mono tracking-[0.2em] uppercase placeholder:text-muted-foreground/20 bg-yellow-50 focus-visible:bg-white transition-colors"
                 />
                 {/* Petit texte déco */}
-                <span className="absolute right-3 bottom-2 text-[10px] text-muted-foreground font-mono opacity-50">
+                <span className="absolute right-3 bottom-2 text-[10px] sm:text-[12px] text-muted-foreground font-mono opacity-50">
                   TICKET #001
                 </span>
               </div>
