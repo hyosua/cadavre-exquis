@@ -8,13 +8,13 @@ import { getGhostWord } from '@/utils/ghost-words.data';
 
 export class GameService {
   // 🔒 Ajout d'une Map pour gérer les verrous par partie
-  private locks = new Map<string, Promise<any>>();
+  public locks = new Map<string, Promise<any>>();
 
   /**
    * 🔒 Méthode utilitaire pour exécuter une action de manière séquentielle pour un gameId
    * Cela empêche deux joueurs (ou IA) de sauvegarder en même temps et d'écraser les données.
    */
-  private async withLock<T>(gameId: string, action: () => Promise<T>): Promise<T> {
+  public async withLock<T>(gameId: string, action: () => Promise<T>): Promise<T> {
     const currentLock = this.locks.get(gameId) || Promise.resolve();
     
     // On crée une nouvelle promesse qui attend la précédente avant de s'exécuter

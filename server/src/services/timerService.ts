@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import { gameService } from './gameService';
+import { redisService } from './redisService';
 
 export class TimerService {
   private timers: Map<string, NodeJS.Timeout> = new Map();
@@ -17,7 +18,9 @@ export class TimerService {
       io.to(gameId).emit('timer_update', { timeLeft });
 
       if (timeLeft <= 0) {
+        io.to(gameId).emit('timer_update', { timeLeft: 0 });
         clearInterval(broadcastInterval);
+        return;
       }
     }, 1000);
 
@@ -33,13 +36,16 @@ export class TimerService {
   }
 
   private async handlePhaseTimeout(io: Server, gameId: string): Promise<void> {
-    console.log(`⏰ Phase timeout for game ${gameId}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`⏰ Phase timeout for game ${gameId}`);
+    }
     
-    // Remplir les mots manquants
+  await gameService.withLock(gameId, async () => {
     await gameService.fillMissingWords(gameId);
-    
-    // Passer à la phase suivante
     await gameService.nextPhase(io, gameId);
+  });
+
+
   }
 
   clearTimer(gameId: string): void {

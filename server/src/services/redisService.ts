@@ -4,6 +4,11 @@ import { Game } from '@/types/game.types';
 const GAME_TTL = 8 * 60 * 60; // 8 heures
 
 export class RedisService {
+  // Expose le client Redis brut
+  get client() {
+    return redis;
+  }
+
   // Game CRUD
   async saveGame(game: Game): Promise<void> {
     const key = `game:${game.id}`;
