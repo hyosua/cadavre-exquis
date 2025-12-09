@@ -8,7 +8,6 @@ export function useGame() {
   const { game, currentPlayer, timeLeft, error, isConnected } = useGameStore();
 
   const createGame = (pseudo: string, config: GameConfig) => {
-    console.log("1. Création demandée")
     socketService.emit('create_game', { pseudo, config });
   };
 
@@ -36,7 +35,6 @@ export function useGame() {
 
   const kickPlayer = (playerToRemove: Player) => {
     if (game) {
-      console.log("Kicking player:", playerToRemove);
       socketService.emit('kick_player', { gameId: game.id, playerToRemove });
     }
   };

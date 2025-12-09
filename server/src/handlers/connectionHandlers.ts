@@ -12,7 +12,6 @@ export function registerConnectionHandlers(io: Server, socket: Socket) {
 
   // handle rejoin attempts from clients
   socket.on('rejoin_game', async (data: { gameId: string; playerId: string }, ack?: (resp: any) => void) => {
-    console.log('rejoin_game received', { socketId: socket.id, ...data });
     const { gameId, playerId } = data;
     try {
       const game = await redisService.getGame(gameId); 

@@ -173,7 +173,6 @@ export function CreateGameForm() {
         aiPlayers: aiPlayers,
       };
 
-      console.log("→ Game config envoyée :", config);
       await createGame(data.pseudo, config);
     } catch (error) {
       console.error("Erreur lors de la création:", error);

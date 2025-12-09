@@ -93,7 +93,6 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
       generationConfig: { temperature: 0.85, topK: 40, topP: 0.95}
     });
     const response = result.response;
-    console.log("Réponse brute de Gemini:", response);
     let text = response.text().trim();
     
     // Nettoyage simple pour s'assurer que Gemini n'ajoute pas de guillemets ou ponctuation
@@ -103,17 +102,13 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
 
     // Réponse de repli simple si l'IA ne renvoie rien
     if (!text) {
-      console.warn(`[AI] Réponse vide pour ${aiPersonnality}. Utilisation GhostWord.`);
       return getGhostWord(currentPhaseTypeKey);
     }
-
-    console.log(`🤖 AI (${aiPersonnality}): "${text}"`);
 
     return text;
   } catch (error) {
     console.error("Erreur de l'API Gemini:", error);
     // Fournir une réponse de repli en cas d'échec de l'API
-    console.log(`[AI] Fallback activé pour phase: ${currentPhaseTypeKey}`);
     return getGhostWord(currentPhaseTypeKey);
   }
 }

@@ -194,8 +194,8 @@ async submitWord(io: Server, gameId: string, playerId: string, word: string): Pr
         player.hasPlayedCurrentPhase = true;
         await redisService.saveGame(game);
 
-        console.log(`✍️  ${player.pseudo} submitted word for phase ${game.currentPhase}`);
-
+        process.env.NODE_ENV !== "production" &&
+          console.log(`Word submitted by ${player.id} phase ${game.currentPhase}`);
         // 4. Notifications et Avancement
         // On n'envoie l'état que maintenant qu'on est sûr que c'est sauvegardé
         io.to(gameId).emit('game_state', game);
@@ -370,8 +370,6 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
     game.votes.push({ playerId, sentenceId });
     await redisService.saveGame(game);
 
-    console.log(`🗳️  ${player.pseudo} voted for sentence ${sentenceId}`);
-
     // Combien de joueurs humains sont ENCORE connectés ?
     const activeHumanPlayers = game.players.filter(p => !p.isAi && p.isConnected).length;
     
@@ -423,9 +421,7 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
         if (game.status === 'playing') {
             // Si le joueur devait jouer dans cette phase mais ne l'a pas fait
             if (!player.hasPlayedCurrentPhase) {
-                console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
                 const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
-                console.log('👻 Auto-played word:', randomWord);
                 await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
                 player.hasPlayedCurrentPhase = true;
             }
@@ -480,9 +476,7 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
             
             // Auto-play si besoin pour ne pas bloquer
             if (!player.hasPlayedCurrentPhase) {
-              console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
                 const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
-                console.log('👻 Auto-played word:', randomWord);
                 await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
                 player.hasPlayedCurrentPhase = true;
             }
@@ -561,9 +555,7 @@ async checkAndAdvancePhase(io: Server, game: Game): Promise<void> {
 
     for (const player of game.players) {
       if (!words[player.id]) {
-        console.log(`👻 Auto-playing for disconnected player ${player.pseudo}`);
-                const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
-                console.log('👻 Auto-played word:', randomWord);
+        const randomWord = getGhostWord(game.config.phases[game.currentPhase]);
         await redisService.setPhaseWord(gameId, game.currentPhase, player.id, randomWord);
         player.hasPlayedCurrentPhase = true;
       }

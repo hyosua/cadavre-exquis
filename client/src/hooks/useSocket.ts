@@ -31,21 +31,18 @@ export function useSocket() {
     if (!socket) return;
 
     socket.on('connect', () => {
-      console.log("Attempting to connect ...")
       setIsConnected(true);
       setError(null);
       // Try to reconnect with stored credentials
       const playerId = currentPlayer?.id;
       const gameId = persistedGameRef?.id;
       if (playerId && gameId) {
-        console.log('Attempting to rejoin game:', gameId, playerId);
         socket.emit('rejoin_game', { gameId, playerId });
       }
     });
 
     // Add specific handler for successful reconnection
     socket.on('player_reconnected', (data: { player: Player, game: Game }) => {
-      console.log('Successfully reconnected to game');
       setCurrentPlayer(data.player);
       setGame(data.game);
       setError(null);
@@ -54,7 +51,6 @@ export function useSocket() {
     });
 
     socket.on('rejoin_failed', (data: { message: string }) => {
-      console.error('Rejoin failed:', data.message);
       toast.error(`${data.message}`);
       // Clear invalid stored data
       useGameStore.getState().setPersistedGameRef(null);
@@ -69,20 +65,17 @@ export function useSocket() {
     });
 
     socket.on('game_deleted', () => {
-      console.log('Game deleted by server');
       resetGame()
       router.push('/');
       toast.info('Partie supprimée');
     });
 
     socket.on('game_left', () => {
-      console.log('server-response: Player left game')
       resetGame()
       router.push('/');
     })
 
     socket.on('kicked_out', () => {
-      console.log('Player kicked out by server')
       resetGame()
       router.push('/');
       toast.warning('Vous avez été exclu de la partie');
@@ -90,13 +83,11 @@ export function useSocket() {
     })
 
     socket.on('game_canceled', () => {
-      console.log('Game canceled by server');
       resetGame()
       router.push('/');
     });
 
     socket.on('assigned_host', (data: { player: Player, message: string }) => {
-      console.log('server: new host assigned');
       setCurrentPlayer(data.player);
       toast.info(data.message);
 
@@ -114,13 +105,11 @@ export function useSocket() {
     });
 
     socket.on('player_status_update', (data: { playerId: string, status: 'thinking' | 'played' }) => {
-      console.log(`Update player ${data.playerId}: ${data.status}`);
       updatePlayerStatus(data.playerId, data.status);
     });
 
     socket.on('current_player', (player) => setCurrentPlayer(player));
     socket.on('game_state', (game: Game) => {
-      console.log("game_state: ",game)
       setGame(game)
     });
     socket.on('phase_started', ({ timeLeft }) => setTimeLeft(timeLeft));
