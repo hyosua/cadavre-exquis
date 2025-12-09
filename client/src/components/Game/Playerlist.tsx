@@ -7,6 +7,7 @@ import { useGame } from "@/hooks/useGame";
 import { X, Crown, Hourglass, Check } from "lucide-react";
 import { Confirm } from "../ui/confirm";
 import { WritingLoader } from "./WritingLoader";
+import { Badge } from "../ui/badge";
 
 interface PlayerListProps {
   players: Player[];
@@ -102,6 +103,16 @@ export function PlayerList({
                       <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-amber-600 bg-amber-100 w-fit px-1.5 rounded-sm border border-amber-600/30">
                         <Crown size={10} strokeWidth={3} /> Chef
                       </div>
+                    )}
+
+                    {/* Badge IA */}
+                    {player.isAi && (
+                      <Badge
+                        variant="secondary"
+                        className="text-xs flex-shrink-0"
+                      >
+                        IA
+                      </Badge>
                     )}
                   </div>
                 </div>

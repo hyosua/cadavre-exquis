@@ -9,13 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { RadioGroup } from "@/components/ui/radio-group";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { GameConfigValues, groupedPresets, difficultyLabels } from "./config";
 import { PresetRadioItem } from "./PresetRadioItem";
 import { CustomPhaseModal } from "./CustomPhaseModal";
@@ -53,10 +47,6 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
         name="presetId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-lg font-semibold">Mode de jeu</FormLabel>
-            <FormDescription>
-              Choisissez une structure de phrase prédéfinie ou créez la vôtre
-            </FormDescription>
             <FormControl>
               <RadioGroup
                 onValueChange={(value) => {
@@ -82,7 +72,7 @@ export const GameModeSelector = ({ control }: GameModeSelectorProps) => {
                         value={difficulty}
                         className={``}
                       >
-                        <AccordionTrigger className="text-base">
+                        <AccordionTrigger className="text-lg font-semibold">
                           {
                             difficultyLabels[
                               difficulty as GamePreset["difficulty"]

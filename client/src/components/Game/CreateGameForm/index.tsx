@@ -212,8 +212,8 @@ export function CreateGameForm() {
                       name="pseudo"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-lg font-bold font-averia flex items-center gap-2">
-                            <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                          <FormLabel className="text-lg  text-primary font-bold font-averia flex items-center gap-2">
+                            <span className="bg-primary text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
                               1
                             </span>
                             Votre Pseudo
@@ -234,8 +234,8 @@ export function CreateGameForm() {
 
                   {/* Mode de jeu */}
                   <motion.div variants={itemVariants} className="space-y-2">
-                    <div className="text-lg font-bold font-averia flex items-center gap-2">
-                      <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                    <div className="text-lg text-primary font-bold font-averia flex items-center gap-2">
+                      <span className="bg-primary text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
                         2
                       </span>
                       Structure de la phrase
@@ -244,7 +244,15 @@ export function CreateGameForm() {
                   </motion.div>
 
                   {/* Joueurs IA */}
-                  <motion.div variants={itemVariants}>
+                  <motion.div variants={itemVariants} className="space-y-2">
+                    <div className="flex text-primary items-center gap-2">
+                      <span className="bg-primary text-background w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
+                        3
+                      </span>
+                      <h3 className="text-lg font-bold font-averia">
+                        Les Robots
+                      </h3>
+                    </div>
                     <AIPlayersList
                       aiPlayers={aiPlayers}
                       onAdd={addAiPlayer}
@@ -261,8 +269,8 @@ export function CreateGameForm() {
                       name="timePerPhase"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-lg font-bold font-averia flex items-center gap-2">
-                            <span className="bg-foreground text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                          <FormLabel className="text-lg text-primary font-bold font-averia flex items-center gap-2">
+                            <span className="bg-primary text-background w-6 h-6 rounded-full flex items-center justify-center text-xs">
                               4
                             </span>
                             Pression Temporelle
@@ -306,7 +314,7 @@ export function CreateGameForm() {
                       // STYLE POP-BTN PRIMARY
                       className="pop-btn bg-primary text-primary-foreground hover:bg-primary/90 w-full h-12 text-lg font-bold"
                       loading={isCreating}
-                      loadingText="Construction..."
+                      loadingText="Création..."
                     >
                       Créer !
                     </LoadingButton>

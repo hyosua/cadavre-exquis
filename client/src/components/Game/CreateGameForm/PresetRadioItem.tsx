@@ -37,11 +37,15 @@ export const PresetRadioItem = ({
         "peer-data-[state=checked]:text-primary"
       )}
     >
-      <span className={cn("font-semibold mb-1 transition-colors")}>
+      <span
+        className={cn(
+          "font-semibold text-lg sm:text-xl mb-1 transition-colors"
+        )}
+      >
         {/*On affiche le titre du preset personnalisé sinon preset normal*/}
         {customTitle || preset.name}
       </span>
-      <span className="text-sm text-muted-foreground ">
+      <span className="text-md sm:text-lg text-muted-foreground ">
         <em>&quot;{customDescription || preset.example}&quot;</em>
       </span>
     </Label>

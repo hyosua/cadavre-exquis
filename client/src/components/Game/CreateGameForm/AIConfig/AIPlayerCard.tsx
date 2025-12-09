@@ -3,7 +3,6 @@ import { PiMaskSadFill } from "react-icons/pi";
 import { GiClown, GiBrain, GiPirateSkull } from "react-icons/gi";
 import { IoIosRose } from "react-icons/io";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -98,14 +97,9 @@ export function AIPlayerCard({
             <SelectTrigger
               className={`h-8 w-full ${config.bgColor} border-muted-foreground/20 hover:bg-background hover:border-muted-foreground/40 transition-colors`}
             >
-              <div className="flex items-center gap-2 w-full">
-                <span className="font-averia font-semibold text-sm sm:text-lg truncate">
-                  {config.label}
-                </span>
-                <Badge variant="secondary" className="text-xs flex-shrink-0">
-                  IA
-                </Badge>
-              </div>
+              <span className="font-averia font-semibold text-sm sm:text-lg truncate">
+                {config.label}
+              </span>
             </SelectTrigger>
             <SelectContent>
               {(
