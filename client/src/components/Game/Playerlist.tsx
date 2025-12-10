@@ -146,16 +146,18 @@ export function PlayerList({
                   )}
 
                   {/* Bouton Kick */}
-                  {currentPlayer?.isHost && currentPlayerId !== player.id && (
-                    <Confirm
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-md bg-destructive/20 hover:bg-destructive hover:text-white border-2 border-transparent hover:border-black transition-all"
-                      buttonName={<X size={16} strokeWidth={3} />}
-                      message={`Expulser ${player.pseudo} ? C'est un peu rude, non ?`}
-                      onConfirm={() => kickPlayer(player)}
-                    />
-                  )}
+                  {currentPlayer?.isHost &&
+                    currentPlayerId !== player.id &&
+                    player.isConnected && (
+                      <Confirm
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-md bg-destructive/20 hover:bg-destructive hover:text-white border-2 border-transparent hover:border-black transition-all"
+                        buttonName={<X size={16} strokeWidth={3} />}
+                        message={`Expulser ${player.pseudo} ? C'est un peu rude, non ?`}
+                        onConfirm={() => kickPlayer(player)}
+                      />
+                    )}
                 </div>
               </motion.div>
             );

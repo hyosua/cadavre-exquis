@@ -1,4 +1,4 @@
-import { getGhostWord } from "@/utils/ghost-words.data";
+import { getGhostWord } from "../utils/ghost-words.data";
 import { Game, AIPlayer } from "../types/game.types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 

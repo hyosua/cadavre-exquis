@@ -4,7 +4,7 @@ import { timerService } from './timerService';
 import { generateGameCode, generateId } from '@/utils/generateCode';
 import { Game, GameConfig, Player, Sentence } from '@/types/game.types';
 import { getAIMove } from './aiService';
-import { getGhostWord } from '@/utils/ghost-words.data';
+import { getGhostWord } from '../utils/ghost-words.data';
 
 export class GameService {
   // 🔒 Ajout d'une Map pour gérer les verrous par partie
