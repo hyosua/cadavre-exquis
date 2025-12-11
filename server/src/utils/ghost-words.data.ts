@@ -7,7 +7,7 @@ export const GHOST_WORDS_DB: Record<string, string[]> = {
     "Le pape", "Un grille-pain", "L'ornithorynque", "Un influenceur", 
     "Mon clone", "Le voisin louche", "Un zombie", "Le stagiaire",
     "Batman", "Une endive", "Le serveur", "Ton futur Toi",
-    "Un spéléologue", "L'archonte", "Une chèvre", "Un pingouin",
+    "Un spéléologue", "Shrek", "Une chèvre", "Un pingouin",
     "Un bouquiniste", "La déesse des nouilles", "Une chanteuse d'opéra", "Un frelon géant",
     "La chaise vide", "Un vagabond", "Le vide intersidéral", "Ton ami imaginaire",
     "Un samouraï", "Le taureau du voisin", "Une momie"

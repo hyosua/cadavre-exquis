@@ -2,15 +2,16 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "prebuild": "rm -rf dist",
     "build": "tsc && tsc-alias",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hyosua",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
