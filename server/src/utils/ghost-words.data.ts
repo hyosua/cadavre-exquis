@@ -5,89 +5,87 @@ export const GHOST_WORDS_DB: Record<string, string[]> = {
   // --- BASIQUES ---
   s: [ // Sujets
     "Le pape", "Un grille-pain", "L'ornithorynque", "Un influenceur", 
-    "Mon clone", "Le voisin louche", "Un zombie philosophe", "Le stagiaire",
-    "Batman", "Une endive", "Le serveur", "Ton futur toi",
-    "Un spéléologue", "L'archonte", "La chèvre cosmique", "Le manchot empereur",
-    "Un bouquiniste taciturne", "La déesse des nouilles", "Un sémaphore désaffecté", "Le méandre oublié",
-    "Le cénobite", "Une phlébite récurrente", "Le mime intersidéral", "Le glouton sibérien",
-    "Un hédoniste contrit", "Le spectre d'un clavecin", "La chimère éphémère"
+    "Mon clone", "Le voisin louche", "Un zombie", "Le stagiaire",
+    "Batman", "Une endive", "Le serveur", "Ton futur Toi",
+    "Un spéléologue", "L'archonte", "Une chèvre", "Un pingouin",
+    "Un bouquiniste", "La déesse des nouilles", "Une chanteuse d'opéra", "Un frelon géant",
+    "La chaise vide", "Un vagabond", "Le vide intersidéral", "Ton ami imaginaire",
+    "Un samouraï", "Le taureau du voisin", "Une momie"
   ],
 
   adj: [ // Adjectifs (Généralement masculin singulier pour "fitter" avec le plus de cas)
     "radioactif", "mélancolique", "visqueux", "invisible", 
     "suspect", "pétillant", "dépressif", "héroïque", 
     "mou", "croustillant", "magnifique", "hurlant",
-    "ubiquitaire", "saugrenu", "nébuleux",
-    "dithyrambique", "soporifique",
-    "aboulique", "versatile", "fallacieux"
+    "bizarre", "saugrenu", "flou",
+    "enthousiaste", "fou à lier",
+    "indécis", "instable", "mesquin"
   ],
 
   v: [ // Verbes Transitifs (3ème pers. singulier)
     "dévore", "analyse", "chatouille", "désintègre", 
     "hypnotise", "négocie avec", "regarde", "cuisine", 
     "insulte", "adore", "punit", "scanne",
-    "obnubile", "vilipende", "transfigure", "défenestre",
-    "exhorte", "collige", "vocifère contre", "subodore",
-    "procrastine sur", "décrète", "sublime", "invoque", "disséque"
+    "obsède", "attaque", "embellit", "lance par la fenêtre",
+    "encourage", "hurle après", "sent venir", "repousse",
+    "ordonne", "supplie", "examine", "invoque", "hante"
   ],
 
   cod: [ // Compléments d'Objet Direct
     "sa propre tête", "la théorie de la relativité", "une chaussette sale", 
     "le vide intersidéral", "un kebab", "la reine d'Angleterre", 
     "tes espoirs", "un parpaing", "le code source", "une licorne",
-    "la quintessence du ridicule", "un solipsisme aigre", "le syndrome de Stendhal", "la notion d'entropie",
-    "un phénakistiscope", "la triskaïdékaphobie", "une sébile en orichalque", "les arcanes majeurs",
-    "un zénith précaire", "l'obsolescence programmée", "les éphélides de l'âme", "une drosophile mutante",
-    "le panégyrique", "un octroi désuet", "le murmure des abysses"
+    "la quintessence du ridicule", "un ermite du Tibet", "un vieux jouet", "un homme hanté par le nombre 13",
+    "la lune", "la poussière du temps", "le reflet d'un regard", "la clef mystérieuse",
+    "le début d'une chanson", "l'ombre d'un pigeon", "la Vérité", "la foule en délire",
+    "le destin de l'humanité", "le secret de la vie", "un fantôme", "un dragon en plastique"
   ],
 
   cc: [ // Compléments Circonstanciels (Mixte)
     "avec une cuillère", "sur la lune", "pendant la messe", 
     "très violemment", "sans pantalon", "dans le métavers", 
     "hier soir", "avec passion", "sous la douche",
-    "en catimini", "nonobstant les foudres", "à l'instar d'un derviche", "contre toute expectative",
-    "à la lueur chancelante", "par le truchement d'un corbeau", "en dépit de la bienséance", "dans un élan d'acrimonie",
-    "sous l'égide d'un gnome", "au gré des limbes", "dans un interstice spatio-temporel", "avec une emphase baroque",
-    "au sein du tohu-bohu", "selon l'herméneutique", "à la va-comme-je-te-pousse"
+    "en catimini", "malgré la tempête", "sur le pont du Titanic", "contre toute expectative",
+    "à la lueur chancelante", "devant un coucher de soleil", "malgré l'approbation de la foule", "dans un élan de colère",
+    "dans un élan de bravoure", "au milieu du chaos", "entre deux instants", "avec un sourire narquois",
+    "au milieu d'un champ", "comme ça vient", "sur un coup de tête"
   ],
-
-  // --- AVANCÉS (Tes autres clés) ---
   
   coi: [ // Complément d'Objet Indirect
     "à son chat", "au président", "contre un mur", "pour la gloire", 
     "à des inconnus", "au percepteur des impôts", "à son ex",
-    "à la postérité", "de l'inanité", "à une égérie évanescente", "pour une peccadille",
-    "contre l'inanition", "à la nébulosité ambiante", "avec circonspection", "en déshérence",
-    "à la conjuration", "à l'éminence grise", "pour une prébende", "du verbiage éculé",
-    "au flegme britannique", "de son propre chef", "à la syncope collective"
+    "à tout le monde", "au néant", "à une amie", "pour une broutille",
+    "contre la faim", "à l'ambiance générale", "avec prudence", "en perte",
+    "à l'assemblée", "au conseiller de la Maison Blanche", "pour un avantage", "de paroles veines",
+    "de sa propre initiative", "à la panique générale"
   ],
 
   atts: [ // Attribut du sujet
     "un génie incompris", "complètement fou", "en mousse", 
     "le maître du monde", "perdu", "une illusion", "toxique",
-    "amphigourique", "une antienne lancinante", "l'épitomé de la veulerie", "désenchanté",
-    "un simulacre probant", "la béatitude forcée", "obsolète", "un quolibet",
-    "parfaitement atrabilaire", "une idiosyncrasie", "le paroxysme de l'ennui", "irrévocable",
-    "l'artefact cryptique", "un égrégore", "sui generis"
+    "confus", "une rengaine", "très lâche", "désenchanté",
+    "déçu", "une joie forcée", "obsolète", "moqueur",
+    "de mauvaise humeur", "étrange", "l'ennui total", "sans espoir",
+    "quelque chose de mystérieux", "un succès", "le comble du ridicule"
   ],
 
   pp: [ // Proposition Principale
     "La mouche tousse", "Le robot s'éveille", "Tout explose", 
     "Il ne se passe rien", "La prophétie se réalise",
     "Le paradigme s'effondre", "Le chat contemple le vide", "L'apoplexie menace", "Le séisme intérieur gronde",
-    "L'horloge s'est figée", "La synchronicité opère", "Le silence est assourdissant", "Le temps se délite",
-    "L'anamnèse est douloureuse", "La sémantique est trahie", "Le chaos s'installe", "La stase est rompue",
-    "Le schisme s'élargit", "La plénitude est feinte", "Le non-sens triomphe"
+    "L'horloge s'est figée", "Le hasard s'en mêle", "Le calme hurle", "Le temps s'effrite",
+    "Le souvenir fait mail", "La vérité se révèle", "Le chaos s'installe", "L'équilibre se brise",
+    "La fracture s'ouvre", "La paix trompe", "L'absurde' triomphe"
   ],
 
   sub: [ // Proposition Subordonnée
     "parce qu'il a faim", "quand les poules auront des dents", 
     "si personne ne regarde", "bien qu'il soit midi", 
     "avant de mourir",
-    "quoique l'on en dise", "dès que l'ubac reverdira", "si l'adage se confirme", "parce que l'ennui le ronge",
-    "afin que la déréliction cesse", "malgré qu'il soit fort tard", "à moins que le sort n'en décide autrement", "lorsque l'acmé sera atteinte",
-    "si l'on considère l'axiome", "nonobstant le dédain général", "puisque l'exégèse est ambiguë", "bien que l'incurie soit manifeste",
-    "afin de conjurer le maléfice", "selon la doxologie", "dès que l'astre s'obscurcira"
+    "quoique l'on en dise", "dès que la colline refleurira", "si le dicton dit vrai", "parce que l'ennui le ronge",
+    "pour que la solitude prenne fin", "malgré qu'il soit fort tard", "à moins que le destin en décide autrement", "quand le sommet sera atteint",
+    "si l’on y réfléchit bien", "malgré le mépris des autres", "puisque le sens n’est pas clair", "même si la négligence saute aux yeux",
+    "afin de conjurer le maléfice", "selon la croyance", "dès que le soleil se lèvera"
   ],
 
   ccl: [ // Lieu
@@ -102,19 +100,19 @@ export const GHOST_WORDS_DB: Record<string, string[]> = {
   cct: [ // Temps
     "l'année prochaine", "il y a mille ans", "à minuit pile", 
     "dans un univers parallèle", "tout de suite", "au crépuscule",
-    "lors du solstisce hiémal", "au temps de l'héliocentrisme", "pendant la quinzième lune", "depuis l'aube des temps",
-    "avant l'apogée", "durant la psychopompe", "à l'instant fatidique", "dès potron-minet",
-    "il y a une éternité", "quand l'éphéméride s'épuise", "au moment de la péremption", "pendant l'interrègne",
-    "jusqu'à l'extinction du dernier feu", "à l'heure du dilemme", "au premier chant du coq"
+    "au cœur de l’hiver", "à l’époque des lumières", "pendant la quinzième lune", "depuis l'aube des temps",
+    "avant l'apogée", "pendant la traversée", "à l'instant fatidique", "au lever du jour",
+    "il y a une éternité", "quand la journée s’achève", "au moment de la péremption", "dans le creux du temps",
+    "jusqu'à l'extinction des feux", "à l'heure du dilemme", "au premier chant du coq"
   ],
 
   ccm: [ // Manière
     "avec élégance", "comme un bourrin", "en silence", 
     "sournoisement", "à cloche-pied", "les yeux fermés",
-    "avec désinvolture", "d'une manière laconique", "par syncope", "avec l'aplomb d'un expert",
-    "selon un rite ancestral", "avec une ostentation grotesque", "en usant de paralipses", "par antonomase",
-    "à la faveur de la nuit", "avec la nonchalance d'un bouledogue", "par mimétisme troublant", "sans la moindre morgue",
-    "en toute duplicité", "avec une faconde démesurée", "par le biais d'un truisme"
+    "avec désinvolture", "en peu de mots", "de façon saccadée", "avec l'aplomb d'un expert",
+    "selon un rite ancestral", "avec une exagération grotesque", "en ne disant pas tout", "en généralisant",
+    "à la tombée de la nuit", "avec la nonchalance d'un bouledogue", "par mimétisme troublant", "avec humilité",
+    "en cachant son jeu", "en parlant sans fin", "par une évidence"
   ],
 
   ve: [ // Verbe d'état
@@ -129,28 +127,28 @@ export const GHOST_WORDS_DB: Record<string, string[]> = {
   gns: [ // Groupe Nominal Sujet (plus complexe)
     "Le grand monstre vert", "La petite souris masquée", 
     "Le dernier survivant", "L'incroyable Hulk",
-    "Le dilettante patenté", "La scorie cosmique", "Le cormoran aveugle", "L'égrégore néfaste",
-    "L'injonction paradoxale", "Le boucanier albinos", "La chimère balkanique", "Le parangon de vertu",
-    "L'énigme insoluble", "Le fardeau de Sisyphe", "La mélopée oubliée", "Le spectre d'un amphithéâtre",
-    "La sérendipité forcée", "Le phénix moribond", "L'apocryphe sibyllin"
+    "L’incroyable voisin", "Un cochon fatigué", "Un cormoran aveugle", "Un corbeau futé",
+    "Un marin solitaire", "Un ministre hongrois", "Le gardien de nuit du Louvre", "Le Croque Mitaine",
+    "Le fantôme de Marie Antoinette", "Le petit chaperon rouge", "Le chat botté", "Skywalker",
+    "Bilbo le Hobbit", "Robin des bois", "Le président des États-Unis"
   ],
 
   adv: [ // Adverbe
     "soudainement", "bizarrement", "peut-être", 
     "toujours", "rarement", "intensément",
     "doucement", "impunément", "placidement", "insidieusement",
-    "inlassablement", "congrument", "démoniaquement", "apocryphes",
-    "irrévocablement", "furtivement", "ostensiblement", "évasivement",
-    "négligemment", "furtivement", "languissamment"
+    "inlassablement", "correctement", "démoniaquement", "à tort",
+    "à raison", "furtivement", "pour toujours", "vaguement",
+    "à la va-vite", "lentement", "à tort ou à raison"
   ]
 };
 
 // Fallback générique si la clé n'existe pas
 const GENERIC_FALLBACKS = [
-  "truc", "bidule", "machin", "chose", "artéfact", "galimatias", 
-  "ustensile", "pantographe", "gribouillis", "patacaisse", 
-  "zézette", "soubresaut", "ergot", "zénith", "méandre", 
-  "pérégrination", "nébulosité", "affabulation", "péripétie", "logogriphe"
+  "truc", "bidule", "machin", "chose", "artéfact", "trucmuche", 
+  "ustensile", "embrouille", "gribouillis", "patacaisse", 
+  "zézette", "soubresaut", "objet", "moment", "mystère", 
+  "charabia", "fouillis", "micmac"
 ];
 
 /**
