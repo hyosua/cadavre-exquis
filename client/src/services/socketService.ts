@@ -1,7 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-console.log("Connecting to Socket URL:", SOCKET_URL);
 class SocketService {
   private socket: Socket | null = null;
 
