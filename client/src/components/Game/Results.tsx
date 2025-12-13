@@ -199,7 +199,7 @@ export function Results() {
             <div className="bg-muted border-2 border-foreground border-dashed rounded-lg p-4 flex items-center gap-3">
               <div className="h-3 w-3 bg-primary rounded-full animate-pulse" />
               <span className="font-averia text-muted-foreground">
-                On attend l&apos;hôte...
+                On attend le chef...
               </span>
             </div>
           )}
