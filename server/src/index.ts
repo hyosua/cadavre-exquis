@@ -32,12 +32,11 @@ app.get('/health', (req, res) => {
 const io = initializeSocket(httpServer);
 
 // Start server
-httpServer.listen(PORT, () => {
+httpServer.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`
   🚀 Server started successfully!
   🌍 Environment: ${process.env.NODE_ENV || 'development'}
-  📡 HTTP Server: http://localhost:${PORT}
+  📡 HTTP Server: http://0.0.0.0:${PORT}
   👉 Allowed Origins: ${allowedOrigins.join(', ')}
-  🔌 Web
-  `)
-})
+  `);
+});
