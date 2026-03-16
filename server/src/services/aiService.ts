@@ -2,10 +2,12 @@ import { getGhostWord } from "../utils/ghost-words.data";
 import { Game, AIPlayer } from "../types/game.types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Initialiser l'API
-const apiKey = process.env.GOOGLE_API_KEY;
-if (!apiKey) throw new Error("[aiService] GOOGLE_API_KEY manquante — vérifier les variables d'environnement.");
-const genAI = new GoogleGenerativeAI(apiKey);
+// Initialiser l'API (lazy — dotenv doit être chargé avant le premier appel)
+function getGenAI(): GoogleGenerativeAI {
+  const apiKey = process.env.GOOGLE_API_KEY;
+  if (!apiKey) throw new Error("[aiService] GOOGLE_API_KEY manquante — vérifier les variables d'environnement.");
+  return new GoogleGenerativeAI(apiKey);
+}
 
 function isAIPlayer(player: any): player is AIPlayer {
   return player.isAi === true;
@@ -75,7 +77,7 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
     systemInstruction,
   ].filter(Boolean).join('\n');
 
-  const model = genAI.getGenerativeModel({
+  const model = getGenAI().getGenerativeModel({
     model: "gemini-2.5-flash",
     systemInstruction: fullSystemInstruction,
   });
