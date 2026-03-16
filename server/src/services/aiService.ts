@@ -3,7 +3,9 @@ import { Game, AIPlayer } from "../types/game.types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialiser l'API
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const apiKey = process.env.GOOGLE_API_KEY;
+if (!apiKey) throw new Error("[aiService] GOOGLE_API_KEY manquante — vérifier les variables d'environnement.");
+const genAI = new GoogleGenerativeAI(apiKey);
 
 function isAIPlayer(player: any): player is AIPlayer {
   return player.isAi === true;
@@ -102,10 +104,12 @@ export async function getAIMove(game: Game, aiPlayerId: string): Promise<string>
     // Nettoyage simple pour s'assurer que Gemini n'ajoute pas de guillemets ou ponctuation
     text = text.replace(/^["']|["']$/g, '');
     text = text.replace(/[.!?]$/g, '');
-    text = text.trim().toLowerCase(); 
+    text = text.trim().toLowerCase();
 
-    // Réponse de repli simple si l'IA ne renvoie rien
-    if (!text) {
+    // Validation de la sortie : rejet si vide, trop long ou multi-ligne
+    // (signe que l'injection a partiellement fonctionné)
+    if (!text || text.length > 80 || /[\n\r]/.test(text)) {
+      console.warn("[AI] Réponse rejetée (hors limites ou multi-ligne), utilisation GhostWord.");
       return getGhostWord(currentPhaseTypeKey);
     }
 
