@@ -5,10 +5,12 @@ const phaseKeySchema = z.enum([
   "ccl", "cct", "ccm", "gns", "adv"
 ]);
 
+const noNewline = /^[^\n\r\\]+$/;
+
 const phaseDetailSchema = z.object({
-  titre: z.string(),
-  helper: z.string(),
-  placeholder: z.string(),
+  titre: z.string().min(1).max(60).regex(noNewline, "Caractères interdits dans le titre"),
+  helper: z.string().min(1).max(100).regex(noNewline, "Caractères interdits dans le helper"),
+  placeholder: z.string().min(1).max(100).regex(noNewline, "Caractères interdits dans le placeholder"),
 });
 
 const gameConfigSchema = z.object({
